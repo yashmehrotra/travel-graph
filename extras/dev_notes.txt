@@ -1,0 +1,14 @@
+py2neo
+- Open-JDK gave some probs , prefer Oracle Java
+
+Flask
+- not much here
+
+
+Medium-Editor
+- Add cool fonts
+- make h1 bigger , minor tweaks , all comes under prettifying it
+- cursor should be ready by default
+- improve the css (remove the inline css)
+- prettify it
+- see best approach to store the text
