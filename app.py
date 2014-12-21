@@ -4,7 +4,7 @@ app = Flask(__name__)
 
 @app.route('/')
 def hello():
-    return "Hello Yash"
+    return render_template('login.html')
 
 @app.route('/medium')
 def editor():
