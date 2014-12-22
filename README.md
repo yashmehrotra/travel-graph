@@ -9,7 +9,10 @@ The next big thing
 *Store blog  
 *py2neo relations  
 
-##Setting it up  
+##Setting it up
 `pip install -r requirements.txt`  
 `python app.py`  
 
+##Also you can use
+`make install`  
+`make run`  
