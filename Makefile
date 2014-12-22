@@ -6,4 +6,7 @@ run:
 	@python app.py
 
 lint:
-	@sh lint.sh
+	@sh bin/lint.sh
+
+graph_db:
+	@sh bin/graph_db.sh
