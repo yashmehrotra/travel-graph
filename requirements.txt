@@ -8,5 +8,6 @@ flake8==2.2.5
 itsdangerous==0.24
 mccabe==0.3
 pep8==1.5.7
+py2neo==2.0.2
 pyflakes==0.8.1
 wsgiref==0.1.2
