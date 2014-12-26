@@ -1,5 +1,5 @@
 from flask import Flask, render_template
-from settings import *
+from settings import graph_uri
 from py2neo import Graph, Node, Relationship
 import pdb
 
@@ -20,14 +20,14 @@ def editor():
 
 @app.route('/graph')
 def graph_db():
-	pdb.set_trace()
-	yash = Node('wanderer', name='Yash',age=19)
-	wayne = Node('wanderer', name='Wayne',age=29)
+    pdb.set_trace()
+    yash = Node('wanderer', name='Yash', age=19)
+    wayne = Node('wanderer', name='Wayne', age=29)
 
-	y_k_w = Relationship(yash,'KNOWS',wayne)
-	graph.create(y_k_w)
+    y_k_w = Relationship(yash, 'KNOWS', wayne)
+    graph.create(y_k_w)
 
-	return 'Hello World'
+    return 'Hello World'
 
 
 if __name__ == '__main__':
