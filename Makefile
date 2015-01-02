@@ -9,7 +9,7 @@ lint:
 	@sh bin/lint.sh
 
 start_db:
-	@../../neo4j-community-2.1.6/bin/neo4j start
+	@~/Downloads/neo4j-community-2.1.6/bin/neo4j start
 
 stop_db:
-	@../../neo4j-community-2.1.6/bin/neo4j stop
+	@~/Downloads/neo4j-community-2.1.6/bin/neo4j stop
