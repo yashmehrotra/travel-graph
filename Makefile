@@ -3,7 +3,7 @@ install:
 	@pip install -r requirements.txt
 
 run:
-	@python app.py
+	@python runserver.py
 
 lint:
 	@sh bin/lint.sh

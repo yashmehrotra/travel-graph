@@ -2,7 +2,10 @@ py2neo
 - Open-JDK gave some probs , prefer Oracle Java
 
 Flask
-- not much here
+- Study about blueprints
+- Handle 405 errors (method not allowed)
+- see if __all__ is imp in __init__ file
+- Bloody Fucking packaging , see how the whole apps folder can be imported by import apps rather than importing each and every file
 
 
 Medium-Editor
