@@ -5,16 +5,17 @@ from travelgraph import app, settings
 
 graph = Graph(settings.graph_uri)
 
+
 @app.route('/api/signup', methods=['POST'])
 def api_signup():
     email = request.form['email']
     # convert password to md5
     password = request.form['password']
-    
+
     user = Node(
         'user',
-        email = email,
-        password = password,   
+        email=email,
+        password=password,
     )
     graph.create(user)
     return 'success , do this in json'
@@ -25,21 +26,21 @@ def api_login():
     email = request.form['email']
     password = request.form['password']
 
-    #see if user exists
-    user = Node(
-        'user',
-        email = email,
-        password = password,   
-    )
-    z='abc'
-    # Match node, if user exists , ha ha ha ha
+    query = graph.find_one('user', property_key='email', property_value=email)
+    if query and password == query.get_properties()['password']:
+        z = 'correct login that user'
+    else:
+        z = 'wrong go away'
     return z
 
 
 @app.route('/api/users', methods=['GET'])
 def api_users():
-    
-    users = graph.cypher.execute("MATCH (u:user) RETURN u.email as email, u.password as password ")
+
+    users = graph.cypher.execute(
+        "MATCH (u:user) RETURN u.email as email, u.password as password"
+    )
+
     x = ''
     for user in users:
         x += 'user - ' + user.email
@@ -48,4 +49,3 @@ def api_users():
         x += '\n'
 
     return x
-
