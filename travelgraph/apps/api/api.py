@@ -1,7 +1,10 @@
 from flask import request
 from py2neo import Graph, Node
+import hashlib
+import json
 
 from travelgraph import app, settings
+from travelgraph.apps import auth
 
 graph = Graph(settings.graph_uri)
 
@@ -9,16 +12,11 @@ graph = Graph(settings.graph_uri)
 @app.route('/api/signup', methods=['POST'])
 def api_signup():
     email = request.form['email']
-    # convert password to md5
     password = request.form['password']
 
-    user = Node(
-        'user',
-        email=email,
-        password=password,
-    )
-    graph.create(user)
-    return 'success , do this in json'
+    node_value = auth.create_user(email, password)
+
+    return 'User created at node val {0}'.format(node_value)
 
 
 @app.route('/api/login', methods=['POST'])
@@ -26,12 +24,15 @@ def api_login():
     email = request.form['email']
     password = request.form['password']
 
+    password = hashlib.md5(password).hexdigest()
+
     query = graph.find_one('user', property_key='email', property_value=email)
     if query and password == query.get_properties()['password']:
-        z = 'correct login that user'
+        auth.create_session(email)
+        z = {'status':'success','message':'ses created'}
     else:
         z = 'wrong go away'
-    return z
+    return json.dumps(z)
 
 
 @app.route('/api/users', methods=['GET'])

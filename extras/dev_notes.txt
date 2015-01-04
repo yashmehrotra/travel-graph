@@ -15,3 +15,7 @@ Medium-Editor
 - improve the css (remove the inline css)
 - prettify it
 - see best approach to store the text
+
+To Add
+- Sign in using google,twitter,fb
+- When a user is created, u may have to use celery depending on what u do

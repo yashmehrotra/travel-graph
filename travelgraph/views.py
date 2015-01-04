@@ -10,8 +10,13 @@ graph = Graph(graph_uri)
 
 
 @app.route('/')
-def hello():
+def page_login():
     return render_template('login.html')
+
+
+@app.route('/signup')
+def page_signup():
+    return render_template('signup.html')
 
 
 @app.route('/medium')
