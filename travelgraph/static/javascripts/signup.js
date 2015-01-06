@@ -1,6 +1,9 @@
 function submit() {
-    var email = $('#email').val();
-    var password = $('#password').val();
+
+    var email      = $('#email').val();
+    var password   = $('#password').val();
+    var first_name = $('#first_name').val();
+    var last_name  = $('#last_name').val();
 
     $.ajax({
         type: "POST",
@@ -8,6 +11,8 @@ function submit() {
         data: {
             'email':email,
             'password':password,
+            'first_name':first_name,
+            'last_name':last_name,
         },
         success: function(result) {
             if(result) {

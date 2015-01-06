@@ -18,4 +18,5 @@ Medium-Editor
 
 To Add
 - Sign in using google,twitter,fb
+- Class in models , a user class
 - When a user is created, u may have to use celery depending on what u do
