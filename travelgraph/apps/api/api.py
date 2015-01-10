@@ -13,14 +13,13 @@ def api_signup():
     Recieves a POST request to create the user
     '''
 
-    email      = request.form['email']
-    password   = request.form['password']
-    first_name = request.form.get('first_name', 'Yash')
-    last_name  = request.form.get('last_name', 'Mehrotra')
+    email      = request.form.get('email')
+    password   = request.form.get('password')
+    first_name = request.form.get('first_name')
+    last_name  = request.form.get('last_name')
+    method     = request.form.get('method')
 
-    password = hashlib.md5(password).hexdigest()
-
-    result = models.create_user(email=email, password=password, first_name=first_name, last_name=last_name)
+    result = models.create_user(email=email, method=method, first_name=first_name, last_name=last_name,  password=password)
 
     return 'User created - {0}'.format(result)
 
@@ -34,10 +33,7 @@ def api_login():
     email = request.form['email']
     password = request.form['password']
 
-    password = hashlib.md5(password).hexdigest()
-
-    z = {'dict':'here'}
-
+    z = models.auth_user(email=email, method='normal', password=password)
     return json.dumps(z)
 
 

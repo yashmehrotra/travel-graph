@@ -8,6 +8,8 @@
     Password :<input id="password" type="password" name="password" /><br>
     First Name :<input id="first_name" type="text" name="first_name" /><br>
     Last Name :<input id="last_name" type="text" name="last_name" /><br>
-    <button onclick="submit()">Login</button>
+    <button onclick="submit()">Login</button><br>
+    <h1>Facebook</h1>
+    <fb:login-button scope="public_profile,email" onlogin="checkLoginState();"></fb:login-button>
 </body>
 </html>
