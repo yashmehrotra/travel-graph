@@ -79,16 +79,19 @@ def create_user(email, method=None, **kwargs):
         
         # To see if user has already signed up and wants to login
         if len(result) != 0:
-            auth_user(result[0]['email'], method='facebook')
+            #pdb.set_trace()
+            response = auth_user(result[0]['email'], method, **kwargs)
+            return response
+
         else:
             query = """ INSERT INTO "user" 
                 (email, name, password) 
                 VALUES ('{0}', '{1}', '{2}')""".format(email, username, password)
 
-        cursor.execute(query)
-        postgre.commit()
+            cursor.execute(query)
+            postgre.commit()
 
-        return json.dumps({'status':'success','message':'user added through facebook'})
+            return json.dumps({'status':'success','message':'user added through facebook'})
     
     return 'Done, also add exception here'
 
@@ -135,3 +138,14 @@ def auth_user(email, method=None, **kwargs):
         
         query = """ SELECT * FROM "user"
             WHERE email = '{0}' """.format(email)
+
+        cursor.execute(query)
+        result = cursor.fetchall()
+
+        # This means the user is not signed up, so lets send him to signup
+        if len(result) == 0:
+            response = create_user(email, method, **kwargs)
+            return response
+        else:
+            response = {'status':'success','message':'user exists, logged in through signup fb'}
+            return response
