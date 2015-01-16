@@ -45,7 +45,7 @@ function statusChangeCallback_b(response) {
             console.log('Successful login for: ' + response.name);
             // Generate a complicated password and put this in a different func
             var method = 'facebook';
-            post_to_api(response.email, '123456', response.first_name, response.last_name,method)
+            post_to_api(response.email, '123456', response.first_name, response.last_name, method)
         });
     } else if (response.status === 'not_authorized') {
         console.log('log into app')

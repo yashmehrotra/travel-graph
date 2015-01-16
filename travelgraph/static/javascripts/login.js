@@ -11,6 +11,7 @@ function submit() {
         },
         success: function(result) {
             if(result) {
+                console.log(result);
                 result = JSON.parse(result);
                 console.log(result['status']);
                 console.log(result.message);

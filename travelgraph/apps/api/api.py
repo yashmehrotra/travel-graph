@@ -33,8 +33,8 @@ def api_login():
     email = request.form['email']
     password = request.form['password']
 
-    z = models.auth_user(email=email, method='normal', password=password)
-    return json.dumps(z)
+    response = models.auth_user(email=email, method='normal', password=password)
+    return json.dumps(response)
 
 
 @app.route('/api/users', methods=['GET'])
@@ -51,3 +51,13 @@ def api_users():
         x += '\n'
 
     return x
+
+
+@app.route('/api/content/add_question', methods=['POST'])
+def api_add_question():
+    '''
+    The question details should be added
+    '''
+    question      = request.form['question']
+    question_tags = request.form['tags']
+    # Take user id and access key from session

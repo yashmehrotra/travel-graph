@@ -17,7 +17,7 @@ Types of methods -
 
 def init_pgsql_db(database=settings.pgsql_db):
     '''
-    Initialize a server instance
+    Initialize a database server instance
     '''
     postgre = pgsql.connect(
             host=settings.pgsql_host,
@@ -44,6 +44,10 @@ def create_user(email, method=None, **kwargs):
     
     postgre = init_pgsql_db()
     cursor = postgre.cursor(cursor_factory=psycopg2.extras.DictCursor)
+
+    ##
+    ## Generate a API KEY FOR THE USER WHICH WILL BE ADDED IN REQUEST SESSION AND BE USED FOR ALL TRANSACTIONS
+    ##
 
     query = """ SELECT * FROM "user"
         WHERE email = '{0}' """.format(email)
