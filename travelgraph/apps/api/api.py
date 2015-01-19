@@ -6,6 +6,8 @@ from travelgraph import app, settings
 from travelgraph.apps import auth
 
 from travelgraph.apps.models import models 
+from travelgraph.apps import session
+
 
 @app.route('/api/signup', methods=['POST'])
 def api_signup():
@@ -19,7 +21,8 @@ def api_signup():
     last_name  = request.form.get('last_name')
     method     = request.form.get('method')
 
-    result = models.create_user(email=email, method=method, first_name=first_name, last_name=last_name,  password=password)
+    result = models.create_user(email=email, method=method,
+        first_name=first_name, last_name=last_name,  password=password)
 
     return 'User created - {0}'.format(result)
 
@@ -30,10 +33,13 @@ def api_login():
     It takes email and password and logs in the user
     '''
     
-    email = request.form['email']
-    password = request.form['password']
+    email    = request.form.get('email')
+    password = request.form.get('password')
 
     response = models.auth_user(email=email, method='normal', password=password)
+    if response['status'] == 'success':
+        session.create_session(email)
+
     return json.dumps(response)
 
 
@@ -58,6 +64,9 @@ def api_add_question():
     '''
     The question details should be added
     '''
-    question      = request.form['question']
-    question_tags = request.form['tags']
-    # Take user id and access key from session
+    question      = request.form.get('question')
+    question_desc = request.form.get('desc')
+    question_tags = request.form.get('tags')
+    # Take user id and api key from session
+    api_key = session.get('api_key')
+    user_id = session.get('user_id')

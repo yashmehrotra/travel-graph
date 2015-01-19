@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<script src="{{ url_for('static', filename='javascripts/jquery-2.1.3.min.js') }}"></script>
+<script src="{{ url_for('static', filename='javascripts/question.js') }}"></script>
+<body>
+    <h1>Hello {{ session.get('first_name') }}</h1>
+    What's the question<br>
+    <textarea id="question"></textarea><br>
+    Some Desc please<br>
+    <textarea id="question_desc"></textarea><br>
+    Tags<br>
+    <input type='text' id="question_tags" /> Use comma for now <br>
+    <button onclick="submit()">Ask</button>
+</body>
+</html>

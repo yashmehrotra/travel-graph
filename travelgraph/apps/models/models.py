@@ -1,11 +1,11 @@
-import psycopg2 as pgsql
-import psycopg2.extras
 import pdb
 import json
 import hashlib
+import random
+from datetime import datetime
 
 from travelgraph import settings
-
+from travelgraph.apps.database import postgre, cursor
 '''
 Types of methods - 
 1.normal
@@ -15,39 +15,35 @@ Types of methods -
 '''
 
 
-def init_pgsql_db(database=settings.pgsql_db):
-    '''
-    Initialize a database server instance
-    '''
-    postgre = pgsql.connect(
-            host=settings.pgsql_host,
-            user=settings.pgsql_user,
-            password=settings.pgsql_password,
-            database=database,
-        )
-
-    return postgre
+def get_random_word(wordLen):
+    word = ''
+    for i in range(wordLen):
+        word += random.choice(('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrs'
+                               'tuvwxyz0123456789/&='))
+    return word
 
 
 def create_user(email, method=None, **kwargs):
     '''
     This function adds user to the database
     '''
-    ##
-    ## We should also keep first name and last name in the database
-    ##
-    username = kwargs.get('first_name') + '-' + kwargs.get('last_name')
+
+    first_name = kwargs.get('first_name')
+    last_name  = kwargs.get('last_name')
+
+    created_ts = datetime.now()
+    updated_ts = datetime.now()
+
+    username = first_name.lower() + '-' +last_name.lower()
 
     password = hashlib.md5(kwargs.get('password')).hexdigest()
 
     # Add a function which sees how many users of the same name are there
-    
-    postgre = init_pgsql_db()
-    cursor = postgre.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
-    ##
-    ## Generate a API KEY FOR THE USER WHICH WILL BE ADDED IN REQUEST SESSION AND BE USED FOR ALL TRANSACTIONS
-    ##
+    api_key = hashlib.sha256(get_random_word(15)).hexdigest()
+    api_key = api_key[:15]
+
+
 
     query = """ SELECT * FROM "user"
         WHERE email = '{0}' """.format(email)
@@ -73,11 +69,23 @@ def create_user(email, method=None, **kwargs):
 
 
         query = """ INSERT INTO "user" 
-            (email, name, password) 
-            VALUES ('{0}', '{1}', '{2}')""".format(email, username, password)
+            (email, name, password, api_key,
+                created_ts, first_name, last_name)
+            VALUES ('{0}', '{1}', '{2}', '{3}',
+                '{4}', '{5}', '{6}')""".format(
+                email, username, password, api_key,
+                created_ts, first_name, last_name)
 
         cursor.execute(query)
         postgre.commit()
+
+        response.update({
+            'status':'success',
+            'message':'user signed up normally',
+            'name':first_name + last_name,
+        })
+
+        return response
 
     elif method == 'facebook':
         
@@ -89,8 +97,12 @@ def create_user(email, method=None, **kwargs):
 
         else:
             query = """ INSERT INTO "user" 
-                (email, name, password) 
-                VALUES ('{0}', '{1}', '{2}')""".format(email, username, password)
+            (email, name, password, api_key,
+                created_ts, first_name, last_name)
+            VALUES ('{0}', '{1}', '{2}', '{3}',
+                '{4}', '{5}', '{6}')""".format(
+                email, username, password, api_key,
+                created_ts, first_name, last_name)
 
             cursor.execute(query)
             postgre.commit()
@@ -102,10 +114,8 @@ def create_user(email, method=None, **kwargs):
 
 def auth_user(email, method=None, **kwargs):
     '''
-    Sees whether info is correct
+    Sees whether user-info is correct
     '''
-    postgre = init_pgsql_db()
-    cursor = postgre.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
     response = {}
 
@@ -115,6 +125,7 @@ def auth_user(email, method=None, **kwargs):
         '''
 
         password = hashlib.md5(kwargs.get('password')).hexdigest()
+        
         query = """ SELECT * FROM "user" 
             WHERE email = '{0}' AND
             password = '{1}' """.format(email, password)
@@ -126,14 +137,20 @@ def auth_user(email, method=None, **kwargs):
         if len(result) == 0:
             response.update({
                 'status':'failed',
-                'error':'Email password combination does not match'
+                'error':'Email Password combination does not match'
             })
 
             return response
 
         else:
             # Start session here
-            return result[0]['user_id']
+            response.update({
+                'status':'success',
+                'message':'user-info is correct',
+                'user_id':result[0]['user_id'],
+                'username':result[0]['name']
+            })
+            return response
 
     elif method == 'facebook':
         '''

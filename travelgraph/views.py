@@ -1,4 +1,4 @@
-from flask import render_template
+from flask import render_template, session
 import pdb
 
 from travelgraph import app
@@ -17,3 +17,13 @@ def page_signup():
 @app.route('/medium')
 def editor():
     return render_template('med.html')
+
+
+@app.route('/cs')
+def cs():
+    return session['username']+session['api_key']
+
+
+@app.route('/ques')
+def ques():
+    return render_template('question.html')

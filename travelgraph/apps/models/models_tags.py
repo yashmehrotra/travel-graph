@@ -1,18 +1,19 @@
-import psycopg2 as pgsql
-import psycopg2.extras
 import pdb
 import json
 
 from travelgraph import settings
+from travelgraph.apps.database import postgre, cursor
 
 
-def add_question():
-    pass
+def get_tag_id(tag):
+    
+    query = """ SELECT tag_id FROM "tags" 
+        WHERE 'tag_value' = '{0}' """.format(
+        tag)
 
-
-def create_tag(tag):
-    pass
+    result = cursor.execute(query)
 
 
 def add_question_to_tag(tag, ques_id):
-    pass
+    
+    tag_id = get_tag_id(tag)
