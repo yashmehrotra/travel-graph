@@ -1,12 +1,13 @@
-from flask import request
+from flask import request, session
 import hashlib
 import json
+import pdb
 
 from travelgraph import app, settings
 from travelgraph.apps import auth
 
-from travelgraph.apps.models import models 
-from travelgraph.apps import session
+from travelgraph.apps.models import models, models_questions 
+from travelgraph.apps import user_session
 
 
 @app.route('/api/signup', methods=['POST'])
@@ -38,7 +39,7 @@ def api_login():
 
     response = models.auth_user(email=email, method='normal', password=password)
     if response['status'] == 'success':
-        session.create_session(email)
+        user_session.create_session(email)
 
     return json.dumps(response)
 
@@ -68,5 +69,10 @@ def api_add_question():
     question_desc = request.form.get('desc')
     question_tags = request.form.get('tags')
     # Take user id and api key from session
-    api_key = session.get('api_key')
-    user_id = session.get('user_id')
+    api_key = session.get('api_key','xyz')
+    user_id = session.get('user_id','13')
+
+    result = models_questions.add_question(user_id, api_key,
+        question, question_desc, question_tags)
+
+    return result['status']
