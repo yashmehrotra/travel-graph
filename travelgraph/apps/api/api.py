@@ -65,14 +65,29 @@ def api_add_question():
     '''
     The question details should be added
     '''
-    question      = request.form.get('question')
-    question_desc = request.form.get('desc')
-    question_tags = request.form.get('tags')
+    question      = request.form.get('question_text')
+    question_desc = request.form.get('question_desc')
+    question_tags = request.form.get('question_tags')
+
     # Take user id and api key from session
-    api_key = session.get('api_key','xyz')
-    user_id = session.get('user_id','13')
+    api_key = session.get('api_key','xyzdd')
+    user_id = session.get('user_id','15')
+
+    #pdb.set_trace()
 
     result = models_questions.add_question(user_id, api_key,
         question, question_desc, question_tags)
 
-    return result['status']
+    return result['status'] + ' ' + str(user_id)
+
+
+@app.route('/api/content/view_tag/<tag>', methods=['GET'])
+def view_tagged_ques(tag):
+    '''
+    Display a list of all the questions related to the tag given
+    '''
+    if '-' in tag:
+        tag = tag.split('-')
+    result = models_questions.view_tagged_questions(tag)
+
+    return json.dumps(result)

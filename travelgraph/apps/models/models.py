@@ -34,23 +34,23 @@ def create_user(email, method=None, **kwargs):
     created_ts = datetime.now()
     updated_ts = datetime.now()
 
+    # Add a function which sees how many users of the same name are there
+    # Then add the no.
     username = first_name.lower() + '-' +last_name.lower()
 
+    # MD5 Hashing, because ethics
     password = hashlib.md5(kwargs.get('password')).hexdigest()
 
-    # Add a function which sees how many users of the same name are there
-
+    # Generating the api key
     api_key = hashlib.sha256(get_random_word(15)).hexdigest()
     api_key = api_key[:15]
-
-
 
     query = """ SELECT * FROM "user"
         WHERE email = '{0}' """.format(email)
 
     cursor.execute(query)
     result = cursor.fetchall()
-
+    
     response = {}
 
     if method == 'normal':

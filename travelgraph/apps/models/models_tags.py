@@ -18,13 +18,10 @@ def get_tag_id(tag):
 
     result = cursor.fetchone()
 
-    pdb.set_trace()
-
-    if not result:
-        result = ''
+    #pdb.set_trace()
 
     # No tag exists
-    if len(result) == 0:
+    if not result:
         # Creating an empty list 
         question_list = json.dumps([])
 
