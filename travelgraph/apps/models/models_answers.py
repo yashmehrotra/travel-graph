@@ -54,19 +54,14 @@ def get_all_answers(question_id):
     Retrieving all the answers for a specific question
     '''
 
-    response = {}
-
-    response['answers'] = []
-
     response = {
         'answers': [],
     }
 
-    answer_ids = []
-
     query = """ SELECT answer_id FROM "answers" 
                 WHERE question_id = '{0}' """.format(question_id)
 
+    cursor.execute(query)
     result = cursor.fetchall()
 
     if result:
