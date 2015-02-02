@@ -2,6 +2,7 @@ from flask import render_template, session
 import pdb
 
 from travelgraph import app
+from travelgraph.apps.models import models_questions
 
 
 @app.route('/')
@@ -31,4 +32,5 @@ def ques():
 
 @app.route('/ques/<ques_id>/')
 def ques_id(ques_id):
-    return render_template('ques_id.html')
+    data = models_questions.get_question(ques_id)
+    return render_template('ques_id.html', data)
