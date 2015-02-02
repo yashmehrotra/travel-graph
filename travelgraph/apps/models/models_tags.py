@@ -18,15 +18,10 @@ def get_tag_id(tag):
 
     result = cursor.fetchone()
 
-    #pdb.set_trace()
-
     # No tag exists
     if not result:
-        # Creating an empty list 
-        question_list = json.dumps([])
-
-        query = """ INSERT INTO "tags" (tag_value, question_list) VALUES ('{0}', '{1}') RETURNING tag_id""".format(
-            tag, question_list)
+        query = """ INSERT INTO "tags" (tag_value) 
+                    VALUES ('{0}') RETURNING tag_id""".format(tag)
 
         cursor.execute(query)
         postgre.commit()
@@ -43,17 +38,30 @@ def add_question_to_tag(tag, ques_id):
     
     tag_id = get_tag_id(tag)
 
-    query = """ SELECT question_list FROM "tags" WHERE tag_id = '{0}' """.format(tag_id)
-
-    cursor.execute(query)
-    result = cursor.fetchone()
-
-    question_list = json.loads(result['question_list'])
-
-    question_list.append(ques_id)
-    question_list = json.dumps(question_list)
-
-    query = """ UPDATE "tags" SET question_list = '{0}' WHERE tag_id = '{1}' """.format(question_list, tag_id)
+    query = """ INSERT INTO "tag_questions" (tag_id, question_id) 
+                    VALUES ('{0}', '{1}') """.format(
+                                        tag_id, ques_id)
 
     cursor.execute(query)
     postgre.commit()
+
+
+def user_subscribes_tag(user_id, api_key, tag_id):
+    '''
+    When a user subscribes to a tag
+    '''
+    
+    response = {}
+
+    query = """ INSERT INTO "tag_subscribers" (user_id, tag_id) 
+                VALUES ('{0}', '{1}') """.format(user_id,tag_id)
+
+    cursor.execute(query)
+    postgre.commit()
+
+    response.update({
+        'status':'success',
+        'message':'Tag successfully subscribed',
+    })
+
+    return response

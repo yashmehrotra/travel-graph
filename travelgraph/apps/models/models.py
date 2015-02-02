@@ -170,3 +170,25 @@ def auth_user(email, method=None, **kwargs):
         else:
             response = {'status':'success','message':'user exists, logged in through signup fb'}
             return response
+
+
+def user_follows_user(user_id, api_key, user_id_to_follow):
+    '''
+    When a user follows another user
+    '''
+
+    response = {}
+
+    query = """ INSERT INTO "user_following" (user_id, follows_user_id) 
+                VALUES ('{0}', '{1}') """.format(user_id, user_id_to_follow)
+
+    cursor.execute(query)
+    postgre.commit()
+
+    response.update({
+        'status':'success',
+        'message':'User {0} is now following User {1}'.format(user_id,
+                                                        user_id_to_follow)
+    })
+
+    return response

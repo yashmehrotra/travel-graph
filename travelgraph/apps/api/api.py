@@ -1,4 +1,4 @@
-from flask import request, session
+from flask import request, session, jsonify
 import hashlib
 import json
 import pdb
@@ -6,7 +6,7 @@ import pdb
 from travelgraph import app, settings
 from travelgraph.apps import auth
 
-from travelgraph.apps.models import models, models_questions 
+from travelgraph.apps.models import models, models_questions, models_tags
 from travelgraph.apps import user_session
 
 
@@ -69,16 +69,16 @@ def api_add_question():
     question_desc = request.form.get('question_desc')
     question_tags = request.form.get('question_tags')
 
-    # Take user id and api key from session
-    api_key = session.get('api_key','xyzdd')
-    user_id = session.get('user_id','15')
+    # Take user id and api key from form first then session
+    user_id = request.form.get('user_id', session.get('user_id'))
+    api_key = request.form.get('api_key', session.get('api_key'))
 
     #pdb.set_trace()
 
     result = models_questions.add_question(user_id, api_key,
         question, question_desc, question_tags)
 
-    return result['status'] + ' ' + str(user_id)
+    return jsonify(result)
 
 
 @app.route('/api/content/view_tag/<tag>', methods=['GET'])
@@ -90,4 +90,48 @@ def view_tagged_ques(tag):
         tag = tag.split('-')
     result = models_questions.view_tagged_questions(tag)
 
-    return json.dumps(result)
+    return jsonify(result)
+
+
+@app.route('/api/content/view_all_ques', methods=['GET'])
+def view_all_ques():
+    '''
+    Display a list of all the questions
+    '''
+
+    result = models_questions.view_all_questions()
+
+    return jsonify(result)
+
+
+@app.route('/api/tag/subscribe_tag', methods=['POST'])
+def subscribe_tag():
+    '''
+    User wants to subscribe to a tag
+    '''
+
+    user_id = request.form.get('user_id', session.get('user_id'))
+    api_key = request.form.get('api_key', session.get('api_key'))
+    tag     = request.form.get('tag')
+
+    tag_id = models_tags.get_tag_id(tag)
+
+    result = models_tags.user_subscribes_tag(user_id, api_key, tag_id)
+
+    return jsonify(result)
+
+
+@app.route('/api/user/follow_user', methods=['POST'])
+def follow_user():
+    '''
+    User wants to follow another user
+    '''
+
+    user_id = request.form.get('user_id', session.get('user_id'))
+    api_key = request.form.get('api_key', session.get('api_key'))
+
+    user_id_to_follow = request.form.get('user_id_to_follow')
+
+    result = models.user_follows_user(user_id, api_key, user_id_to_follow)
+
+    return jsonify(result)
