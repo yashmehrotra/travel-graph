@@ -33,4 +33,4 @@ def ques():
 @app.route('/ques/<ques_id>/')
 def ques_id(ques_id):
     data = models_questions.get_question(ques_id)
-    return render_template('ques_id.html', data)
+    return render_template('ques_id.html', data=data)
