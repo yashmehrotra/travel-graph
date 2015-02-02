@@ -22,6 +22,7 @@ To Add
 Database
 - See how often the connection should be closed
 - ALTER SEQUENCE (table)_(column)_seq RESTART WITH 1;   --RESET AUTO-INCREMENT COUNTER
+- Time stamp for question added, answer added, question updated
 
 General
 - Encoding (???)
