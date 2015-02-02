@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<script src="{{ url_for('static', filename='javascripts/jquery-2.1.3.min.js') }}"></script>
+<script src="{{ url_for('static', filename='javascripts/ques_id.js') }}"></script>
+<body>
+    <h1>Hello {{ session.get('first_name') }}</h1>
+    Question {{ data.question_id }}<br>
+    <div>
+    	<div id="ques-id" style="display: none;">{{ data.question_id }}</div>
+    	<div>{{ data.question_text }}</div>
+    	<div>{{ data.question_desc }}</div>
+    	<div>{{ data.question_tags }}</div>
+    </div>
+    <div id="ans">
+    	<ul>
+    		<!-- answers appended here -->
+    	</ul>
+    </div>
+    <textarea id="ans-text" placeholder="Write an answer.."></textarea>
+    <button id="ans-submit">Post</button>
+</body>
+</html>

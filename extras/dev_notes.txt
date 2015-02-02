@@ -29,5 +29,8 @@ General
 - SQL Alchemy
 - How about ULTRA JSON
 
+Avijit
+ - Base.html: common script inclusions, topbar/footer inclusions : {% block body %}, {% end block %}
+
 Ankur
 - 
