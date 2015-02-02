@@ -1,4 +1,6 @@
+
 $(function () {
+
     var ques_id = $('#ques-id').text();
     submit(ques_id);
     $('#ans-submit').on('click', function (){
@@ -14,9 +16,7 @@ function submit(ques_id) {
         success: function(result) {
             if(result) {
                 console.log(result);
-                result = JSON.parse(result);
-                console.log(result['status']);
-                console.log(result.message);
+                append(result);
             } else {
                 console.log('Problem with ajax');
             }
@@ -34,11 +34,7 @@ function add_ans(ques_id, ans_text) {
         },
         success: function(result) {
             if(result) {
-                console.log(result);
-                result = JSON.parse(result);
-                console.log(result['status']);
-                console.log(result.message);
-                append();
+                submit(ques_id);
             } else {
                 console.log('Problem with ajax');
             }
@@ -46,10 +42,12 @@ function add_ans(ques_id, ans_text) {
     });
 }
 
-function append() {
-    for (var i = answers.length - 1; i >= 0; i--) {
-        $('#ans ul').append('<li>' + answers[i].answer + '</li>')
+function append(result) {
+    if ($('.ans-list')) {
+        $('.ans-list').remove();
     }
-    };
-    
+    console.log(result);
+    for (var i = result.answers.length - 1; i >= 0; i--) {
+        $('#ans ul').append('<li class="ans-list">' + result.answers[i].answer + '</li>');
+    }
 }
