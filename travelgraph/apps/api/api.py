@@ -164,3 +164,14 @@ def get_answers(question_id):
     result = models_answers.get_all_answers(question_id)
 
     return jsonify(result)
+
+
+@app.route('/api/content/get_question/<question_id>/')
+def get_question(question_id):
+    '''
+    Retrieve a question with a given id
+    '''
+
+    result = models_questions.get_question(question_id)
+
+    return jsonify(result)

@@ -57,7 +57,7 @@ def get_question(question_id):
                     WHERE question_id = '{0}' """.format(question_id)
 
     cursor.execute(query)
-    result = cursor.fetchall()
+    result = cursor.fetchone()
 
     if result:
         response.update({

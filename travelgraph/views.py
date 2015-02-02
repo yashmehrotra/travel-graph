@@ -27,3 +27,8 @@ def cs():
 @app.route('/ques')
 def ques():
     return render_template('question.html')
+
+
+@app.route('/ques/<ques_id>/')
+def ques_id(ques_id):
+    return render_template('ques_id.html')
