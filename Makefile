@@ -7,9 +7,3 @@ run:
 
 lint:
 	@sh bin/lint.sh
-
-start_db:
-	@~/Downloads/neo4j-community-2.1.6/bin/neo4j start
-
-stop_db:
-	@~/Downloads/neo4j-community-2.1.6/bin/neo4j stop

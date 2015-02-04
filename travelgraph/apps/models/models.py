@@ -107,8 +107,8 @@ def create_user(email, method=None, **kwargs):
             cursor.execute(query)
             postgre.commit()
 
-            return json.dumps({'status':'success','message':'user added through facebook'})
-    
+            return json.dumps({'status': 'success','message': 'user added through facebook'})
+
     return 'Done, also add exception here'
 
 
@@ -125,19 +125,19 @@ def auth_user(email, method=None, **kwargs):
         '''
 
         password = hashlib.md5(kwargs.get('password')).hexdigest()
-        
-        query = """ SELECT * FROM "user" 
+
+        query = """ SELECT * FROM "user"
             WHERE email = '{0}' AND
             password = '{1}' """.format(email, password)
 
         cursor.execute(query)
         result = cursor.fetchall()
 
-        # Email Password combination does not match 
+        # Email Password combination does not match
         if len(result) == 0:
             response.update({
-                'status':'failed',
-                'error':'Email Password combination does not match'
+                'status': 'failed',
+                'error':' Email Password combination does not match'
             })
 
             return response
@@ -145,10 +145,10 @@ def auth_user(email, method=None, **kwargs):
         else:
             # Start session here
             response.update({
-                'status':'success',
-                'message':'user-info is correct',
-                'user_id':result[0]['user_id'],
-                'username':result[0]['name']
+                'status': 'success',
+                'message': 'user-info is correct',
+                'user_id': result[0]['user_id'],
+                'username': result[0]['name']
             })
             return response
 

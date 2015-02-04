@@ -17,6 +17,7 @@ def create_session(email):
     session['user_id']    = result['user_id']
     session['username']   = result['name']
     session['api_key']    = result['api_key']
+    session['email']      = result['email']
     session['first_name'] = result['first_name']
     session['last_name']  = result['last_name']
 
@@ -26,4 +27,4 @@ def create_session(email):
 
 #No attributes cause we are destroying the current session
 def destroy_session():
-    pass
+    session.clear()
