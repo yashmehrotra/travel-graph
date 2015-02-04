@@ -3,6 +3,7 @@ import pdb
 
 from travelgraph import app
 from travelgraph.apps.models import models_questions
+from travelgraph.apps.auth import login_required
 
 
 @app.route('/')
@@ -26,11 +27,13 @@ def cs():
 
 
 @app.route('/ques')
+@login_required
 def ques():
     return render_template('question.html')
 
 
 @app.route('/ques/<ques_id>/')
+@login_required
 def ques_id(ques_id):
     data = models_questions.get_question(ques_id)
     return render_template('ques_id.html', data=data)
