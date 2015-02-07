@@ -196,6 +196,10 @@ html { overflow-y: scroll; }
  img{max-width:100%;vertical-align:middle;display:inline-block} 
 
  .icon-box > img{width:100px;height:100px;vertical-align:middle;display:inline-block} 
+ .icon-box#connect-icon-box > img{width:80px;} 
+ .icon-box#community-icon-box > img{width:75px;} 
+ .icon-box#discover-icon-box > img{width:105px;} 
+ .icon-box#explore-icon-box > img{width:85px;} 
 
  .w-mobile *{background-attachment:scroll !important} 
 
