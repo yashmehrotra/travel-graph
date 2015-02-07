@@ -1,15 +1,85 @@
 <!DOCTYPE html>
-<script src="{{ url_for('static', filename='javascripts/jquery-2.1.3.min.js') }}"></script>
-<script src="{{ url_for('static', filename='javascripts/signup.js') }}"></script>
-<body>
-    <h1>Signup</h1>
-    Enter your details<br>
-    Email :<input id="email" type="email" name="email" /><br>
-    Password :<input id="password" type="password" name="password" /><br>
-    First Name :<input id="first_name" type="text" name="first_name" /><br>
-    Last Name :<input id="last_name" type="text" name="last_name" /><br>
-    <button onclick="submit()">Login</button><br>
-    <h1>Facebook</h1>
-    <fb:login-button scope="public_profile,email" onlogin="checkLoginState();"></fb:login-button>
-</body>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Ghoom - Take up a Traveller Name for Yourself</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    
+    <link rel="stylesheet" type="text/css" href="../static/stylesheets/normal.css">
+    <link rel="stylesheet" type="text/css" href="../static/stylesheets/style.css">
+    <link rel="stylesheet" type="text/css" href="../static/stylesheets/headhesive.css">
+
+    <!-- START MOBILE DETECT -->
+    <script>if (/mobile/i.test(navigator.userAgent)) document.documentElement.className += ' w-mobile';</script>
+    <!-- END MOBILE DETECT -->
+
+    <!--[if lt IE 9]><script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7/html5shiv.min.js"></script><![endif]-->
+    <script src="{{ url_for('static', filename='javascripts/jquery-2.1.3.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='javascripts/signup.js') }}"></script>
+    
+  </head>
+
+  <body>
+
+    <section>
+      <div class="banner">
+	<div class="w-container container">
+	  <div class="w-row">
+            <div class="w-col w-col-3 logo">
+	      <a href="index.html"><img class="logo" src="../static/images/logo.png" alt="GHOOM"></a>
+            </div>
+            <div class="w-col w-col-9">
+	      <div class="w-nav navbar" data-collapse="medium" data-animation="default" data-duration="400" data-contain="1">
+		<div class="w-container nav">
+		  <nav class="w-nav-menu nav-menu" role="navigation">
+                    <a class="w-nav-link menu-li" href="index.html#home">HOME</a>
+                    <a class="w-nav-link menu-li" href="index.html#service">SERVICES</a>
+                    <a class="w-nav-link menu-li" href="index.html#contact">CONTACT</a>
+		    <a class="w-nav-link menu-li" href="signup.html">SIGNUP</a>
+		  </nav>
+		  <div class="w-nav-button">
+                    <div class="w-icon-nav-menu"></div>
+		  </div>
+		</div>
+	      </div>
+            </div>
+	  </div>
+	</div>
+      </div>
+    </section>
+
+    
+    <div class="row-back">
+      
+      <div class="w-container wrap">
+	<div class="center">
+
+	  <h1 class="underline">Sign up</h1>
+	  <p>Enter the details below to sign up</p>
+
+	</div>
+
+	<div class="w-col w-col-6">
+	  <div class="w-form">
+	    
+	    <form action="" id="sign-up-form">
+	      <input placeholder="Email" class="w-input" id="email" type="email" name="email" /><br>
+	      <input placeholder="Password" class="w-input" id="password" type="password" name="password" /><br>
+	      <input placeholder="First Name" class="w-input" id="first_name" type="text" name="first_name" /><br>
+	      <input placeholder="Last Name" class="w-input" id="last_name" type="text" name="last_name" /><br>
+	      <button class="button animated fadeInUp delay-1s" onclick="submit()">Sign up</button>
+	    </form>
+	    
+	  </div>
+	</div>
+
+	<div class="w-col w-col-6">
+	  <h3>Facebook</h3>
+	  <fb:login-button scope="public_profile,email" onlogin="checkLoginState();"></fb:login-button>
+	</div>
+	
+      </div>
+    </div>
+
+  </body>
 </html>

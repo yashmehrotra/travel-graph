@@ -19,82 +19,46 @@
     <link rel="stylesheet" type="text/css" href="../static/stylesheets/fontello.css">
     <link rel="stylesheet" type="text/css" href="../static/stylesheets/fontello-ie7.css">
 
-    <!-- START MAGNIFIC POPUP STYLESHEET -->
-    <link rel="stylesheet" type="text/css" href="../static/stylesheets/magnific-popup.css">
-    <!-- END MAGNIFIC POPUP STYLESHEET -->
-
-    <!-- LOAD GOOGLE FONT OPEN SANS -->
-    <link href="http://fonts.googleapis.com/css?family=Open+Sans:400italic,300,400,600,700" rel="stylesheet" type="text/css">
-    <!-- END GOOGLE FONT OPEN SANS -->
-    
-
-    <!-- START AJAX WEBFONTS -->
-    <script src="https://ajax.googleapis.com/ajax/libs/webfont/1.4.7/webfont.js"></script>
-    <!-- END AJAX WEBFONTS -->
-
     <!-- START MOBILE DETECT -->
     <script>if (/mobile/i.test(navigator.userAgent)) document.documentElement.className += ' w-mobile';</script>
     <!-- END MOBILE DETECT -->
 
-    <!-- START FAVICON -->
     <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
-    <!-- EDN FAVICON -->
     
     <!--[if lt IE 9]><script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7/html5shiv.min.js"></script><![endif]-->
 
-  </head><!-- END HEAD -->
-  <body> <!-- START BODY TAG -->
-    
+  </head>
+  <body>
+
     <div tabindex="1000" style="overflow-y: auto;" id="boxscroll">
 
-      <!-- CHANGEABLE UNIQUE SECTOIN ID -->
       <section id="home">
-
-	<!-- START FIXED HEADER DIV -->
 	<div class="banner">
-	  <!-- START CONTAINER -->
 	  <div class="w-container container">
 	    <div class="w-row">
-
-              <!-- START COLUMN 3 -->
               <div class="w-col w-col-3 logo">
-		<!-- START LOGO -->
-		<a href="javascript:window.location.href=window.location.href"><img class="logo" src="../static/images/logo.png" alt="GHOOM"></a>
-		<!-- END LOGO -->
-              </div><!-- END COLUMN 3 -->
-	      
-              <!-- START COLUMN 9 -->
+		<a href="index.html"><img class="logo" src="../static/images/logo.png" alt="GHOOM"></a>
+              </div>
               <div class="w-col w-col-9">
-
-		<!-- START NAVIGATION -->
 		<div class="w-nav navbar" data-collapse="medium" data-animation="default" data-duration="400" data-contain="1">
-		  <div class="w-container nav"><!-- START CONTAINER -->
-
+		  <div class="w-container nav">
 		    <nav class="w-nav-menu nav-menu" role="navigation">
                       <a class="w-nav-link menu-li" href="#home">HOME</a>
                       <a class="w-nav-link menu-li" href="index.html#service">SERVICES</a>
                       <a class="w-nav-link menu-li" href="index.html#contact">CONTACT</a>
+		      <a class="w-nav-link menu-li" href="signup.html">SIGNUP</a>
 		    </nav>
-		    
-		    <!-- START MOBILE NAVIGATION BUTTON * DO NOT DELETE THIS DIV* -->
 		    <div class="w-nav-button">
                       <div class="w-icon-nav-menu"></div>
-		    </div><!-- END MOBILE NAVIGATION BUTTON -->
-
+		    </div>
 		  </div>
-		  <!-- END CONTAINER -->
 		</div>
-		<!-- END NAVIGATION -->
               </div>
-              <!-- END COLUMN 9 -->
 	    </div>
 	  </div>
-	  <!-- END CONTAINER -->
 	</div>
-	<!-- END FIXED HEADER DIV -->
       </section>
-      <!-- END SECTION -->
-      <!-- END HEADER -->
+
 
       <div class="header-parallax" data-stellar-background-ratio="0.5">
 	<div class="slidersection">
@@ -104,18 +68,16 @@
 	    <div class="center fixed-content">
 	      <div class="center-fix">
 		<h1 class="underline animated fadeInDown">GHOOM</h1>
-		<h4 class="animated fadeInUp delay-05s" style="margin-bottom: 50px;">Take up a traveller name for yourself <!-- <strong class="green">Carino Technologies</strong> --></h4>
+		<h4 class="animated fadeInUp delay-05s" style="margin-bottom: 50px;">Take up a traveller name for yourself</h4>
 
-		<form action="">
-		  
+		<form action="" id="sign-up-form-2">
 		  <label for="username"></label>
-		  <input id="username" class="w-input" name="user_name" type="text" placeholder="Username">
+		  <input id="username" class="w-input animated fadeInUp" name="user_name" type="text" placeholder="Username">
 		  <label for="password"></label>
-		  <input id="password" class="w-input" name="user_pass" type="password" placeholder="Password">
-		  
+		  <input id="password" class="w-input animated fadeInUp" name="user_pass" type="password" placeholder="Password">
 		</form>
 		
-		<a class="button animated fadeInUp delay-1s" href="index.html#features" id="sign-up" style=""><span><i class="cogelegance-icons-"></i></span>Sign up</a><a class="button border animated fadeInUp delay-1s" href="index.html#contact">Login</a>
+		<a class="button animated fadeInUp delay-1s" href="signup.html" id="sign-up" style=""><span><i class="cogelegance-icons-"></i></span>Sign up</a><a class="button border animated fadeInUp delay-1s" href="index.html#contact">Login</a>
 	      </div>
 	    </div>
 	  </div>
@@ -124,17 +86,20 @@
 
     </div>
 
+    <!--///////////////////////////////////////////////////////
 
+	// Graphical Icons section 
+
+	//////////////////////////////////////////////////////////-->
+    
     <div id="service">
 
       <div class="row-gree">
-
 	<div class="w-container wrap">
           <div class="center">
             <h1 class="underline">OUR SERVICE</h1>
           </div>
         </div>
-
       </div>
 
       <div class="row-back">
@@ -142,99 +107,58 @@
 	<div class="w-container wrap-normal">
 
           <div class="center">
-
             <h2>WHAT <span class="green">WE</span> DO</h2>
-
-            <p>lorem ipsum metea data, what a lovely traeat to eyes</p>
-
+            <p>ADD SOME DESCRIPTION ...</p>
 	  </div>
 
           <div class="w-col w-col-4">
-
             <div class="icon-box">
-
               <img src="../static/images/home-graphic-icons/experience-new.svg" alt="share">
-              <!-- <div class="icon-svg"></div> -->
-
               <h3 class="underline">share</h3>
-
               <p>Share your travel experiences with the travel community. Maps, Trails, Pictures, Videos, and many ways to storyboard your journey !</p>
-
             </div>
-
           </div>
 
           <div class="w-col w-col-4">
-
             <div class="icon-box" id="connect-icon-box">
-
               <img src="../static/images/home-graphic-icons/connect-new.svg" alt="connect">
-
               <h3 class="underline">connect</h3>
-
               <p>Get in touch with other travelers and see where they are, where they've been, and get invited on journeys !</p>
-
             </div>
-
           </div>
 
           <div class="w-col w-col-4">
-
             <div class="icon-box" id="community-icon-box">
-
               <img src="../static/images/home-graphic-icons/enthusiasts-new.svg" alt="community">
-
               <h3 class="underline">community</h3>
-
               <p>Engage yourself with different travel & adventure communities and groups where you get to contribute, teach and learn !</p>
-
             </div>
-
           </div>
 
-
           <div class="w-col w-col-4">
-
             <div class="icon-box" id="discover-icon-box">
-
               <img src="../static/images/home-graphic-icons/discover-new.svg" alt="discover">
-
               <h3 class="underline">discover</h3>
-
               <p>Discover what other travelers are experiencing. Places, adventures, stories, people and more</p>
-
             </div>
-
           </div>
 
           <div class="w-col w-col-4">
-
             <div class="icon-box">
-
               <img src="../static/images/home-graphic-icons/adventure-new.svg" alt="adventure">
-
               <h3 class="underline">adventure</h3>
-
               <p>Get resources to Adventures, List as a Guide if you have the experience, Find and Join other Expeditions !</p>
-
             </div>
-
           </div>
 
           <div class="w-col w-col-4">
-
             <div class="icon-box" id="explore-icon-box">
-
               <img src="../static/images/home-graphic-icons/find-new.svg" alt="explore">
-
               <h3 class="underline">explore</h3>
-
               <p>Find Places, Gears, People and just about anything ! Get your questions out to the Travelers. Find what you're looking for. </p>
-
             </div>
-
           </div>
-
+	  
 	</div>
 
       </div>
@@ -242,13 +166,11 @@
     </div>
 
 
-
     <!--///////////////////////////////////////////////////////
 
 	// Contact section 
 
 	//////////////////////////////////////////////////////////-->
-
 
 
     <div id="contact">
@@ -263,15 +185,7 @@
               <div class="social-footter">
                 <i class="facebookelegance-icons-"></i>
                 <i class="twitter-birdelegance-icons-"></i>
-                <!-- <i class="vimeoelegance-icons-"></i> -->
-                <!-- <i class="friendfeedelegance-icons-"></i> -->
-                <!-- <i class="deviantartelegance-icons-"></i> -->
-                <!-- <i class="lastfmelegance-icons-"></i> -->
                 <i class="linkedinelegance-icons-"></i>
-                <!-- <i class="picasaelegance-icons-"></i> -->
-                <!-- <i class="wordpresselegance-icons-"></i> -->
-                <!-- <i class="instagramelegance-icons-"></i> -->
-                <!-- <i class="tumblrelegance-icons-"></i> -->
               </div>
 
               <div class="w-form">
@@ -325,10 +239,8 @@
 
 	//////////////////////////////////////////////////////////-->  
 
-
-
     <div class="footer row-back">
-      <div class="w-container wrap-normal center">© <span class="green"><a href="javascript:window.location.href=window.location.href">Ghoom</a></span> - 2015</div>
+      <div class="w-container wrap-normal center">© <span class="green"><a href="index.html">Ghoom</a></span> - 2015</div>
     </div>
 
     <!--///////////////////////////////////////////////////////
@@ -338,22 +250,9 @@
 	//////////////////////////////////////////////////////////-->
 </div>
 
-
 <script src="../static/javascripts/jquery.js"></script>
-<!-- <script src="../static/javascripts/modernizr.js"></script> -->
 <script src="../static/javascripts/normal.js"></script>
-<!-- <script src="../static/javascripts/carousels.js"></script> -->
-<!-- <script src="../static/javascripts/jquery.stellar.js"></script> -->
-<!-- <script src="../static/javascripts/classie.js"></script> -->
-<!-- <script src="../static/javascripts/jquery.mixitup.js"></script> -->
-<!-- <script src="../static/javascripts/testimonials.js"></script> -->
-<!-- <script src="../static/javascripts/jquery.nicescroll.js"></script> -->
-<!-- <script src="../static/javascripts/rotating-text.js"></script> -->
-<!-- <script src="../static/javascripts/jquery.magnific-popup.js"></script> -->
-<!-- <script src="../static/javascripts/headhesive.min.js"></script> -->
-<!-- <script src="../static/javascripts/waypoints.min.js"></script> -->
 <script src="../static/javascripts/scripts.js"></script>
 
 </body>
-
 </html>

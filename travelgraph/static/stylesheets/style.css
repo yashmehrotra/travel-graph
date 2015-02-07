@@ -951,8 +951,13 @@ top: 1px;
 }
 
 
-#username, #password {
+#sign-up-form-2 > input {
   width: 45%;
+  margin: auto;
+}
+
+#sign-up-form > input {
+  width: 100%;
   margin: auto;
 }
 
