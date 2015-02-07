@@ -80,3 +80,14 @@ def api_users():
         x += '\n'
 
     return x
+
+
+@app.route('/api/user/<user_id>/')
+def api_user(user_id):
+    '''
+    Stuff
+    '''
+
+    result = models.user_details(user_id)
+
+    return result

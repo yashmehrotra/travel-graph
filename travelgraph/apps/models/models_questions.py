@@ -148,3 +148,39 @@ def view_all_questions():
     })
 
     return response
+
+
+def get_user_questions(user_id):
+    '''
+    Get all the questions asked by a specific user
+    '''
+
+    response = {
+        'questions': [],
+    }
+    
+    query = """ SELECT * FROM "questions"
+                WHERE user_id = '{0}' """.format(user_id)
+
+    cursor.execute(query)
+
+    result = cursor.fetchall()
+
+    if result:
+        for question in result:
+            response['questions'].append({
+                'question_id': question['question_id'],
+                'question_text': question['question_text'],
+                'question_desc': question['question_desc'],
+                'question_tags': json.loads(question['question_tags']),
+                'asked_by_user_id': question['user_id']
+            })
+
+    response.update({
+        'status':'success',
+        'message':'{0} question(s) found'.format(len(response['questions'])),
+    })
+
+    return response
+
+

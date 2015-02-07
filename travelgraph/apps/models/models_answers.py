@@ -75,3 +75,11 @@ def get_all_answers(question_id):
     })
 
     return response
+
+
+def get_user_answer(user_id, question_id=None):
+    '''
+    asdasd
+    '''
+
+    pass
