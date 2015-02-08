@@ -82,4 +82,20 @@ def get_user_answer(user_id, question_id=None):
     asdasd
     '''
 
-    pass
+    response = {
+        'answers'
+    }
+
+    if not question_id:
+        '''
+        We Want all of the user's answers
+        '''
+
+        query = """ SELECT * FROM "answers"
+                    WHERE user_id = '{0}' """.format(user_id)
+
+        cursor.execute(query)
+
+        result = cursor.fetchall()
+
+        
