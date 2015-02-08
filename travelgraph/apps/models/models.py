@@ -201,23 +201,25 @@ def user_details(user_id):
     Load user specific details for his/her profile
     '''
 
-    response = {}
+    pass
+    
+    # response = {}
 
-    query_user_data = """ SELECT * FROM "user"
-                          WHERE user_id = '{0}' """.format(user_id)
+    # query_user_data = """ SELECT * FROM "user"
+    #                       WHERE user_id = '{0}' """.format(user_id)
 
-    cursor.execute(query)
-    user_data = cursor.fetchone()
+    # cursor.execute(query)
+    # user_data = cursor.fetchone()
 
-    user_questions = models_questions.get_user_questions['questions']
+    # user_questions = models_questions.get_user_questions['questions']
 
-    query_user_answers = """ SELECT * FROM "answers"
-                             WHERE user_id = '{0}' """.format(user_id)
+    # query_user_answers = """ SELECT * FROM "answers"
+    #                          WHERE user_id = '{0}' """.format(user_id)
 
-    cursor.execute(query)
-    user_answers = cursor.fetchall()
+    # cursor.execute(query)
+    # user_answers = cursor.fetchall()
 
-    user_answered_questions = []
+    # user_answered_questions = []
 
-    for answer in user_answers:
-        user_answered_questions.append(answer[])
+    # for answer in user_answers:
+    #     user_answered_questions.append(answer[])

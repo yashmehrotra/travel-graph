@@ -79,7 +79,7 @@ def get_all_answers(question_id):
 
 def get_user_answer(user_id, question_id=None):
     '''
-    asdasd
+    Get either all of the user's answers or Get his answer for a specific question
     '''
 
     response = {
@@ -98,4 +98,4 @@ def get_user_answer(user_id, question_id=None):
 
         result = cursor.fetchall()
 
-        
+    pass

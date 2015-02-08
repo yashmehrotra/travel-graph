@@ -29,6 +29,7 @@ function submit() {
     var first_name = $('#first_name').val();
     var last_name  = $('#last_name').val();
     var method     = 'normal';
+    console.log(email,password,first_name);
 
     post_to_api(email, password, first_name, last_name, method);
 }
