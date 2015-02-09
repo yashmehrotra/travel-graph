@@ -13,7 +13,8 @@
     <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
 
     <link href="../static/stylesheets/uikit.min.css" rel="stylesheet"/>
-    <link rel="stylesheet" href="../static/stylesheets/chosen-style.css">
+    <link href="../static/stylesheets/uikit.docs.min.css" rel="stylesheet"/>
+    <!-- <link rel="stylesheet" href="../static/stylesheets/chosen-style.css"> -->
     <link rel="stylesheet" href="../static/stylesheets/prism.css">
     <link rel="stylesheet" href="../static/stylesheets/chosen.css">
     
@@ -30,6 +31,60 @@
     </script>
   </head>
   <body>
-    
+    <div style="padding: 20px 0;">
+      <div class="uk-container uk-container-center">
+	
+	<div class="uk-grid">
+	  <!-- FOR USER NAME, AVATAR AND RANK -->
+	  <div class="uk-width-1-5">
+	    
+	    <article class="uk-comment">
+	      <header class="uk-comment-header">
+		<img class="uk-comment-avatar" alt="avatar" src="../static/images/placeholder_avatar.svg"/>
+		<h4 class="uk-comment-title">Author name</h4>
+		<div class="uk-badge uk-badge-warning uk-badge-mini">Rank</div>
+		
+	      </header>
+	    </article>
+
+	    <div class="uk-clearfix uk-margin-top uk-center">
+	      <button class="uk-button uk-button-small uk-button-primary" type="button">Follow</button>
+	    </div>
+	    
+	  </div>
+	  
+	  <!-- FOR QUES TEXT + OTHER DETAILS -->
+	  <div class="uk-width-4-5">
+	    <h3>What activities should be done in Rishikesh? I am with my family and I am looking forward to some economical destinations!</h3>
+
+	    <div class="uk-grid">
+	      <div class="uk-width-4-5">
+		<p>
+		  <button class="uk-button uk-button-mini" type="button">tag-1</button>
+		  <button class="uk-button uk-button-mini" type="button">tag-2</button>
+		  <button class="uk-button uk-button-mini" type="button">tag-3</button>
+		</p>
+		
+		<p>
+		  <button class="uk-button uk-button-mini" type="button">tag-1</button>
+		  <button class="uk-button uk-button-mini" type="button">tag-2</button>
+		</p>
+	      </div>
+
+	      <div class="uk-width-1-5">
+		<button class="uk-button uk-button-small uk-button-primary uk-margin-right uk-float-right" type="button">Subscribe</button>
+	      </div>
+	    </div>
+	    
+	    <hr>
+	    <p>
+	      <button class="uk-button uk-button-success" type="button">Answer</button>
+	    </p>
+	    
+	  </div>
+	  
+	</div>
+      </div>
+    </div>
   </body>
 </html>
