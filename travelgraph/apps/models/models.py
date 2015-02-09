@@ -7,7 +7,12 @@ from datetime import datetime
 from travelgraph import settings
 from travelgraph.apps.database import postgre, cursor
 
-from travelgraph.apps.models import models_questions
+from travelgraph.apps.models import (
+        models_questions,
+        models_answers,
+        models_tags,
+    )
+
 '''
 Types of methods - 
 1.normal
@@ -25,6 +30,27 @@ def get_random_word(wordLen):
     return word
 
 
+def get_unique_username(first_name, last_name):
+    '''
+    This is to generate a unique username
+    '''
+
+    username = '{0}-{1}-1'.format(first_name.lower(), last_name.lower())
+
+    query = """ SELECT * FROM "user"
+                WHERE name = '{0}' """.format(username)
+
+    cursor.execute(query)
+
+    total_results = len(cursor.fetchall())
+
+    username = username.split('-')
+    username[2] = str(total_results+1)
+    username = '-'.join(username)
+
+    return username
+
+
 def create_user(email, method=None, **kwargs):
     '''
     This function adds user to the database
@@ -38,7 +64,8 @@ def create_user(email, method=None, **kwargs):
 
     # Add a function which sees how many users of the same name are there
     # Then add the no.
-    username = first_name.lower() + '-' +last_name.lower()
+    
+    username = get_unique_username(first_name, last_name)
 
     # MD5 Hashing, because ethics
     password = hashlib.md5(kwargs.get('password')).hexdigest()
@@ -196,30 +223,75 @@ def user_follows_user(user_id, api_key, user_id_to_follow):
     return response
 
 
+def get_followers(user_id):
+    '''
+    Get a list of all the user_ids that follow the given user_id
+    '''
+
+    response = []
+
+    query = """ SELECT * FROM "user_following"
+                WHERE follows_user_id = '{0}' """.format(user_id)
+
+    cursor.execute(query)
+    result = cursor.fetchall()
+
+    for row in result:
+        response.append(row['user_id'])
+
+    return response
+
+
+def get_following(user_id):
+    '''
+    Get a list of all the user_ids that are followed by the given user_id
+    '''
+
+    response = []
+
+    query = """ SELECT * FROM "user_following"
+                WHERE user_id = '{0}' """.format(user_id)
+
+    cursor.execute(query)
+    result = cursor.fetchall()
+
+    for row in result:
+        response.append(row['follows_user_id'])
+
+    return response
+
+
 def user_details(user_id):
     '''
     Load user specific details for his/her profile
     '''
 
+    response = {
+        'user_id': user_id,
+    }
+
+    query_user_data = """ SELECT * FROM "user"
+                          WHERE user_id = '{0}' """.format(user_id)
+
+    cursor.execute(query)
+    user_data = cursor.fetchone()
+
+    user_questions = models_questions.get_user_questions(user_id)['questions']
+
+    user_answers = models_answers.get_user_answer(user_id)['answers']
+
+    user_answered_question_ids = [ question 
+                                   for question 
+                                   in user_answers['question_id'] ]
+
+    user_answered_questions = [ models_questions.get_question(question)
+                                for question
+                                in user_answered_question_ids ]
+
+    user_following = get_following(user_id)
+
+    user_followers = get_followers(user_id)
+
+    user_tags = models_tags.get_user_tags(user_id)['tags']
+
     pass
-    
-    # response = {}
-
-    # query_user_data = """ SELECT * FROM "user"
-    #                       WHERE user_id = '{0}' """.format(user_id)
-
-    # cursor.execute(query)
-    # user_data = cursor.fetchone()
-
-    # user_questions = models_questions.get_user_questions['questions']
-
-    # query_user_answers = """ SELECT * FROM "answers"
-    #                          WHERE user_id = '{0}' """.format(user_id)
-
-    # cursor.execute(query)
-    # user_answers = cursor.fetchall()
-
-    # user_answered_questions = []
-
-    # for answer in user_answers:
-    #     user_answered_questions.append(answer[])

@@ -82,15 +82,14 @@ def get_user_answer(user_id, question_id=None):
     Get either all of the user's answers or Get his answer for a specific question
     '''
 
-    response = {
-        'answers'
-    }
+    response = {}
 
     if not question_id:
         '''
         We Want all of the user's answers
         '''
 
+        response['answers'] = []
         query = """ SELECT * FROM "answers"
                     WHERE user_id = '{0}' """.format(user_id)
 
@@ -98,4 +97,47 @@ def get_user_answer(user_id, question_id=None):
 
         result = cursor.fetchall()
 
-    pass
+        if result:
+            for row in result:
+                response['answers'].append({
+                    'answer_id': row['answer_id'],
+                    'answer': row['answer'],
+                    'question_id': row['question_id'],
+                    'user_id': row['user_id'],
+                })
+
+            response.update({
+                'status': 'success',
+                'message': '{0} answer(s) found'.format(len(response['answers'])),
+            })
+
+        return response
+
+    else:
+        '''
+        We want a user's answer for a specific question
+        '''
+
+        response['answers'] = {}
+
+        query = """ SELECT * FROM "answers"
+                    WHERE user_id = '{0}' AND
+                    question_id = '{1}' """.format(user_id, question_id)
+
+        cursor.execute(query)
+
+        result = cursor.fetchone()
+
+        if result:
+            response['answers'].update({
+                'answer_id': result['answer_id'],
+                'answer': result['answer'],
+                'question_id': result['question_id'],
+                'user_id': result['user_id']
+            })
+
+            response.update({
+                'status': 'success',
+            })
+
+        return response

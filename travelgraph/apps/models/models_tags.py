@@ -7,7 +7,7 @@ from travelgraph.apps.database import postgre, cursor
 
 def get_tag_id(tag):
     '''
-    Retrieves tag_id of a given tag
+    Retrieves tag_id of a given tag, if no tag exists then a new tag is creaed
     '''
     
     query = """ SELECT tag_id FROM "tags" 
@@ -65,3 +65,55 @@ def user_subscribes_tag(user_id, api_key, tag_id):
     })
 
     return response
+
+
+def get_tag(tag_id):
+    '''
+    Get tag value corresponding to a tag_id
+    '''
+
+    response = {}
+
+    query = """ SELECT * FROM "tags"
+                WHERE tag_id = '{0}' """.format(tag_id)
+
+    cursor.execute(query)
+
+    result = cursor.fetchone()
+
+    response.update({
+        'tag_id': result['tag_id'],
+        'tag_value': result['tag_value']
+    })
+
+    return response
+
+
+def get_user_tags(user_id):
+    '''
+    Retrieve all the tag_ids and tags followed by a user
+    '''
+
+    # Format of response['tags'] = [ {tag_id,tag}, {tag_id,tag}, {tag_id,tag},... ]
+
+    response = {
+        'user_id': user_id,
+        'tags': [],
+    }
+
+    query = """ SELECT * FROM "tag_subscribers"
+                WHERE user_id = '{0}' """.format(user_id)
+
+    cursor.execute(query)
+    result = cursor.fetchall()
+
+    if result:
+        response['tags'] = [ get_tag(tag['tag_id']) for tag in result ]
+
+    response.update({
+        'status': 'success',
+        'message': '{0} tag(s) found'.format(len(response['tags']))
+    })
+
+    return response
+
