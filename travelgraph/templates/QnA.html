@@ -14,7 +14,7 @@
 
     <link href="../static/stylesheets/uikit.min.css" rel="stylesheet"/>
     <link href="../static/stylesheets/uikit.docs.min.css" rel="stylesheet"/>
-    <!-- <link rel="stylesheet" href="../static/stylesheets/chosen-style.css"> -->
+    <link rel="stylesheet" href="../static/stylesheets/chosen-style.css">
     <link rel="stylesheet" href="../static/stylesheets/prism.css">
     <link rel="stylesheet" href="../static/stylesheets/chosen.css">
     
@@ -22,11 +22,17 @@
     <script type="text/javascript" src="../static/javascripts/uikit.min.js"></script>
     <script src="../static/javascripts/chosen.jquery.js" type="text/javascript"></script>
     <script src="../static/javascripts/prism.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../../plugins/ckeditor/ckeditor.js" type="text/javascript"></script>
     <script type="text/javascript">
 
       $(function () {
-        $('select-box_selector').chosen();
+        $('#answer-tags-select').chosen();
+      
       });
+
+      function display_ans_textarea() {
+        $('#answer-textarea-grid').show();
+      }
       
     </script>
   </head>
@@ -41,9 +47,8 @@
 	    <article class="uk-comment">
 	      <header class="uk-comment-header">
 		<img class="uk-comment-avatar" alt="avatar" src="../static/images/placeholder_avatar.svg"/>
-		<h4 class="uk-comment-title">Author name</h4>
+		<h4 class="uk-comment-title">User name</h4>
 		<div class="uk-badge uk-badge-warning uk-badge-mini">Rank</div>
-		
 	      </header>
 	    </article>
 
@@ -72,18 +77,57 @@
 	      </div>
 
 	      <div class="uk-width-1-5">
-		<button class="uk-button uk-button-small uk-button-primary uk-margin-right uk-float-right" type="button">Subscribe</button>
+		<button class="uk-button uk-button-small uk-button-danger uk-margin-right uk-float-right" type="button">Subscribe</button>
 	      </div>
 	    </div>
 	    
 	    <hr>
 	    <p>
-	      <button class="uk-button uk-button-success" type="button">Answer</button>
+	      <button id="answer-btn" class="uk-button uk-button-success" type="button" data-uk-toggle="{target:'#answer-textarea-grid'}">Answer</button>
 	    </p>
 	    
 	  </div>
 	  
 	</div>
+
+	<!-- FOR ANSWERS TEXTAREA -->
+	<div id="answer-textarea-grid" class="uk-grid">
+	  <!-- USED AS A TEMPORARY FIX! -->
+	  <div class="uk-width-1-5"></div>
+	  
+	  <div class="uk-width-3-5">
+	    <!-- <form> -->
+
+	      <textarea id="answertext" name="answer-text">
+		Post Your Answer Here.
+	      </textarea>
+	      <script>
+		CKEDITOR.replace('answer-text');
+	      </script>
+	      
+	      <p>
+		<button class="uk-button uk-button-success uk-margin-top">Post</button>
+	      </p>
+
+	    <!-- </form> -->
+	  </div>
+
+	  <div class="uk-width-1-5">
+	    <select id="answer-tags-select" class="uk-width-1-1" name="answer-tags-select" multiple data-placeholder="add some tags..">
+	      <option value="tag-1">tag-1</option>
+	      <option value="tag-2">tag-2</option>
+	      <option value="tag-3">tag-3</option>
+	      <option value="tag-4">tag-4</option>
+	      <option value="tag-5">tag-5</option>
+	      <option value="tag-6">tag-6</option>
+	      <option value="tag-7">tag-7</option>
+	      <option value="tag-8">tag-8</option>
+	      <option value="tag-9">tag-9</option>
+	    </select>
+	  </div>
+	  
+	</div>
+	
       </div>
     </div>
   </body>
