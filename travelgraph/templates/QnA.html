@@ -14,7 +14,7 @@
 
     <link href="../static/stylesheets/uikit.min.css" rel="stylesheet"/>
     <link href="../static/stylesheets/uikit.docs.min.css" rel="stylesheet"/>
-    <link rel="stylesheet" href="../static/stylesheets/chosen-style.css">
+    <!-- <link rel="stylesheet" href="../static/stylesheets/chosen-style.css"> -->
     <link rel="stylesheet" href="../static/stylesheets/prism.css">
     <link rel="stylesheet" href="../static/stylesheets/chosen.css">
     
@@ -23,6 +23,7 @@
     <script src="../static/javascripts/chosen.jquery.js" type="text/javascript"></script>
     <script src="../static/javascripts/prism.js" type="text/javascript" charset="utf-8"></script>
     <script src="../../plugins/ckeditor/ckeditor.js" type="text/javascript"></script>
+    <script type="text/javascript" src="../static/javascripts/ques_id-1.html"></script>
     <script type="text/javascript">
 
       $(function () {
@@ -114,6 +115,7 @@
 	    <!-- </form> -->
 	  </div>
 
+	  <!-- FOR ADDITION OF TAGS FOR A QUESTION -->
 	  <div class="uk-width-1-5">
 	    <select id="answer-tags-select" class="uk-width-1-1" name="answer-tags-select" multiple data-placeholder="add some tags..">
 	      <option value="tag-1">tag-1</option>
@@ -126,6 +128,57 @@
 	      <option value="tag-8">tag-8</option>
 	      <option value="tag-9">tag-9</option>
 	    </select>
+	  </div>
+	  
+	</div>
+
+	<div class="uk-grid" id="ans-count">
+	  <!-- USED AS A TEMPORARY FIX! -->
+	  <div class="uk-width-1-5"></div>
+	  <div class="uk-width-3-5">
+	    <div class="uk-panel uk-panel-box uk-panel-box-primary">
+	      <h4>2 Answers</h4>
+	      <!-- <h4 class="uk-panel-title">2 Answers</h4> -->
+	    </div>
+	  </div>
+	</div>
+	
+	<!-- CURRENTLY HARD-CODED ANWERS SINCE QUES ID IS NOT KNOWN -->
+	<div class="uk-grid" id="answers-grid">
+
+	  <!-- USED AS A TEMPORARY FIX! -->
+	  <div class="uk-width-1-5"></div>
+
+	  <div class="uk-width-3-5">
+	    <hr>
+	    <!-- <div class="uk-panel"> -->
+
+	      <p>This is some random answer text.<br>Here is an (responsive)image:</p>
+	      <img alt="ans-img" class="uk-margin-bottom" src="../static/images/wbg6.jpg">
+	      <br>
+	      <p>
+		<a href="#">This</a> is a random link
+	      </p>
+	      
+	      <article class="uk-comment uk-width-3-5">
+		<header class="uk-comment-header">
+		  <img class="uk-comment-avatar" src="../static/images/placeholder_avatar.svg" alt="user-img">
+		  <!-- <h4 class="uk-comment-title">Answered by <a href="">Username</a></h4> -->
+		  <h5 class="uk-comment-title">Answered by <a href="">Username</a></h5>
+		  <ul class="uk-comment-meta">
+		    <li>
+		      <span>Answered at 9:30pm on 11 Feb 2015</span>
+		    </li>
+		  </ul>
+		</header>
+		<!-- <div class="uk-comment-body"></div> -->
+	      </article>
+	      
+	    <!-- </div> -->
+	  </div>
+
+	  <div class="uk-width-1-5">
+	    
 	  </div>
 	  
 	</div>
