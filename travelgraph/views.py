@@ -46,3 +46,9 @@ def ques_id(ques_id):
 def logout():
     resp = api_logout()
     return resp
+
+@app.route('/qna')
+def questions_n_answers():
+    return render_template('QnA.html')
+
+    

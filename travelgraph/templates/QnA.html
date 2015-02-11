@@ -1,229 +1,202 @@
-<!doctype html>
-<html lang="en">
-  <head>
+{% extends "base.html" %}
 
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+{% block script %}
+<script type="text/javascript">
+  $(function () {
+    $('#answer-tags-select').chosen();
+    $('.answered-tags-selected').chosen();
+    // var objEditor = CKEDITOR.instances["answertext"];
+  });
+</script>
+{% endblock %}
 
-    <title>Ghoom | Take up a Traveller Name for Yourself</title>
+{% block body %}
 
-    <meta name="description" content="" />
-    <meta name="keywords" content="" />
-    
-    <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
-
-    <link href="../static/stylesheets/uikit.min.css" rel="stylesheet"/>
-    <link href="../static/stylesheets/uikit.docs.min.css" rel="stylesheet"/>
-    <!-- <link rel="stylesheet" href="../static/stylesheets/chosen-style.css"> -->
-    <link rel="stylesheet" href="../static/stylesheets/prism.css">
-    <link rel="stylesheet" href="../static/stylesheets/chosen.css">
-    
-    <script type="text/javascript" src="../static/javascripts/jquery-2.1.3.min.js"></script>
-    <script type="text/javascript" src="../static/javascripts/uikit.min.js"></script>
-    <script src="../static/javascripts/chosen.jquery.js" type="text/javascript"></script>
-    <script src="../static/javascripts/prism.js" type="text/javascript" charset="utf-8"></script>
-    <script src="../../plugins/ckeditor/ckeditor.js" type="text/javascript"></script>
-    <script type="text/javascript" src="../static/javascripts/ques_id-1.html"></script>
-    <script type="text/javascript">
-
-      $(function () {
-        $('#answer-tags-select').chosen();
-        $('.answered-tags-selected').chosen();
-      });
-
-      // function display_ans_textarea() {
-        // $('#answer-textarea-grid').show();
-      // }
+  <div style="padding: 20px 0;">
+    <div class="uk-container uk-container-center">
       
-    </script>
-  </head>
-  <body>
-    <div style="padding: 20px 0;">
-      <div class="uk-container uk-container-center">
-	
-	<div class="uk-grid">
-	  <!-- FOR USER NAME, AVATAR AND RANK -->
-	  <div class="uk-width-1-5">
-	    
-	    <article class="uk-comment">
-	      <header class="uk-comment-header">
-		<img class="uk-comment-avatar" alt="avatar" src="../static/images/placeholder_avatar.svg"/>
-		<h4 class="uk-comment-title">User name</h4>
-		<div class="uk-badge uk-badge-warning uk-badge-mini">Rank</div>
-	      </header>
-	    </article>
+      <div class="uk-grid">
+	<!-- FOR USER NAME, AVATAR AND RANK -->
+	<div class="uk-width-1-5">
+	  
+	  <article class="uk-comment">
+	    <header class="uk-comment-header">
+	      <img class="uk-comment-avatar" alt="avatar" src="../static/images/placeholder_avatar.svg"/>
+	      <h4 class="uk-comment-title">User name</h4>
+	      <div class="uk-badge uk-badge-warning uk-badge-mini">Rank</div>
+	    </header>
+	  </article>
 
-	    <div class="uk-clearfix uk-margin-top uk-center">
-	      <button class="uk-button uk-button-small uk-button-primary" type="button">Follow</button>
-	    </div>
-	    
+	  <div class="uk-clearfix uk-margin-top uk-center">
+	    <button class="uk-button uk-button-small uk-button-primary" type="button">Follow</button>
 	  </div>
 	  
-	  <!-- FOR QUES TEXT + OTHER DETAILS -->
-	  <div class="uk-width-4-5">
-	    <h3>What activities should be done in Rishikesh? I am with my family and I am looking forward to some economical destinations!</h3>
-
-	    <div class="uk-grid">
-	      <div class="uk-width-4-5">
-		<p>
-		  <button class="uk-button uk-button-mini" type="button">tag-1</button>
-		  <button class="uk-button uk-button-mini" type="button">tag-2</button>
-		  <button class="uk-button uk-button-mini" type="button">tag-3</button>
-		</p>
-		
-		<p>
-		  <button class="uk-button uk-button-mini" type="button">tag-1</button>
-		  <button class="uk-button uk-button-mini" type="button">tag-2</button>
-		</p>
-	      </div>
-
-	      <div class="uk-width-1-5">
-		<button class="uk-button uk-button-small uk-button-danger uk-margin-right uk-float-right" type="button">Subscribe</button>
-	      </div>
-	    </div>
-	    
-	    <hr>
-	    <p>
-	      <button id="answer-btn" class="uk-button uk-button-success" type="button" data-uk-toggle="{target:'#answer-textarea-grid'}">Answer</button>
-	    </p>
-	    
-	  </div>
-	  
-	</div>
-
-	<!-- FOR ANSWERS TEXTAREA -->
-	<div id="answer-textarea-grid" class="uk-grid">
-
-	  <!-- USED AS A TEMPORARY FIX! -->
-	  <div class="uk-width-1-5"></div>
-	  
-	  <div class="uk-width-3-5">
-	    <!-- <form> -->
-
-	      <textarea id="answertext" name="answer-text">
-		Post Your Answer Here.
-	      </textarea>
-	      <script>
-		CKEDITOR.replace('answer-text');
-		var objEditor = CKEDITOR.instances["answertext"];
-	      </script>
-	      
-	      <p>
-		<button class="uk-button uk-button-success uk-margin-top">Post</button>
-	      </p>
-
-	    <!-- </form> -->
-	  </div>
-
-	  <!-- FOR ADDITION OF TAGS FOR A QUESTION -->
-	  <div class="uk-width-1-5">
-	    <select id="answer-tags-select" class="uk-width-1-1" name="answer-tags-select" multiple data-placeholder="add some tags..">
-	      <option value="tag-1">tag-1</option>
-	      <option value="tag-2">tag-2</option>
-	      <option value="tag-3">tag-3</option>
-	      <option value="tag-4">tag-4</option>
-	      <option value="tag-5">tag-5</option>
-	      <option value="tag-6">tag-6</option>
-	      <option value="tag-7">tag-7</option>
-	      <option value="tag-8">tag-8</option>
-	      <option value="tag-9">tag-9</option>
-	    </select>
-	  </div>
-	  
-	</div>
-
-	<div class="uk-grid" id="ans-count">
-	  <!-- USED AS A TEMPORARY FIX! -->
-	  <div class="uk-width-1-5"></div>
-	  <div class="uk-width-3-5">
-	    <div class="uk-panel uk-panel-box uk-panel-box-primary">
-	      <h4>2 Answers</h4>
-	    </div>
-	  </div>
 	</div>
 	
-	<!-- CURRENTLY HARD-CODED ANWERS SINCE QUES ID IS NOT KNOWN -->
-	<div class="uk-grid" id="answers-grid">
+	<!-- FOR QUES TEXT + OTHER DETAILS -->
+	<div class="uk-width-4-5">
+	  <h3>What activities should be done in Rishikesh? I am with my family and I am looking forward to some economical destinations!</h3>
 
-	  <!-- USED AS A TEMPORARY FIX! -->
-	    <div class="uk-width-1-5"></div>
-
-	    <div class="uk-width-3-5">
-	      <hr>
-	      <p>This is some random answer text.<br>Here is an (responsive)image:</p>
-	      <img alt="ans-img" class="uk-margin-bottom" src="../static/images/wbg6.jpg">
-	      <br>
+	  <div class="uk-grid">
+	    <div class="uk-width-4-5">
 	      <p>
-		<a href="#">This</a> is a random link
+		<button class="uk-button uk-button-mini" type="button">tag-1</button>
+		<button class="uk-button uk-button-mini" type="button">tag-2</button>
+		<button class="uk-button uk-button-mini" type="button">tag-3</button>
 	      </p>
 	      
-	      <article class="uk-comment uk-width-3-5">
-		<header class="uk-comment-header">
-		  <img class="uk-comment-avatar" src="../static/images/placeholder_avatar.svg" alt="user-img">
-		  <!-- <h4 class="uk-comment-title">Answered by <a href="">Username</a></h4> -->
-		  <h5 class="uk-comment-title">Answered by <a href="">Username</a></h5>
-		  <ul class="uk-comment-meta">
-		    <li>
-		      <span>Answered at 9:30pm on 11 Feb 2015</span>
-		    </li>
-		  </ul>
-		</header>
-	      </article>
-	      
+	      <p>
+		<button class="uk-button uk-button-mini" type="button">tag-1</button>
+		<button class="uk-button uk-button-mini" type="button">tag-2</button>
+	      </p>
 	    </div>
 
-	    <!-- FOR DISPLAYING TAGS IN ANSWER -->
 	    <div class="uk-width-1-5">
-	      <!-- <blockquote> -->
-		<select id="answer-1-tags-selected" class="answered-tags-selected uk-width-1-1" name="answer-tags-select" multiple>
-		  <option value="tag-2" selected="selected">tag-2</option>
-		  <option value="tag-4" selected="selected">tag-4</option>
-		  <option value="tag-5" selected="selected">tag-5</option>
-		</select>
-	      <!-- </blockquote> -->
+	      <button class="uk-button uk-button-small uk-button-danger uk-margin-right uk-float-right" type="button">Subscribe</button>
 	    </div>
-
+	  </div>
 	  
-	    <!-- 2ND ANSWER ..... -->
-	    
-
-	    <!-- USED AS A TEMPORARY FIX! -->
-	    <div class="uk-width-1-5"></div>
-
-	    <div class="uk-width-3-5">
-	      <hr>
-	      <p>This is some random answer text.<br>Here is an (responsive)image:</p>
-	      <img alt="ans-img" class="uk-margin-bottom" src="../static/images/wbg6.jpg">
-	      <br>
-	      <p>
-		<a href="#">This</a> is a random link
-	      </p>
-	      
-	      <article class="uk-comment uk-width-3-5">
-		<header class="uk-comment-header">
-		  <img class="uk-comment-avatar" src="../static/images/placeholder_avatar.svg" alt="user-img">
-		  <h5 class="uk-comment-title">Answered by <a href="">Username</a></h5>
-		  <ul class="uk-comment-meta">
-		    <li>
-		      <span>Answered at 9:30pm on 11 Feb 2015</span>
-		    </li>
-		  </ul>
-		</header>
-	      </article>
-	      
-	    </div>
-
-	    <!-- FOR DISPLAYING TAGS IN ANSWER -->
-	    <div class="uk-width-1-5 uk-margin-top">
-		<select id="answer-2-tags-selected" class="uk-width-1-1 answered-tags-selected" name="answer-tags-select" multiple>
-		  <option value="tag-4" selected="selected">tag-4</option>
-		  <option value="tag-5" selected="selected">tag-5</option>
-		</select>
-	    </div>
-	    
+	  <hr>
+	  <p>
+	    <button id="answer-btn" class="uk-button uk-button-success" type="button" data-uk-toggle="{target:'#answer-textarea-grid'}">Answer</button>
+	  </p>
+	  
 	</div>
 	
       </div>
+
+      <!-- FOR ANSWERS TEXTAREA -->
+      <div id="answer-textarea-grid" class="uk-grid">
+
+	<!-- USED AS A TEMPORARY FIX! -->
+	<div class="uk-width-1-5"></div>
+	
+	<div class="uk-width-3-5">
+	  <!-- <form> -->
+
+	  <textarea id="answertext" name="answer-text">
+	    Post Your Answer Here.
+	  </textarea>
+
+	  <script>
+	    CKEDITOR.replace('answer-text');
+	  </script>
+	  
+	  <p>
+	    <button class="uk-button uk-button-success uk-margin-top">Post</button>
+	  </p>
+
+	  <!-- </form> -->
+	</div>
+
+	<!-- FOR ADDITION OF TAGS FOR A QUESTION -->
+	<div class="uk-width-1-5">
+	  <select id="answer-tags-select" class="uk-width-1-1" name="answer-tags-select" multiple data-placeholder="add some tags..">
+	    <option value="tag-1">tag-1</option>
+	    <option value="tag-2">tag-2</option>
+	    <option value="tag-3">tag-3</option>
+	    <option value="tag-4">tag-4</option>
+	    <option value="tag-5">tag-5</option>
+	    <option value="tag-6">tag-6</option>
+	    <option value="tag-7">tag-7</option>
+	    <option value="tag-8">tag-8</option>
+	    <option value="tag-9">tag-9</option>
+	  </select>
+	</div>
+	
+      </div>
+
+      <div class="uk-grid" id="ans-count">
+	<!-- USED AS A TEMPORARY FIX! -->
+	<div class="uk-width-1-5"></div>
+	<div class="uk-width-3-5">
+	  <div class="uk-panel uk-panel-box uk-panel-box-primary">
+	    <h4>2 Answers</h4>
+	  </div>
+	</div>
+      </div>
+      
+      <!-- CURRENTLY HARD-CODED ANWERS SINCE QUES ID IS NOT KNOWN -->
+      <div class="uk-grid" id="answers-grid">
+
+	<!-- USED AS A TEMPORARY FIX! -->
+	<div class="uk-width-1-5"></div>
+
+	<div class="uk-width-3-5">
+	  <hr>
+	  <p>This is some random answer text.<br>Here is an (responsive)image:</p>
+	  <img alt="ans-img" class="uk-margin-bottom" src="../static/images/wbg6.jpg">
+	  <br>
+	  <p>
+	    <a href="#">This</a> is a random link
+	  </p>
+	  
+	  <article class="uk-comment uk-width-3-5">
+	    <header class="uk-comment-header">
+	      <img class="uk-comment-avatar" src="../static/images/placeholder_avatar.svg" alt="user-img">
+	      <!-- <h4 class="uk-comment-title">Answered by <a href="">Username</a></h4> -->
+	      <h5 class="uk-comment-title">Answered by <a href="">Username</a></h5>
+	      <ul class="uk-comment-meta">
+		<li>
+		  <span>Answered at 9:30pm on 11 Feb 2015</span>
+		</li>
+	      </ul>
+	    </header>
+	  </article>
+	  
+	</div>
+
+	<!-- FOR DISPLAYING TAGS IN ANSWER -->
+	<div class="uk-width-1-5">
+	  <!-- <blockquote> -->
+	  <select id="answer-1-tags-selected" class="answered-tags-selected uk-width-1-1" name="answer-tags-select" multiple>
+	    <option value="tag-2" selected="selected">tag-2</option>
+	    <option value="tag-4" selected="selected">tag-4</option>
+	    <option value="tag-5" selected="selected">tag-5</option>
+	  </select>
+	  <!-- </blockquote> -->
+	</div>
+
+	
+	<!-- 2ND ANSWER ..... -->
+	
+
+	<!-- USED AS A TEMPORARY FIX! -->
+	<div class="uk-width-1-5"></div>
+
+	<div class="uk-width-3-5">
+	  <hr>
+	  <p>This is some random answer text.<br>Here is an (responsive)image:</p>
+	  <img alt="ans-img" class="uk-margin-bottom" src="../static/images/wbg6.jpg">
+	  <br>
+	  <p>
+	    <a href="#">This</a> is a random link
+	  </p>
+	  
+	  <article class="uk-comment uk-width-3-5">
+	    <header class="uk-comment-header">
+	      <img class="uk-comment-avatar" src="../static/images/placeholder_avatar.svg" alt="user-img">
+	      <h5 class="uk-comment-title">Answered by <a href="">Username</a></h5>
+	      <ul class="uk-comment-meta">
+		<li>
+		  <span>Answered at 9:30pm on 11 Feb 2015</span>
+		</li>
+	      </ul>
+	    </header>
+	  </article>
+	  
+	</div>
+
+	<!-- FOR DISPLAYING TAGS IN ANSWER -->
+	<div class="uk-width-1-5 uk-margin-top">
+	  <select id="answer-2-tags-selected" class="uk-width-1-1 answered-tags-selected" name="answer-tags-select" multiple>
+	    <option value="tag-4" selected="selected">tag-4</option>
+	    <option value="tag-5" selected="selected">tag-5</option>
+	  </select>
+	</div>
+	
+      </div>
+      
     </div>
-  </body>
-</html>
+  </div>
+{% endblock %}  
