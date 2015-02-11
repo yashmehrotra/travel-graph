@@ -24,16 +24,6 @@
 
     <script src="{{ url_for('static', filename='plugins/ckeditor/ckeditor.js') }}" type="text/javascript"></script>
     {% block script %}{% endblock %}
-    <script type="text/javascript">
-      $(function () {
-        $('#answer-tags-select').chosen();
-        $('.answered-tags-selected').chosen();
-      });
-    </script>
-    <script type"text/javascript">
-      CKEDITOR.replace('answer-text');
-      var objEditor = CKEDITOR.instances["answertext"];
-    </script>
   </head>
   <body>
     {% block body %}{% endblock %}

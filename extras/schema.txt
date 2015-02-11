@@ -1,0 +1,16 @@
+ANSWERS
+- answer_id   - BigSerial
+- answer_text - Unicode
+- question_id - BigInt
+- user_id     - BigInt
+- answer_ts   - DateTime
+- answer_tags - json
+
+QUESTIONS
+- question_id   - BigSerial
+- question_text - Unicode
+- question_desc - Unicode
+- question_tags - JSON
+- user_id       - BigInt
+- question_ts   - DateTime
+-  

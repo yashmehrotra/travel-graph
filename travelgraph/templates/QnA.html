@@ -1,13 +1,7 @@
 {% extends "base.html" %}
 
 {% block script %}
-<script type="text/javascript">
-  $(function () {
-    $('#answer-tags-select').chosen();
-    $('.answered-tags-selected').chosen();
-    // var objEditor = CKEDITOR.instances["answertext"];
-  });
-</script>
+
 {% endblock %}
 
 {% block body %}
@@ -74,13 +68,18 @@
 	<div class="uk-width-3-5">
 	  <!-- <form> -->
 
-	  <textarea id="answertext" name="answer-text">
+	  <textarea id="answertext" name="answertext">
 	    Post Your Answer Here.
 	  </textarea>
 
-	  <script>
-	    CKEDITOR.replace('answer-text');
-	  </script>
+	  <script type="text/javascript">
+		    $('#answer-tags-select').chosen();
+		    $('.answered-tags-selected').chosen();
+		    CKEDITOR.replace('answertext');
+		    var objEditor = CKEDITOR.instances["answertext"];
+		   	// for getting html
+		   	// 
+	</script>
 	  
 	  <p>
 	    <button class="uk-button uk-button-success uk-margin-top">Post</button>
