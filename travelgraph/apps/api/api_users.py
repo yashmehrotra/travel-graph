@@ -90,4 +90,4 @@ def api_user(user_id):
 
     result = models.user_details(user_id)
 
-    return result
+    return jsonify(result)

@@ -273,16 +273,16 @@ def user_details(user_id):
     query_user_data = """ SELECT * FROM "user"
                           WHERE user_id = '{0}' """.format(user_id)
 
-    cursor.execute(query)
+    cursor.execute(query_user_data)
     user_data = cursor.fetchone()
 
     user_questions = models_questions.get_user_questions(user_id)['questions']
 
     user_answers = models_answers.get_user_answer(user_id)['answers']
 
-    user_answered_question_ids = [ question 
+    user_answered_question_ids = [ question['question_id'] 
                                    for question 
-                                   in user_answers['question_id'] ]
+                                   in user_answers ]
 
     user_answered_questions = [ models_questions.get_question(question)
                                 for question
@@ -294,4 +294,14 @@ def user_details(user_id):
 
     user_tags = models_tags.get_user_tags(user_id)['tags']
 
-    pass
+    response.update({
+        'status': 'success',
+        'user_questions': user_questions,
+        'user_answers': user_answers,
+        'user_answered_questions': user_answered_questions,
+        'user_following': user_following,
+        'user_followers': user_followers,
+        'user_tags': user_tags,
+    })
+
+    return response
