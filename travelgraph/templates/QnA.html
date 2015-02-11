@@ -30,9 +30,9 @@
       
       });
 
-      function display_ans_textarea() {
-        $('#answer-textarea-grid').show();
-      }
+      // function display_ans_textarea() {
+        // $('#answer-textarea-grid').show();
+      // }
       
     </script>
   </head>
@@ -92,6 +92,7 @@
 
 	<!-- FOR ANSWERS TEXTAREA -->
 	<div id="answer-textarea-grid" class="uk-grid">
+
 	  <!-- USED AS A TEMPORARY FIX! -->
 	  <div class="uk-width-1-5"></div>
 	  
@@ -103,6 +104,7 @@
 	      </textarea>
 	      <script>
 		CKEDITOR.replace('answer-text');
+		var objEditor = CKEDITOR.instances["answertext"];
 	      </script>
 	      
 	      <p>
