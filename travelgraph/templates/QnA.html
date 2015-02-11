@@ -2,6 +2,13 @@
 
 {% block script %}
 
+<script type="text/javascript">
+  $(function (){
+    $('#answer-tags-select').chosen();
+    $('.answered-tags-selected').chosen();
+  });
+</script>
+
 {% endblock %}
 
 {% block body %}
@@ -73,8 +80,6 @@
 	  </textarea>
 
 	  <script type="text/javascript">
-		    $('#answer-tags-select').chosen();
-		    $('.answered-tags-selected').chosen();
 		    CKEDITOR.replace('answertext');
 		    var objEditor = CKEDITOR.instances["answertext"];
 		   	// for getting html
