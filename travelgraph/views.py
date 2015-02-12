@@ -3,7 +3,7 @@ import pdb
 import json
 
 from travelgraph import app
-from travelgraph.apps.models import models_questions
+from travelgraph.apps.models import models_questions, models
 from travelgraph.apps.auth import login_required
 from travelgraph.apps.api.api_users import api_logout     # This line should be removed later on
 
@@ -37,8 +37,19 @@ def ques():
 @app.route('/ques/<ques_id>/')
 @login_required
 def ques_id(ques_id):
-    data = models_questions.get_question(ques_id)
-    return render_template('ques_id.html', data=data)
+    data = {
+        'user': models.user_details(session['user_id'])
+        'question': models_questions.get_question(ques_id)
+    }
+    return render_template('QnA.html', data=data)
+    
+
+@app.route('/user/<user_id>/')
+@login_required
+def user_id(user_id):
+    # data = models_questions.get_question(ques_id)
+    
+    return render_template('.html', data=data)
 
 
 @app.route('/logout')
@@ -47,8 +58,10 @@ def logout():
     resp = api_logout()
     return resp
 
-@app.route('/qna')
-def questions_n_answers():
-    return render_template('QnA.html')
+
+    
+# @app.route('/qna')
+# def questions_n_answers():
+    # return render_template('QnA.html')
 
     

@@ -9,6 +9,7 @@ $(function () {
   //     var ans_text = $('#ans-text').val();
   //     add_ans(ques_id, ans_text);
   // });
+    
 
 });
 

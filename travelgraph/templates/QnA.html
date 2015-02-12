@@ -36,20 +36,16 @@
 	
 	<!-- FOR QUES TEXT + OTHER DETAILS -->
 	<div class="uk-width-4-5">
-	  <h3>What activities should be done in Rishikesh? I am with my family and I am looking forward to some economical destinations!</h3>
+	  <div hidden class="ques-id">{{ data.question.question_id }}</div>
+	  <h3>{{ data.question.question_text }}</h3>
 
 	  <div class="uk-grid">
 	    <div class="uk-width-4-5">
 	      <p>
-		<button class="uk-button uk-button-mini" type="button">tag-1</button>
-		<button class="uk-button uk-button-mini" type="button">tag-2</button>
-		<button class="uk-button uk-button-mini" type="button">tag-3</button>
-	      </p>
-	      
-	      <p>
-		<button class="uk-button uk-button-mini" type="button">tag-1</button>
-		<button class="uk-button uk-button-mini" type="button">tag-2</button>
-	      </p>
+		{% for tag in data.question_tags %}
+		<button class="uk-button uk-button-mini" type="button">{{ tag }}</button>
+		{% endfor %}
+	      </p>	      
 	    </div>
 
 	    <div class="uk-width-1-5">
