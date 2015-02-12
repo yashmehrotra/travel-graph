@@ -323,10 +323,10 @@ def asker_details(user_id):
     user_data = cursor.fetchone()
 
     user_details.update({
-        'status': 'success'
+        'status': 'success',
         'user_id': user_data['user_id'],
-        'first_name': user_data['first_name']
-        'last_name': user_data['last_name']
+        'first_name': user_data['first_name'],
+        'last_name': user_data['last_name'],
     })
 
     return user_details
