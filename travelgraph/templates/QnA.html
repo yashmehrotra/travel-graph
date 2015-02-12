@@ -9,8 +9,9 @@
   });
 </script>
 
-{% endblock %}
+<script type="text/javascript" src="{{ url_for('static', filename='javascripts/ques_id.js') }}"></script>
 
+{% endblock %}
 
       {% block body %}
       
@@ -36,7 +37,7 @@
 	
 	<!-- FOR QUES TEXT + OTHER DETAILS -->
 	<div class="uk-width-4-5">
-	  <div hidden class="ques-id">{{ data.question.question_id }}</div>
+	  <div hidden id="ques-id">{{ data.question.question_id }}</div>
 	  <h3>{{ data.question.question_text }}</h3>
 
 	  <div class="uk-grid">
@@ -76,14 +77,13 @@
 	  </textarea>
 
 	  <script type="text/javascript">
-		    CKEDITOR.replace('answertext');
-		    var objEditor = CKEDITOR.instances["answertext"];
-		   	// for getting html
-		   	// 
+	    CKEDITOR.replace('answertext');
+	    var objEditor = CKEDITOR.instances["answertext"];
+	    // for getting html
 	</script>
 	  
 	  <p>
-	    <button class="uk-button uk-button-success uk-margin-top">Post</button>
+	    <button class="uk-button uk-button-success uk-margin-top" id="post-ans">Post</button>
 	  </p>
 
 	  <!-- </form> -->
@@ -115,8 +115,9 @@
 	  </div>
 	</div>
       </div>
-      
-      <!-- CURRENTLY HARD-CODED ANWERS SINCE QUES ID IS NOT KNOWN -->
+
+
+      <!-- ANSWERS APPENDED INSIDE THIS DIV -->
       <div class="uk-grid" id="answers-grid">
 
 	<!-- USED AS A TEMPORARY FIX! -->
@@ -134,8 +135,8 @@
 	  <article class="uk-comment uk-width-3-5">
 	    <header class="uk-comment-header">
 	      <img class="uk-comment-avatar" src="{{ url_for('static', filename='images/placeholder_avatar.svg') }}" alt="user-img">
-	      <h5 class="uk-comment-title">Answered by <a href="">Username</a></h5>
-	      <!-- <h5>Answered by <a href>Username</a></h6> -->
+	      Answered by <a href="">Username</a>
+	      <!-- <h5 class="uk-comment-title">Answered by <a href="">Username</a></h5> -->
 	      <ul class="uk-comment-meta">
 		<li>
 		  <span>Answered at 9:30pm on 11 Feb 2015</span>
@@ -145,7 +146,7 @@
 	  </article>
 	  
 	</div>
-
+	
 	<!-- FOR DISPLAYING TAGS IN ANSWER -->
 	<div class="uk-width-1-5">
 	  <!-- <blockquote> -->
@@ -176,7 +177,7 @@
 	  <article class="uk-comment uk-width-3-5">
 	    <header class="uk-comment-header">
 	      <img class="uk-comment-avatar" src="{{ url_for('static', filename='images/placeholder_avatar.svg') }}" alt="user-img">
-	      <h5 class="uk-comment-title">Answered by <a href="">Username</a></h5>
+	      Answered by <a href="">Username</a>
 	      <ul class="uk-comment-meta">
 		<li>
 		  <span>Answered at 9:30pm on 11 Feb 2015</span>
@@ -194,7 +195,8 @@
 	    <option value="tag-5" selected="selected">tag-5</option>
 	  </select>
 	</div>
-	
-      </div>
+
+	</div>	
+      <!-- </span> -->
 
       {% endblock %}  
