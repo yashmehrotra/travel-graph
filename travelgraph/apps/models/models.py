@@ -275,6 +275,7 @@ def user_details(user_id):
 
     cursor.execute(query_user_data)
     user_data = cursor.fetchone()
+    # Above user_data should be looked into and should be converted into a proper dictionary
 
     user_questions = models_questions.get_user_questions(user_id)['questions']
 
@@ -296,6 +297,7 @@ def user_details(user_id):
 
     response.update({
         'status': 'success',
+        'user_data': user_data,
         'user_questions': user_questions,
         'user_answers': user_answers,
         'user_answered_questions': user_answered_questions,
@@ -305,3 +307,27 @@ def user_details(user_id):
     })
 
     return response
+
+
+def asker_details(user_id):
+    '''
+    Get some details about the asker of a question
+    '''
+
+    user_details = {}
+
+    query = """ SELECT * FROM "user"
+                WHERE user_id = '{0}' """.format(user_id)
+
+    cursor.execute(query)
+    user_data = cursor.fetchone()
+
+    user_details.update({
+        'status': 'success'
+        'user_id': user_data['user_id'],
+        'first_name': user_data['first_name']
+        'last_name': user_data['last_name']
+    })
+
+    return user_details
+

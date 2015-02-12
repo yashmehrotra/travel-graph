@@ -37,10 +37,14 @@ def ques():
 @app.route('/ques/<ques_id>/')
 @login_required
 def ques_id(ques_id):
+    question_details = models_questions.get_question(ques_id)
+    asker_details = models.asker_details(question_details['asked_by_user_id'])
+
     data = {
-        'user': models.user_details(session['user_id'])
-        'question': models_questions.get_question(ques_id)
+        'question': question_details,
+        'user': asker_details,
     }
+
     return render_template('QnA.html', data=data)
     
 
