@@ -3,6 +3,8 @@ import json
 
 from travelgraph.apps.database import postgre, cursor
 
+from travelgraph.apps.models import models
+
 
 def add_answer(question_id, answer_text, user_id):
     '''
@@ -44,7 +46,7 @@ def get_answer(answer_id):
             'answer_id': result['answer_id'],
             'answer': result['answer'],
             'question_id': result['question_id'],
-            'user_id': result['user_id']
+            'user_details': models.user_details(result['user_id']),
         })
 
     return response

@@ -261,7 +261,7 @@ def get_following(user_id):
     return response
 
 
-def user_details(user_id):
+def user_profile(user_id):
     '''
     Load user specific details for his/her profile
     '''
@@ -309,7 +309,7 @@ def user_details(user_id):
     return response
 
 
-def asker_details(user_id):
+def user_details(user_id):
     '''
     Get some details about the asker of a question
     '''
@@ -327,6 +327,7 @@ def asker_details(user_id):
         'user_id': user_data['user_id'],
         'first_name': user_data['first_name'],
         'last_name': user_data['last_name'],
+        'username': user_data['name'],
     })
 
     return user_details

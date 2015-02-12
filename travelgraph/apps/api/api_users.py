@@ -88,6 +88,6 @@ def api_user(user_id):
     Stuff
     '''
 
-    result = models.user_details(user_id)
+    result = models.user_profile(user_id)
 
     return jsonify(result)
