@@ -5,11 +5,11 @@ $(function () {
   //alert(ques_id);
   get_answers(ques_id);
 
-  // $('#post-ans').on('click', function (){
-    // var ans_text = objEditor.getData();
-    // console.log(ans_text);
-    // add_ans(ques_id, ans_text);
-  // });
+  $('#post-ans').on('click', function (){
+    var ans_text = objEditor.getData();
+    console.log(ans_text);
+    add_ans(ques_id, ans_text);
+  });
 
 });
 

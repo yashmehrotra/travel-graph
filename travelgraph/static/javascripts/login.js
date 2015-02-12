@@ -1,3 +1,7 @@
+// $(function(){
+    
+// });
+
 function submit() {
     var email = $('#email').val();
     var password = $('#password').val();
@@ -15,6 +19,7 @@ function submit() {
                 result = JSON.parse(result);
                 console.log(result['status']);
                 console.log(result.message);
+		// window.location.replace("/ques/1");
             } else {
                 console.log('Problem with ajax');
             }
