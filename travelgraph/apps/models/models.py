@@ -9,9 +9,10 @@ from travelgraph.apps.database import postgre, cursor
 
 from travelgraph.apps.models import (
         models_questions,
-        models_answers,
         models_tags,
+        models_answers
     )
+
 
 '''
 Types of methods - 
