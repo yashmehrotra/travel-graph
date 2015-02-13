@@ -58,4 +58,5 @@ function append_answers(result) {
     
     $('#answers-grid').append(answer_html_to_append);
   }
+    $('#answers-count-text').empty().append(result.answers.length + " Answers");
 }
