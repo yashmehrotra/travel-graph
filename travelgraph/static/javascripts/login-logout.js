@@ -7,7 +7,7 @@ function logout_user() {
     type: "GET",
     url: "/api/logout",
     success: function() {
-      // Redirect to login/homepage
+      window.location.href = "";
     }
   });  
 }

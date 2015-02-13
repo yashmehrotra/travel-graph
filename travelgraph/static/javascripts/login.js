@@ -1,5 +1,15 @@
 $(function(){
   $('#login-button').on('click', submit);
+  
+  // DEBUG THIS...
+  $('.login-input').on('keypress', function(event){
+    event.preventDefault();
+    if (event.which == 13) {
+      // alert("Hello");
+      submit();
+    }
+  });
+
 });
 
 
@@ -17,10 +27,9 @@ function submit() {
         success: function(result) {
             if(result) {
                 console.log(result);
-                result = JSON.parse(result);
                 console.log(result['status']);
                 console.log(result.message);
-		window.location.href = "http://localhost:5000/ques/1";
+		window.location.href = "/ques/1";
             } else {
                 console.log('Problem with ajax');
             }

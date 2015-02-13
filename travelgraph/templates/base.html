@@ -40,11 +40,12 @@
       <div class="uk-navbar-flip">
 	<ul class="uk-navbar-nav">
 	  <li class="uk-parent" data-uk-dropdown>
-	    <a href>Hello, {{ session['first_name'] }}</a>
+	    <div hidden id="logged-in-user-id">{{ session['user_id'] }}</div>
+	    <a href="">Hello, {{ session['first_name'] }}</a>
 	    <div class="uk-dropdown uk-dropdown-navbar">
 	      <ul class="uk-nav uk-nav-navbar">
-		<li><a href>Profile</a></li>
-		<li><a id="header-logout" href>Logout</a></li>
+		<li><a href="">Profile</a></li>
+		<li><a id="header-logout" href="">Logout</a></li>
 	      </ul>
 	    </div>
 	  </li>

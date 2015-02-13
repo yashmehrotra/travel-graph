@@ -19,17 +19,18 @@
   <!-- FOR ASKER'S NAME, AVATAR AND RANK -->
   <div class="uk-width-1-5">
     
-    <article class="uk-comment">
+    <articlex class="uk-comment">
       <header class="uk-comment-header">
 	
 	<img class="uk-comment-avatar" alt="avatar" src="{{ url_for('static', filename='images/placeholder_avatar.svg') }}"/>
+	<div hidden id="asker-user-id">{{ data.user.user_id }}</div>
 	<h4 class="uk-comment-title">{{ data.user.first_name + " " + data.user.last_name }}</h4>
 	<div class="uk-badge uk-badge-warning uk-badge-mini">Rank</div>
       </header>
     </article>
 
     <div class="uk-clearfix uk-margin-top uk-center">
-      <button class="uk-button uk-button-small uk-button-primary" type="button">Follow</button>
+      <button class="uk-button uk-button-small uk-button-primary" id="follow-asker" type="button">Follow</button>
     </div>
     
   </div>
@@ -49,7 +50,7 @@
       </div>
 
       <div class="uk-width-1-5">
-	<button class="uk-button uk-button-small uk-button-danger uk-margin-right uk-float-right" type="button">Subscribe</button>
+	<button class="uk-button uk-button-small uk-button-danger uk-margin-right uk-float-right" id="subscribe-question" type="button">Subscribe</button>
       </div>
     </div>
     
