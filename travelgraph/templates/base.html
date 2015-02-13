@@ -29,6 +29,8 @@
     {% block script %}{% endblock %}
   </head>
   <body>
+
+    <!-- TOP NAVBAR -->
     <nav class="uk-navbar">
       <ul class="uk-navbar-nav">
 	<li><a href>Questions</a></li>
@@ -49,11 +51,13 @@
 	</ul>
       </div>
     </nav>
+
+    <!-- MAIN CONTAINERS -->
     <div style="padding: 20px 0;">
       <div class="uk-container uk-container-center">
 	{% block body %}{% endblock %}
       </div>
     </div>
+    
   </body>
 </html>
-

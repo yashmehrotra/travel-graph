@@ -1,6 +1,7 @@
-// $(function(){
-    
-// });
+$(function(){
+  $('#login-button').on('click', submit);
+});
+
 
 function submit() {
     var email = $('#email').val();
@@ -19,7 +20,7 @@ function submit() {
                 result = JSON.parse(result);
                 console.log(result['status']);
                 console.log(result.message);
-		// window.location.replace("/ques/1");
+		window.location.href = "http://localhost:5000/ques/1";
             } else {
                 console.log('Problem with ajax');
             }

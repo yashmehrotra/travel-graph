@@ -13,113 +13,112 @@
 
 {% endblock %}
 
-      {% block body %}
-      
-      <div class="uk-grid">
-	<!-- FOR USER NAME, AVATAR AND RANK -->
-	<div class="uk-width-1-5">
-	  
-	  <article class="uk-comment">
-	    <header class="uk-comment-header">
-	      
-	      <img class="uk-comment-avatar" alt="avatar" src="{{ url_for('static', filename='images/placeholder_avatar.svg') }}"/>
-	      <!-- <h4 class="uk-comment-title">data.user.first_name</h4> -->
-	      <h4 class="uk-comment-title">{{ data.user.first_name + " " + data.user.last_name }}</h4>
-	      <div class="uk-badge uk-badge-warning uk-badge-mini">Rank</div>
-	    </header>
-	  </article>
+{% block body %}
 
-	  <div class="uk-clearfix uk-margin-top uk-center">
-	    <button class="uk-button uk-button-small uk-button-primary" type="button">Follow</button>
-	  </div>
-	  
-	</div>
+<div class="uk-grid">
+  <!-- FOR ASKER'S NAME, AVATAR AND RANK -->
+  <div class="uk-width-1-5">
+    
+    <article class="uk-comment">
+      <header class="uk-comment-header">
 	
-	<!-- FOR QUES TEXT + OTHER DETAILS -->
-	<div class="uk-width-4-5">
-	  <div hidden id="ques-id">{{ data.question.question_id }}</div>
-	  <h3>{{ data.question.question_text }}</h3>
+	<img class="uk-comment-avatar" alt="avatar" src="{{ url_for('static', filename='images/placeholder_avatar.svg') }}"/>
+	<h4 class="uk-comment-title">{{ data.user.first_name + " " + data.user.last_name }}</h4>
+	<div class="uk-badge uk-badge-warning uk-badge-mini">Rank</div>
+      </header>
+    </article>
 
-	  <div class="uk-grid">
-	    <div class="uk-width-4-5">
-	      <p>
-		{% for tag in data.question.question_tags %}
-		<button class="uk-button uk-button-mini" type="button">{{ tag }}</button>
-		{% endfor %}
-	      </p>	      
-	    </div>
+    <div class="uk-clearfix uk-margin-top uk-center">
+      <button class="uk-button uk-button-small uk-button-primary" type="button">Follow</button>
+    </div>
+    
+  </div>
+  
+  <!-- FOR QUES TEXT + OTHER DETAILS -->
+  <div class="uk-width-4-5">
+    <div hidden id="ques-id">{{ data.question.question_id }}</div>
+    <h2>{{ data.question.question_text }}</h2>
 
-	    <div class="uk-width-1-5">
-	      <button class="uk-button uk-button-small uk-button-danger uk-margin-right uk-float-right" type="button">Subscribe</button>
-	    </div>
-	  </div>
-	  
-	  <hr>
-	  <p>
-	    <button id="answer-btn" class="uk-button uk-button-success" type="button" data-uk-toggle="{target:'#answer-textarea-grid'}">Answer</button>
-	  </p>
-	  
-	</div>
-	
+    <div class="uk-grid">
+      <div class="uk-width-4-5">
+	<p>
+	  {% for tag in data.question.question_tags %}
+	  <button class="uk-button uk-button-mini" type="button">{{ tag }}</button>
+	  {% endfor %}
+	</p>	      
       </div>
 
-      <!-- FOR ANSWERS TEXTAREA -->
-      <div id="answer-textarea-grid" class="uk-grid">
-
-	<!-- USED AS A TEMPORARY FIX! -->
-	<div class="uk-width-1-5"></div>
-	
-	<div class="uk-width-3-5">
-	  <!-- <form> -->
-
-	  <textarea id="answertext" name="answertext">
-	    Post Your Answer Here.
-	  </textarea>
-
-	  <script type="text/javascript">
-	    CKEDITOR.replace('answertext');
-	    var objEditor = CKEDITOR.instances["answertext"];
-	    // for getting html
-	</script>
-	  
-	  <p>
-	    <button class="uk-button uk-button-success uk-margin-top" id="post-ans">Post</button>
-	  </p>
-
-	  <!-- </form> -->
-	</div>
-
-	<!-- FOR ADDITION OF TAGS FOR A QUESTION -->
-	<div class="uk-width-1-5">
-	  <select id="answer-tags-select" class="uk-width-1-1" name="answer-tags-select" multiple data-placeholder="add some tags..">
-	    <option value="tag-1">tag-1</option>
-	    <option value="tag-2">tag-2</option>
-	    <option value="tag-3">tag-3</option>
-	    <option value="tag-4">tag-4</option>
-	    <option value="tag-5">tag-5</option>
-	    <option value="tag-6">tag-6</option>
-	    <option value="tag-7">tag-7</option>
-	    <option value="tag-8">tag-8</option>
-	    <option value="tag-9">tag-9</option>
-	  </select>
-	</div>
-	
+      <div class="uk-width-1-5">
+	<button class="uk-button uk-button-small uk-button-danger uk-margin-right uk-float-right" type="button">Subscribe</button>
       </div>
+    </div>
+    
+    <hr>
+    <p>
+      <button id="answer-button" class="uk-button uk-button-success" type="button" data-uk-toggle="{target:'#answer-textarea-grid'}">Answer</button>
+    </p>
+    
+  </div>
+  
+</div>
 
-      <div class="uk-grid" id="ans-count">
-	<!-- USED AS A TEMPORARY FIX! -->
-	<div class="uk-width-1-5"></div>
-	<div class="uk-width-3-5">
-	  <div class="uk-panel uk-panel-box uk-panel-box-primary">
-	    <h4 id="answers-count-text">
-	      <!-- NO. OF ANSWERS APPENDED HERE -->
-	    </h4>
-	  </div>
-	</div>
-      </div>
+<!-- FOR ANSWERS TEXTAREA -->
+<div id="answer-textarea-grid" class="uk-grid uk-hidden">
+
+  <!-- USED AS A TEMPORARY FIX! -->
+  <div class="uk-width-1-5"></div>
+  
+  <div class="uk-width-3-5">
+    <!-- <form> -->
+
+    <textarea id="answertext" name="answertext">
+      Post Your Answer Here.
+    </textarea>
+
+    <script type="text/javascript">
+      CKEDITOR.replace('answertext');
+      var objEditor = CKEDITOR.instances["answertext"];
+      // for getting html
+    </script>
+    
+    <p>
+      <button class="uk-button uk-button-success uk-margin-top" id="post-ans">Post</button>
+    </p>
+
+    <!-- </form> -->
+  </div>
+
+  <!-- FOR ADDITION OF TAGS FOR A QUESTION -->
+  <div class="uk-width-1-5">
+    <select id="answer-tags-select" class="uk-width-1-1" name="answer-tags-select" multiple data-placeholder="add some tags..">
+      <option value="tag-1">tag-1</option>
+      <option value="tag-2">tag-2</option>
+      <option value="tag-3">tag-3</option>
+      <option value="tag-4">tag-4</option>
+      <option value="tag-5">tag-5</option>
+      <option value="tag-6">tag-6</option>
+      <option value="tag-7">tag-7</option>
+      <option value="tag-8">tag-8</option>
+      <option value="tag-9">tag-9</option>
+    </select>
+  </div>
+  
+</div>
+
+<div class="uk-grid" id="ans-count">
+  <!-- USED AS A TEMPORARY FIX! -->
+  <div class="uk-width-1-5"></div>
+  <div class="uk-width-3-5">
+    <div class="uk-panel uk-panel-box uk-panel-box-primary">
+      <h5 id="answers-count-text">
+	<!-- NO. OF ANSWERS APPENDED HERE -->
+      </h5>
+    </div>
+  </div>
+</div>
 
 
-      <!-- ANSWERS APPENDED INSIDE THIS DIV -->
-      <div class="uk-grid" id="answers-grid"></div>	
+<!-- ANSWERS APPENDED INSIDE THIS DIV -->
+<div class="uk-grid" id="answers-grid"></div>	
 
-      {% endblock %}  
+{% endblock %}  

@@ -2,7 +2,6 @@
 $(function () {
   
   var ques_id = $('#ques-id').text();
-  //alert(ques_id);
   get_answers(ques_id);
 
   $('#post-ans').on('click', function (){
@@ -11,14 +10,21 @@ $(function () {
     add_ans(ques_id, ans_text);
   });
 
+  $('#answer-button').on('click', function(){
+    if($('#answer-textarea-grid').is(':visible')) {
+      $('#answer-tags-select').next().width('100%');  // Used to correct the width of the tags input area when the text editro is shown
+      $(this).text("Hide");
+    } else {
+      $(this).text("Answer");
+    }
+  });
+
 });
 
 function get_answers(ques_id) {
-  //alert(ques_id);
   $.ajax({
     type: "GET",
     url: "/api/content/get_answers/" + ques_id + "/",
-      // console.log(result);
     success: function(result) {
       if(result) {
         console.log(result);
