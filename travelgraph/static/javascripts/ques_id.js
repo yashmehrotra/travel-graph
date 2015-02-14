@@ -1,6 +1,14 @@
 $(function () {
   
   var ques_id = $('#ques-id').text();
+  var asker_user_id = $('#asker-user-id').text();
+  var logged_in_user_id = $('#logged-in-user-id').text();
+  
+  if (asker_user_id == logged_in_user_id) {
+    $('#follow-asker').attr('disabled', true);
+    $('#subscribe-question').attr('disabled', true);
+  }
+
   get_answers(ques_id);
 
   $('#post-ans').on('click', function (){
@@ -9,12 +17,11 @@ $(function () {
     add_ans(ques_id, ans_text);
   });
   
-  var asker_user_id = $('#asker-user-id').text();
+
   $('#follow-asker').on('click', function(){
-    follow_user(asker_user_id);
+    follow_user(asker_user_id, logged_in_user_id);
   });
 
-  var logged_in_user_id = $('#logged-in-user-id').text();
   $('#subscribe-question').on('click', function(){
     subscribe_question(logged_in_user_id, ques_id);
   });
@@ -68,21 +75,24 @@ function append_answers(result) {
   $('#answers-grid').empty();
 
   for (var i = result.answers.length - 1; i >= 0; i--) {
-    var answer_html_to_append = '<div class="uk-width-1-5"></div><div class="uk-width-3-5"><hr><p>' + result.answers[i].answer + '</p><img alt="ans-img" class="uk-margin-bottom" src="../../static/images/wbg6.jpg"><br><article class="uk-comment uk-width-3-5"><header class="uk-comment-header"><img class="uk-comment-avatar" src="../../static/images/placeholder_avatar.svg" alt="user-img">Answered by <a href="">' + result.answers[i].user_details.username + '</a><ul class="uk-comment-meta"><li><span>Answered at 9:30pm on 11 Feb 2015</span></li></ul></header></article></div><!-- FOR DISPLAYING TAGS IN ANSWER --><div class="uk-width-1-5 uk-margin-top"><p><button class="uk-button uk-button-small" type="button">tag-1</button><button class="uk-button uk-button-small" type="button">tag-2</button></p></div>';    
+    var answer_html_to_append = '<div class="uk-width-1-5"></div><div class="uk-width-3-5"><hr><p>' + result.answers[i].answer + '</p><br><article class="uk-comment uk-width-3-5"><header class="uk-comment-header"><img class="uk-comment-avatar" src="../../static/images/placeholder_avatar.svg" alt="user-img">Answered by <a href="">' + result.answers[i].user_details.username + '</a><ul class="uk-comment-meta"><li><span>Answered at 9:30pm on 11 Feb 2015</span></li></ul></header></article></div><!-- FOR DISPLAYING TAGS IN ANSWER --><div class="uk-width-1-5 uk-margin-top"><p><button class="uk-button uk-button-small" type="button">tag-1</button><button class="uk-button uk-button-small" type="button">tag-2</button></p></div>';    
 
     $('#answers-grid').append(answer_html_to_append);
   }
     $('#answers-count-text').empty().append(result.answers.length + " Answers");
 }
 
-function follow_user(user_id) {
+function follow_user(user_id, logged_in_user_id) {
   $.ajax({
     type: "POST",
     url: "/api/user/follow_user",
-    data: user_id,
+    data: {
+      'user_id': user_id,
+      'user_id_to_follow': logged_in_user_id,
+    },
     success: function(result) {
       if(result) {
-	$('#follow-asker').text('Unfollow');
+	$('#follow-asker').text('Following');
 	$('#follow-asker').removeClass('uk-button-primary');
       } else {
 	console.log('Problem with ajax');
