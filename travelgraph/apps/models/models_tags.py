@@ -135,3 +135,24 @@ def get_doobie_type_id(doobie_type):
     doobie_type_id = cursor.fetchone()['id']
 
     return doobie_type_id
+
+
+def get_tags_for_doobie(doobie_type, mapping_id):
+    '''
+    Get all the tags for a specific doobie
+    '''
+
+    tags = []
+
+    query = """ SELECT * FROM "doobie_tags_mapping"
+                WHERE doobie_type = '{0}' AND
+                mapping_id = '{1}' """.format(doobie_type, mapping_id)
+
+    cursor.execute(query)
+
+    result = cursor.fetchall()
+
+    for row in result:
+        tags.append(get_tag(row['tag_id']))
+
+    return tags

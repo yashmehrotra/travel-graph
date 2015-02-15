@@ -127,6 +127,17 @@ def get_question(question_id):
     return jsonify(result)
 
 
+@app.route('/api/content/get_user_questions/<user_id>/')
+def get_all_user_questions(user_id):
+    '''
+    Retrieve a question with a given id
+    '''
+
+    result = models_questions.get_user_questions(user_id)
+
+    return jsonify(result)
+
+
 @app.route('/api/user/follow_question', methods=['POST'])
 def subscribe_question():
     '''

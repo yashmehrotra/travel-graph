@@ -19,13 +19,14 @@ def add_question(user_id, question_title, question_desc, question_tags):
     user_id = str(user_id)
 
     created_ts = datetime.now()
+    updated_ts = datetime.now()
 
     query = """ INSERT INTO "doobie_questions"
                 (title, description, user_id, created_ts) 
-                 VALUES ('{0}', '{1}', '{2}', '{3}') 
+                 VALUES ('{0}', '{1}', '{2}', '{3}', '{4}') 
                  RETURNING question_id """.format(
                     question_title, question_desc,
-                    user_id, created_ts)
+                    user_id, created_ts, updated_ts)
 
     #pdb.set_trace()
     cursor.execute(query)
@@ -69,7 +70,9 @@ def get_question(question_id):
             'question_id': result['question_id'],
             'question_text': result['title'],
             'question_desc': result['description'],
-            'asked_by_user_id': result['user_id']
+            'question_tags': get_question_tags(result['question_id']),
+            'user_id': result['user_id'],
+            'updated_ts': result['updated_ts']
         })
 
     return response
@@ -142,7 +145,9 @@ def view_all_questions():
                 'question_id': question['question_id'],
                 'question_text': question['title'],
                 'question_desc': question['description'],
-                'asked_by_user_id': question['user_id']
+                'question_tags': get_question_tags(question['question_id']),
+                'user_id': question['user_id'],
+                'updated_ts': question['updated_ts']
             })
 
     response.update({
@@ -171,11 +176,19 @@ def get_user_questions(user_id):
 
     if result:
         for question in result:
+
+            question_tags = models_tags.get_tags_for_doobie(
+                                    get_doobie_type_id('question'),
+                                    question['question_id']
+                                )
+
             response['questions'].append({
                 'question_id': question['question_id'],
                 'question_text': question['title'],
                 'question_desc': question['description'],
-                'asked_by_user_id': question['user_id']
+                'question_tags': get_question_tags(question['question_id']),
+                'user_id': question['user_id'],
+                'updated_ts': question['updated_ts']
             })
 
     response.update({
@@ -250,3 +263,14 @@ def get_doobie_id_question(question_id):
     doobie_id = cursor.fetchone()['doobie_id']
 
     return doobie_id
+
+
+def get_question_tags(question_id):
+    '''
+    Get all the tags related to a question in a list
+    '''
+
+    question_tags = models_tags.get_tags_for_doobie(
+                                get_doobie_type_id('question'), question_id)
+
+    return question_tags

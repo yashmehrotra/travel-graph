@@ -60,7 +60,7 @@ def get_answer(answer_id):
         response.update({
             'answer_id': result['answer_id'],
             'answer': result['answer'],
-            # 'answer_tags': json.loads(result['answer_tags']),
+            'answer_tags': get_answer_tags(result['answer_id']),
             'question_id': result['question_id'],
             'user_details': user_details(result['user_id']),
         })
@@ -120,7 +120,7 @@ def get_user_answer(user_id, question_id=None):
                 response['answers'].append({
                     'answer_id': row['answer_id'],
                     'answer': row['answer'],
-                    #'answer_tags': json.loads(row['answer_tags']),
+                    'answer_tags': get_answer_tags(row['answer_id']),
                     'question_id': row['question_id'],
                     'user_id': row['user_id'],
                 })
@@ -151,7 +151,7 @@ def get_user_answer(user_id, question_id=None):
             response['answers'].update({
                 'answer_id': result['answer_id'],
                 'answer': result['answer'],
-                #'answer_tags': json.loads(row['answer_tags']),
+                'answer_tags': get_answer_tags(result['answer_id']),
                 'question_id': result['question_id'],
                 'user_id': result['user_id']
             })
@@ -207,3 +207,14 @@ def get_doobie_type_id(doobie_type):
     doobie_type_id = cursor.fetchone()['id']
 
     return doobie_type_id
+
+
+def get_answer_tags(answer_id):
+    '''
+    Get all the tags related to a question in a list
+    '''
+
+    answer_tags = models_tags.get_tags_for_doobie(
+                                get_doobie_type_id('answer'), answer_id)
+
+    return answer_tags
