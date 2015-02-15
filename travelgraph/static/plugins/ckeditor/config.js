@@ -35,4 +35,8 @@ CKEDITOR.editorConfig = function( config ) {
 
 	// Simplify the dialog windows.
 	config.removeDialogTabs = 'image:advanced;link:advanced';
+	
+	// Addition of Google Maps plugin.
+	config.extraPlugins = 'wenzgmap';
+
 };
