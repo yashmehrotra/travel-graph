@@ -71,9 +71,7 @@ def create_user(email, method=None, **kwargs):
     # MD5 Hashing, because ethics
     password = hashlib.md5(kwargs.get('password')).hexdigest()
 
-    # Generating the api key
-    api_key = hashlib.sha256(get_random_word(15)).hexdigest()
-    api_key = api_key[:15]
+    bio = kwargs.get('bio')
 
     query = """ SELECT * FROM "user"
         WHERE email = '{0}' """.format(email)
@@ -97,14 +95,13 @@ def create_user(email, method=None, **kwargs):
 
             return json.dumps(response)
 
-
         query = """ INSERT INTO "user" 
-            (email, name, password, api_key,
-                created_ts, first_name, last_name)
+            (email, username, password, updated_ts,
+                created_ts, first_name, last_name, bio)
             VALUES ('{0}', '{1}', '{2}', '{3}',
-                '{4}', '{5}', '{6}')""".format(
-                email, username, password, api_key,
-                created_ts, first_name, last_name)
+                '{4}', '{5}', '{6}', '{7}')""".format(
+                email, username, password, updated_ts,
+                created_ts, first_name, last_name, bio)
 
         cursor.execute(query)
         postgre.commit()
@@ -125,13 +122,15 @@ def create_user(email, method=None, **kwargs):
             response = auth_user(result[0]['email'], method, **kwargs)
             return response
 
+        password = hashlib.md5(get_random_word()).hexdigest()
+
         else:
             query = """ INSERT INTO "user" 
-            (email, name, password, api_key,
+            (email, username, password, updated_ts,
                 created_ts, first_name, last_name)
             VALUES ('{0}', '{1}', '{2}', '{3}',
                 '{4}', '{5}', '{6}')""".format(
-                email, username, password, api_key,
+                email, username, password, updated_ts,
                 created_ts, first_name, last_name)
 
             cursor.execute(query)
@@ -202,15 +201,19 @@ def auth_user(email, method=None, **kwargs):
             return response
 
 
-def user_follows_user(user_id, api_key, user_id_to_follow):
+def user_follows_user(user_id, user_id_to_follow):
     '''
     When a user follows another user
     '''
 
     response = {}
 
-    query = """ INSERT INTO "user_following" (user_id, follows_user_id) 
-                VALUES ('{0}', '{1}') """.format(user_id, user_id_to_follow)
+    created_ts = datetime.now()
+
+    query = """ INSERT INTO "user_follows"
+                (user_id, follows_user_id,created_ts) 
+                VALUES ('{0}', '{1}') """.format(user_id,
+                                user_id_to_follow, created_ts)
 
     cursor.execute(query)
     postgre.commit()
@@ -231,7 +234,7 @@ def get_followers(user_id):
 
     response = []
 
-    query = """ SELECT * FROM "user_following"
+    query = """ SELECT * FROM "user_follows"
                 WHERE follows_user_id = '{0}' """.format(user_id)
 
     cursor.execute(query)
@@ -250,7 +253,7 @@ def get_following(user_id):
 
     response = []
 
-    query = """ SELECT * FROM "user_following"
+    query = """ SELECT * FROM "user_follows"
                 WHERE user_id = '{0}' """.format(user_id)
 
     cursor.execute(query)
@@ -328,7 +331,7 @@ def user_details(user_id):
         'user_id': user_data['user_id'],
         'first_name': user_data['first_name'],
         'last_name': user_data['last_name'],
-        'username': user_data['name'],
+        'username': user_data['username'],
     })
 
     return user_details

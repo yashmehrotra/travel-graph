@@ -1,11 +1,11 @@
 import pdb
 import json
+from datetime import datetime
 
 from travelgraph.apps.database import postgre, cursor
 from travelgraph.apps.models import models_tags
 
-def add_question(user_id, api_key,
-    question_text, question_desc, question_tags):
+def add_question(user_id, question_title, question_desc, question_tags):
     
     response = {}
 
@@ -14,16 +14,18 @@ def add_question(user_id, api_key,
     question_tags = question_tags.split(',')
     question_tags = [ str(tag.lower().strip()) for tag in question_tags ]
 
-    question_text = str(question_text)
+    question_text = unicode(question_text)
     question_desc = str(question_desc)
     user_id = str(user_id)
 
-    query = """ INSERT INTO "questions"
-                (question_text, question_desc, question_tags, user_id) 
+    created_ts = datetime.now()
+
+    query = """ INSERT INTO "doobie_questions"
+                (title, description, user_id, created_ts) 
                  VALUES ('{0}', '{1}', '{2}', '{3}') 
                  RETURNING question_id """.format(
                     question_text, question_desc,
-                    json.dumps(question_tags), user_id)
+                    user_id, created_ts)
 
     #pdb.set_trace()
     cursor.execute(query)
@@ -34,8 +36,9 @@ def add_question(user_id, api_key,
 
     question_id = cursor.fetchone()[0]
 
+    # Add these tags to mapping table
     for tag in question_tags:
-        models_tags.add_question_to_tag(tag, question_id)
+        models_tags.map_tag_to_doobie(tag, question_id, 'question')
 
     response.update({
         'status': 'success',
@@ -53,7 +56,7 @@ def get_question(question_id):
 
     response = {}
 
-    query = """ SELECT * FROM "questions" 
+    query = """ SELECT * FROM "doobie_questions" 
                     WHERE question_id = '{0}' """.format(question_id)
 
     cursor.execute(query)
@@ -62,15 +65,14 @@ def get_question(question_id):
     if result:
         response.update({
             'question_id': result['question_id'],
-            'question_text': result['question_text'],
-            'question_desc': result['question_desc'],
-            'question_tags': json.loads(result['question_tags']),
+            'question_text': result['title'],
+            'question_desc': result['description'],
             'asked_by_user_id': result['user_id']
         })
 
     return response
 
-
+# Fix below function
 def view_tagged_questions(tags):
     '''
     Get all the questions related to the given tag(s)
@@ -127,7 +129,7 @@ def view_all_questions():
 
     response['questions'] = []
 
-    query = """ SELECT * FROM "questions" """
+    query = """ SELECT * FROM "doobie_questions" """
 
     cursor.execute(query)
     result = cursor.fetchall()
@@ -136,9 +138,8 @@ def view_all_questions():
         for question in result:
             response['questions'].append({
                 'question_id': question['question_id'],
-                'question_text': question['question_text'],
-                'question_desc': question['question_desc'],
-                'question_tags': json.loads(question['question_tags']),
+                'question_text': question['title'],
+                'question_desc': question['description'],
                 'asked_by_user_id': question['user_id']
             })
 
@@ -159,7 +160,7 @@ def get_user_questions(user_id):
         'questions': [],
     }
     
-    query = """ SELECT * FROM "questions"
+    query = """ SELECT * FROM "doobie_questions"
                 WHERE user_id = '{0}' """.format(user_id)
 
     cursor.execute(query)
@@ -170,9 +171,8 @@ def get_user_questions(user_id):
         for question in result:
             response['questions'].append({
                 'question_id': question['question_id'],
-                'question_text': question['question_text'],
-                'question_desc': question['question_desc'],
-                'question_tags': json.loads(question['question_tags']),
+                'question_text': question['title'],
+                'question_desc': question['description'],
                 'asked_by_user_id': question['user_id']
             })
 
@@ -191,8 +191,14 @@ def subscribe_question(question_id, user_id):
 
     response = {}
 
-    query = """ INSERT INTO "" (question_id, user_id)
-                VALUES ('{0}', '{1}') """.format(question_id, user_id)
+    created_ts = datetime.now()
+
+    doobie_id = get_doobie_id_question(question_id)
+
+    query = """ INSERT INTO "user_doobie_follows"
+                (user_id, doobie_id, created_ts)
+                VALUES ('{0}', '{1}', '{2}') """.format(user_id,
+                                            doobie_id, created_ts)
 
     cursor.execute(query)
     postgre.commit()
@@ -204,3 +210,41 @@ def subscribe_question(question_id, user_id):
     })
 
     return response
+
+
+def map_to_doobie(question_id, user_id):
+
+    doobie_type_id = get_doobie_type_id('question')
+    
+    query = """ INSERT INTO "doobie" (type, mapping_id)
+                VALUES ('{0}', '{1}') """.format(doobie_type_id, question_id)
+
+    cursor.execute(query)
+    postgre.commit()
+
+
+def get_doobie_type_id(doobie_type):
+
+    query = """ SELECT * FROM "doobie_type"
+                WHERE name = '{0}' """.format(doobie_type)
+
+    cursor.execute(query)
+    doobie_type_id = cursor.fetchone()['id']
+
+    return doobie_type_id
+
+
+def get_doobie_id_question(question_id):
+
+    doobie_type_id = get_doobie_type_id('question')
+
+    query = """ SELECT * FROM "doobie"
+                WHERE type = '{0}' AND
+                      mapping_id = '{1}' """.format(
+                                    doobie_type_id, question_id)
+
+    cursor.execute(query)
+
+    doobie_id = cursor.fetchone()['doobie_id']
+
+    return doobie_id

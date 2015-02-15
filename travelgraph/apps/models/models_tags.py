@@ -1,5 +1,6 @@
 import pdb
 import json
+from datetime import datetime
 
 from travelgraph import settings
 from travelgraph.apps.database import postgre, cursor
@@ -11,7 +12,7 @@ def get_tag_id(tag):
     '''
     
     query = """ SELECT tag_id FROM "tags" 
-        WHERE tag_value = '{0}' """.format(
+        WHERE name = '{0}' """.format(
         tag)
 
     cursor.execute(query)
@@ -20,7 +21,7 @@ def get_tag_id(tag):
 
     # No tag exists
     if not result:
-        query = """ INSERT INTO "tags" (tag_value) 
+        query = """ INSERT INTO "tags" (name) 
                     VALUES ('{0}') RETURNING tag_id""".format(tag)
 
         cursor.execute(query)
@@ -34,27 +35,40 @@ def get_tag_id(tag):
         return tag_id
 
 
-def add_question_to_tag(tag, ques_id):
+def map_tag_to_doobie(tag, doobie_id, doobie_type):
     
     tag_id = get_tag_id(tag)
 
-    query = """ INSERT INTO "tag_questions" (tag_id, question_id) 
-                    VALUES ('{0}', '{1}') """.format(
-                                        tag_id, ques_id)
+    doobie_type_id = get_doobie_type_id(doobie_type)
+
+    query = """ INSERT INTO "doobie_tags_mapping"
+                (tag_id, doobie_type, doobie_id) 
+                VALUES ('{0}', '{1}', '{2}') 
+                RETURNING id """.format(
+                        tag_id, doobie_type_id, doobie_id)
+
+    cursor.execute(query)
+    postgre.commit()
+
+    query = """ INSERT INTO "doobie" (type, mapping_id)
+                VALUES ('{0}', '{1}') """.format(doobie_type_id, mapping_id)
 
     cursor.execute(query)
     postgre.commit()
 
 
-def user_subscribes_tag(user_id, api_key, tag_id):
+def user_subscribes_tag(user_id, tag_id):
     '''
     When a user subscribes to a tag
     '''
     
     response = {}
 
-    query = """ INSERT INTO "tag_subscribers" (user_id, tag_id) 
-                VALUES ('{0}', '{1}') """.format(user_id,tag_id)
+    created_ts = datetime.now()
+
+    query = """ INSERT INTO "user_tags_follows" (user_id, tag_id, created_ts) 
+                VALUES ('{0}', '{1}', '{2}') """.format(user_id,
+                                                tag_id, created_ts)
 
     cursor.execute(query)
     postgre.commit()
@@ -83,7 +97,7 @@ def get_tag(tag_id):
 
     response.update({
         'tag_id': result['tag_id'],
-        'tag_value': result['tag_value']
+        'tag_value': result['name']
     })
 
     return response
@@ -101,7 +115,7 @@ def get_user_tags(user_id):
         'tags': [],
     }
 
-    query = """ SELECT * FROM "tag_subscribers"
+    query = """ SELECT * FROM "user_tags_follows"
                 WHERE user_id = '{0}' """.format(user_id)
 
     cursor.execute(query)
@@ -117,3 +131,13 @@ def get_user_tags(user_id):
 
     return response
 
+
+def get_doobie_type_id(doobie_type):
+
+    query = """ SELECT * FROM "doobie_type"
+                WHERE name = '{0}' """.format(doobie_type)
+
+    cursor.execute(query)
+    doobie_type_id = cursor.fetchone()['id']
+
+    return doobie_type_id
