@@ -22,7 +22,7 @@ def add_question(user_id, question_title, question_desc, question_tags):
     updated_ts = datetime.now()
 
     query = """ INSERT INTO "doobie_questions"
-                (title, description, user_id, created_ts) 
+                (title, description, user_id, created_ts, updated_ts) 
                  VALUES ('{0}', '{1}', '{2}', '{3}', '{4}') 
                  RETURNING question_id """.format(
                     question_title, question_desc,

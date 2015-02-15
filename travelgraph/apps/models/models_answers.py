@@ -17,12 +17,13 @@ def add_answer(question_id, answer_text, answer_tags,user_id):
     answer_tags = [ str(tag.lower().strip()) for tag in answer_tags ]
 
     created_ts = datetime.now()
+    updated_ts = datetime.now()
 
     query = """ INSERT INTO "doobie_answers"
-                (answer, question_id, user_id, created_ts) 
-                VALUES ('{0}', '{1}', '{2}', '{3}')
+                (answer, question_id, user_id, created_ts, updated_ts) 
+                VALUES ('{0}', '{1}', '{2}', '{3}', '{4}')
                     RETURNING answer_id """.format(answer_text,
-                                question_id, user_id, created_ts)
+                            question_id, user_id, created_ts, updated_ts)
 
     cursor.execute(query)
     postgre.commit()
