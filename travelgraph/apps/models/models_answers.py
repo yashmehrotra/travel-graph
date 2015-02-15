@@ -46,7 +46,7 @@ def get_answer(answer_id):
         response.update({
             'answer_id': result['answer_id'],
             'answer': result['answer'],
-            'answer_tags': json.loads(result['answer_tags']),
+            # 'answer_tags': json.loads(result['answer_tags']),
             'question_id': result['question_id'],
             'user_details': user_details(result['user_id']),
         })
