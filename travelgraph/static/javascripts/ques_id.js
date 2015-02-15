@@ -1,31 +1,37 @@
 $(function () {
-  
+    
+  // retreive id(s) from html
   var ques_id = $('#ques-id').text();
   var asker_user_id = $('#asker-user-id').text();
   var logged_in_user_id = $('#logged-in-user-id').text();
-  
+    
+  // follow and subscribe buttons should be disabled if the currently logged in user is the same as the question asker
   if (asker_user_id == logged_in_user_id) {
     $('#follow-asker').attr('disabled', true);
     $('#subscribe-question').attr('disabled', true);
   }
 
+  // retreive all answers for the current question
   get_answers(ques_id);
 
+  // post an answer
   $('#post-ans').on('click', function (){
-    var ans_text = objEditor.getData();
+    var ans_text = objEditor.getData();   // get formatted html out of ckeditor 
     // console.log(ans_text);
     add_ans(ques_id, ans_text);
   });
   
-
+  // follow the question asker
   $('#follow-asker').on('click', function(){
     follow_user(asker_user_id, logged_in_user_id);
   });
 
+  // subscribe to a question
   $('#subscribe-question').on('click', function(){
     subscribe_question(logged_in_user_id, ques_id);
   });
 
+  // show/hide the answer text area
   $('#answer-button').on('click', function(){
     if($('#answer-textarea-grid').is(':visible')) {
       $('#answer-tags-select').next().width('100%');  // Used to correct the width of the tags input area when the text editor is shown
@@ -44,8 +50,7 @@ function get_answers(ques_id) {
     success: function(result) {
       if(result) {
         console.log(result);
-	// FOR APPENDING THE ANSWERS
-        append_answers(result);
+        append_answers(result);    // append all the retreived answers
       } else {
         console.log('Problem with ajax');
       }
