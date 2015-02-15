@@ -53,7 +53,7 @@ def ques_id(ques_id):
 def user_id(user_id):
     # data = models_questions.get_question(ques_id)
     
-    return render_template('.html', data=data)
+    return render_template('user_profile.html')
 
 
 @app.route('/logout')

@@ -80,7 +80,7 @@ function append_answers(result) {
   $('#answers-grid').empty();
 
   for (var i = result.answers.length - 1; i >= 0; i--) {
-    var answer_html_to_append = '<div class="uk-width-1-5"></div><div class="uk-width-3-5"><hr><p>' + result.answers[i].answer + '</p><br><article class="uk-comment uk-width-2-5"><header class="uk-comment-header"><img class="uk-comment-avatar" src="../../static/images/placeholder_avatar.svg" alt="user-img">Answered by <a href="">' + result.answers[i].user_details.username + '</a><ul class="uk-comment-meta"><li><span>Answered at 9:30pm on 11 Feb 2015</span></li></ul></header></article></div><!-- FOR DISPLAYING TAGS IN ANSWER --><div class="uk-width-1-5 uk-margin-top"><p><button class="uk-button uk-button-small" type="button">tag-1</button><button class="uk-button uk-button-small" type="button">tag-2</button></p></div>';    
+    var answer_html_to_append = '<div class="uk-width-1-5"></div><div class="uk-width-3-5"><hr><p>' + result.answers[i].answer + '</p><br><article class="uk-comment uk-width-2-5"><header class="uk-comment-header"><img class="uk-comment-avatar" src="../../static/images/placeholder_avatar.svg" alt="user-img" style="height: 40px; width: 40px;">Answered by <a href="">' + result.answers[i].user_details.username + '</a><ul class="uk-comment-meta"><li><span>Answered at 9:30pm on 11 Feb 2015</span></li></ul></header></article></div><!-- FOR DISPLAYING TAGS IN ANSWER --><div class="uk-width-1-5 uk-margin-top"><p><button class="uk-button uk-button-small" type="button">tag-1</button><button class="uk-button uk-button-small" type="button">tag-2</button></p></div>';    
 
     $('#answers-grid').append(answer_html_to_append);
   }
