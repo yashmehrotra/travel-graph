@@ -14,7 +14,7 @@ def add_question(user_id, question_title, question_desc, question_tags):
     question_tags = question_tags.split(',')
     question_tags = [ str(tag.lower().strip()) for tag in question_tags ]
 
-    question_text = unicode(question_text)
+    question_title = unicode(question_title)
     question_desc = str(question_desc)
     user_id = str(user_id)
 
@@ -24,7 +24,7 @@ def add_question(user_id, question_title, question_desc, question_tags):
                 (title, description, user_id, created_ts) 
                  VALUES ('{0}', '{1}', '{2}', '{3}') 
                  RETURNING question_id """.format(
-                    question_text, question_desc,
+                    question_title, question_desc,
                     user_id, created_ts)
 
     #pdb.set_trace()
@@ -40,10 +40,12 @@ def add_question(user_id, question_title, question_desc, question_tags):
     for tag in question_tags:
         models_tags.map_tag_to_doobie(tag, question_id, 'question')
 
+    map_to_doobie(question_id, user_id)
+
     response.update({
         'status': 'success',
         'message': 'question successfully added',
-        'question': question_text,
+        'question': question_title,
         'user_id': user_id,
     })
 

@@ -7,7 +7,11 @@ from travelgraph import app, settings
 from travelgraph.apps import auth
 
 from travelgraph.apps.models import (
-        models, models_questions, models_tags, models_answers)
+        models,
+        models_questions,
+        models_tags,
+        models_answers
+    )
 from travelgraph.apps import user_session
 
 
@@ -16,16 +20,15 @@ def api_add_question():
     '''
     The question details should be added
     '''
-    question      = request.form.get('question_text')
-    question_desc = request.form.get('question_desc')
-    question_tags = request.form.get('question_tags')
+    question_title = request.form.get('question_text')
+    question_desc  = request.form.get('question_desc')
+    question_tags  = request.form.get('question_tags')
 
     # Take user id and api key from form first then session
     user_id = request.form.get('user_id', session.get('user_id'))
-    api_key = request.form.get('api_key', session.get('api_key'))
 
-    result = models_questions.add_question(user_id, api_key,
-        question, question_desc, question_tags)
+    result = models_questions.add_question(user_id, question_title,
+                                question_desc, question_tags)
 
     return jsonify(result)
 
@@ -60,12 +63,11 @@ def subscribe_tag():
     '''
 
     user_id = request.form.get('user_id', session.get('user_id'))
-    api_key = request.form.get('api_key', session.get('api_key'))
     tag     = request.form.get('tag')
 
     tag_id = models_tags.get_tag_id(tag)
 
-    result = models_tags.user_subscribes_tag(user_id, api_key, tag_id)
+    result = models_tags.user_subscribes_tag(user_id, tag_id)
 
     return jsonify(result)
 
@@ -77,11 +79,10 @@ def follow_user():
     '''
 
     user_id = request.form.get('user_id', session.get('user_id'))
-    api_key = request.form.get('api_key', session.get('api_key'))
 
     user_id_to_follow = request.form.get('user_id_to_follow')
 
-    result = models.user_follows_user(user_id, api_key, user_id_to_follow)
+    result = models.user_follows_user(user_id, user_id_to_follow)
 
     return jsonify(result)
 
@@ -93,7 +94,6 @@ def add_answer():
     '''
 
     user_id = request.form.get('user_id', session.get('user_id'))
-    api_key = request.form.get('api_key', session.get('api_key'))
 
     question_id = request.form.get('question_id')
     answer = request.form.get('answer')
@@ -123,5 +123,19 @@ def get_question(question_id):
     '''
 
     result = models_questions.get_question(question_id)
+
+    return jsonify(result)
+
+
+@app.route('/api/user/follow_question', methods=['POST'])
+def subscribe_question():
+    '''
+    User wants to subscribe to a question with question_id given
+    '''
+
+    user_id = request.form.get('user_id')
+    question_id = request.form.get('question_id')
+
+    result = models_questions.subscribe_question(question_id, user_id)
 
     return jsonify(result)

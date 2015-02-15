@@ -39,7 +39,7 @@ def get_unique_username(first_name, last_name):
     username = '{0}-{1}-1'.format(first_name.lower(), last_name.lower())
 
     query = """ SELECT * FROM "user"
-                WHERE name = '{0}' """.format(username)
+                WHERE username = '{0}' """.format(username)
 
     cursor.execute(query)
 
@@ -116,13 +116,14 @@ def create_user(email, method=None, **kwargs):
 
     elif method == 'facebook':
         
+        password = hashlib.md5(get_random_word()).hexdigest()
+        
         # To see if user has already signed up and wants to login
         if len(result) != 0:
             #pdb.set_trace()
             response = auth_user(result[0]['email'], method, **kwargs)
             return response
 
-        password = hashlib.md5(get_random_word()).hexdigest()
 
         else:
             query = """ INSERT INTO "user" 
@@ -160,7 +161,7 @@ def auth_user(email, method=None, **kwargs):
             password = '{1}' """.format(email, password)
 
         cursor.execute(query)
-        result = cursor.fetchall()
+        result = cursor.fetchone()
 
         # Email Password combination does not match
         if len(result) == 0:
@@ -176,8 +177,8 @@ def auth_user(email, method=None, **kwargs):
             response.update({
                 'status': 'success',
                 'message': 'user-info is correct',
-                'user_id': result[0]['user_id'],
-                'username': result[0]['name']
+                'user_id': result['user_id'],
+                'username': result['username']
             })
             return response
 
@@ -212,7 +213,7 @@ def user_follows_user(user_id, user_id_to_follow):
 
     query = """ INSERT INTO "user_follows"
                 (user_id, follows_user_id,created_ts) 
-                VALUES ('{0}', '{1}') """.format(user_id,
+                VALUES ('{0}', '{1}', '{2}') """.format(user_id,
                                 user_id_to_follow, created_ts)
 
     cursor.execute(query)

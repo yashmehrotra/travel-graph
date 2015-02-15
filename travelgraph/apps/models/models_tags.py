@@ -35,23 +35,17 @@ def get_tag_id(tag):
         return tag_id
 
 
-def map_tag_to_doobie(tag, doobie_id, doobie_type):
+def map_tag_to_doobie(tag, mapping_id, doobie_type):
     
     tag_id = get_tag_id(tag)
 
     doobie_type_id = get_doobie_type_id(doobie_type)
 
     query = """ INSERT INTO "doobie_tags_mapping"
-                (tag_id, doobie_type, doobie_id) 
+                (tag_id, doobie_type, mapping_id) 
                 VALUES ('{0}', '{1}', '{2}') 
                 RETURNING id """.format(
-                        tag_id, doobie_type_id, doobie_id)
-
-    cursor.execute(query)
-    postgre.commit()
-
-    query = """ INSERT INTO "doobie" (type, mapping_id)
-                VALUES ('{0}', '{1}') """.format(doobie_type_id, mapping_id)
+                        tag_id, doobie_type_id, mapping_id)
 
     cursor.execute(query)
     postgre.commit()

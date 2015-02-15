@@ -15,14 +15,12 @@ def create_session(email):
     result = cursor.fetchone()
 
     session['user_id']    = result['user_id']
-    session['username']   = result['name']
-    session['api_key']    = result['api_key']
+    session['username']   = result['username']
     session['email']      = result['email']
     session['first_name'] = result['first_name']
     session['last_name']  = result['last_name']
 
     print 'session created'
-    print session['api_key']
 
 
 #No attributes cause we are destroying the current session
