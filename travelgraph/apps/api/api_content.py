@@ -97,8 +97,10 @@ def add_answer():
 
     question_id = request.form.get('question_id')
     answer = request.form.get('answer')
+    answer_tags = request.form.get('answer_tags')
 
-    result = models_answers.add_answer(question_id, answer, user_id)
+    result = models_answers.add_answer(question_id, answer,
+                                        answer_tags, user_id)
 
     return jsonify(result)
 
