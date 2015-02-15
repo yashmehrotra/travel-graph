@@ -1,5 +1,5 @@
 $(function (){
-        
+          
   $('#question-submit-button').on('click',function(){
     var ques_text = $('#question-text').val();
     var ques_desc = objEditor.getData();

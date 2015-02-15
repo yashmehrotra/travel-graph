@@ -38,7 +38,7 @@ def ques():
 @login_required
 def ques_id(ques_id):
     question_details = models_questions.get_question(ques_id)
-    asker_details = models.user_details(question_details['asked_by_user_id'])
+    asker_details = models.user_details(question_details['user_id'])
 
     data = {
         'question': question_details,

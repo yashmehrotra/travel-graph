@@ -12,7 +12,7 @@
 
 {% block body %}
 
-<div class="uk-grid">
+<div class="uk-grid" ng-app="travel-graph">
   <!-- FOR ASKER'S NAME, AVATAR AND RANK -->
   <div class="uk-width-1-5">
     
@@ -116,6 +116,7 @@
 
 
 <!-- ANSWERS APPENDED INSIDE THIS DIV -->
-<div class="uk-grid" id="answers-grid"></div>	
+<!-- <div class="uk-grid" id="answers-grid"></div>	 -->
+<div class="uk-grid" id="answers-grid" ng-controller="answers-get"></div>
 
 {% endblock %}  
