@@ -4,7 +4,7 @@ ANSWERS
 - question_id - BigInt
 - user_id     - BigInt
 - answer_ts   - DateTime
-- answer_tags - json
+- answer_tags - JSON
 
 QUESTIONS
 - question_id   - BigSerial
@@ -13,4 +13,43 @@ QUESTIONS
 - question_tags - JSON
 - user_id       - BigInt
 - question_ts   - DateTime
--  
+- question_uts  - DateTime
+
+TAGS
+- tag_id - BigSerial
+- tag    - Unicode
+
+TAGS_QUESTIONS
+- tag_id      - BigInt
+- question_id - BigInt
+
+TAGS_ANSWERS
+- tag_id    - BigInt 
+- answer_id - BigInt
+
+TAGS_USERS
+- tag_id  - BigInt
+- user_id - BigInt
+
+USER_QUESTIONS
+- user_id     - BigInt
+- question_id - BigInt
+
+USER_FOLLOW
+- user_id          - BigInt
+- follows(user_id) - BigInt
+
+USER
+- user_id    - BigSerial
+- email      - Unicode/Text
+- username   - Unicode
+- password   - Unicode
+- api_key    - Unicode
+- first_name - Unicode
+- last_name  - Unicode
+- created_ts - DateTime
+- updated_ts - DateTime
+
+FB
+- user_id - BigInt
+- fb_id   - BiggestIntEverMade

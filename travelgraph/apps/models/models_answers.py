@@ -4,16 +4,19 @@ import json
 from travelgraph.apps.database import postgre, cursor
 
 
-def add_answer(question_id, answer_text, user_id):
+def add_answer(question_id, answer_text, answer_tags,user_id):
     '''
     Storing answer for a given question
     '''
 
     response = {}
 
+    answer_tags = answer_tags.split(',')
+    answer_tags = [ str(tag.lower().strip()) for tag in answer_tags ]
+
     query = """ INSERT INTO "answers" (answer, question_id, user_id) 
-                VALUES ('{0}', '{1}', '{2}') """.format(answer_text,
-                                                question_id, user_id)
+                VALUES ('{0}', '{1}', '{2}', '{3}') """.format(answer_text,
+                                json.dumps(answer_tags),question_id, user_id)
 
     cursor.execute(query)
     postgre.commit()
@@ -43,6 +46,7 @@ def get_answer(answer_id):
         response.update({
             'answer_id': result['answer_id'],
             'answer': result['answer'],
+            'answer_tags': json.loads(result['answer_tags'],
             'question_id': result['question_id'],
             'user_details': user_details(result['user_id']),
         })
@@ -102,6 +106,7 @@ def get_user_answer(user_id, question_id=None):
                 response['answers'].append({
                     'answer_id': row['answer_id'],
                     'answer': row['answer'],
+                    'answer_tags': json.loads(row['answer_tags']),
                     'question_id': row['question_id'],
                     'user_id': row['user_id'],
                 })
@@ -132,6 +137,7 @@ def get_user_answer(user_id, question_id=None):
             response['answers'].update({
                 'answer_id': result['answer_id'],
                 'answer': result['answer'],
+                'answer_tags': json.loads(row['answer_tags']),
                 'question_id': result['question_id'],
                 'user_id': result['user_id']
             })

@@ -184,3 +184,23 @@ def get_user_questions(user_id):
     return response
 
 
+def subscribe_question(question_id, user_id):
+    '''
+    User wants to subscribe a question
+    '''
+
+    response = {}
+
+    query = """ INSERT INTO "" (question_id, user_id)
+                VALUES ('{0}', '{1}') """.format(question_id, user_id)
+
+    cursor.execute(query)
+    postgre.commit()
+
+    response.update({
+        'status': 'success',
+        'message': 'user_id - {0} subscribed to question_id - {1} '.format(
+                                                        question_id, user_id)
+    })
+
+    return response
