@@ -65,6 +65,7 @@ function add_ans(ques_id, ans_text) {
     data: {
       'question_id': ques_id,
       'answer': ans_text,
+      'answer_tags': 'a,b,c'
     },
     success: function(result) {
       if(result) {
