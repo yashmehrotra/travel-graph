@@ -12,7 +12,7 @@
 
 {% block body %}
 
-<div class="uk-grid" ng-app="travel-graph">
+<div class="uk-grid">
   <!-- FOR ASKER'S NAME, AVATAR AND RANK -->
   <div class="uk-width-1-5">
     
@@ -22,6 +22,7 @@
 	<img class="uk-comment-avatar" alt="avatar" src="{{ url_for('static', filename='images/placeholder_avatar.svg') }}"/>
 	<div hidden id="asker-user-id">{{ data.user.user_id }}</div>
 	<h4 class="uk-comment-title">{{ data.user.first_name + " " + data.user.last_name }}</h4>
+	<h2 class="uk-comment-title">{[{ 2 + 2 }]}</h4>
 	<div class="uk-badge uk-badge-warning uk-badge-mini">Rank</div>
       </header>
     </article>
@@ -114,9 +115,30 @@
   </div>
 </div>
 
-
 <!-- ANSWERS APPENDED INSIDE THIS DIV -->
 <!-- <div class="uk-grid" id="answers-grid"></div>	 -->
-<div class="uk-grid" id="answers-grid" ng-controller="answers-get"></div>
+<div class="uk-grid" id="answers-grid" ng-controller="AnswersCtrl">
+  <div class="uk-grid uk-width-1-1" ng-repeat="answer_data in answers">
+    <div class="uk-width-1-5"></div>
+
+    <div class="uk-width-3-5">
+      <hr>
+      {[{ answer_data.answer }]}
+      <article class="uk-comment uk-width-2-5">
+	<header class="uk-comment-header">
+	  <img class="uk-comment-avatar" src="../../static/images/placeholder_avatar.svg" alt="user-img" style="height: 40px; width: 40px;">Answered by <a href=""></a>
+	  <ul class="uk-comment-meta">
+	    <li>
+	      <span>Answered at 9:30pm on 11 Feb 2015</span>
+	    </li>
+	  </ul>
+	</header>
+      </article>
+    </div>
+    
+    <div class="uk-width-1-5 uk-margin-top"></div>
+  </div>
+</div>
+<!-- <article class="uk-comment uk-width-2-5"><header class="uk-comment-header"><img class="uk-comment-avatar" src="../../static/images/placeholder_avatar.svg" alt="user-img" style="height: 40px; width: 40px;">Answered by <a href="">' + result.answers[i].user_details.username + '</a><ul class="uk-comment-meta"><li><span>Answered at 9:30pm on 11 Feb 2015</span></li></ul></header></article> -->
 
 {% endblock %}  

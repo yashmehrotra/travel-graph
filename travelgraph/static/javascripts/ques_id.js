@@ -50,7 +50,7 @@ function get_answers(ques_id) {
     success: function(result) {
       if(result) {
         console.log(result);
-        append_answers(result);    // append all the retreived answers
+        // append_answers(result);    // append all the retreived answers
       } else {
         console.log('Problem with ajax');
       }
