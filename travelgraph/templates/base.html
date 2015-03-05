@@ -31,7 +31,7 @@
 
     {% block script %}{% endblock %}
   </head>
-  <body>
+  <body ng-app="travel-graph">
 
     <!-- TOP NAVBAR -->
     <nav class="uk-navbar">
@@ -60,7 +60,7 @@
 
     <!-- MAIN CONTAINERS -->
     <div style="padding: 20px 0;">
-      <div class="uk-container uk-container-center" ng-app="travel-graph">
+      <div class="uk-container uk-container-center">
 	{% block body %}{% endblock %}
       </div>
     </div>

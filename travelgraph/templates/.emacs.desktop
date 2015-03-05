@@ -1,0 +1,51 @@
+;; -*- mode: emacs-lisp; coding: emacs-mule; -*-
+;; --------------------------------------------------------------------------
+;; Desktop File for Emacs
+;; --------------------------------------------------------------------------
+;; Created Thu Mar  5 00:25:19 2015
+;; Desktop file format version 206
+;; Emacs version 24.3.1
+
+;; Global section:
+(setq desktop-missing-file-warning nil)
+(setq tags-file-name nil)
+(setq tags-table-list nil)
+(setq search-ring nil)
+(setq regexp-search-ring nil)
+(setq register-alist nil)
+(setq file-name-history '("/home/avijit/github/travel-graph/travelgraph/templates" "~/github/travel-graph/travelgraph/templates/../static/javascripts/ques_id.js" "~/github/travel-graph/travelgraph/templates/../static/javascripts/main.js" "~/github/travel-graph/travelgraph/static/javascripts/ques_id.js"))
+
+;; Buffer section -- buffers listed in same order as in buffer list:
+(desktop-create-buffer 206
+  "/home/avijit/github/travel-graph/travelgraph/templates/QnA.html"
+  "QnA.html"
+  'html-mode
+  '(anzu-mode git-gutter-mode linum-mode autopair-mode)
+  4102
+  '(4102 nil)
+  nil
+  nil
+  '((buffer-file-coding-system . undecided-unix)))
+
+(desktop-create-buffer 206
+  "/home/avijit/github/travel-graph/travelgraph/static/javascripts/ques_id.js"
+  "ques_id.js"
+  'js2-mode
+  '(anzu-mode git-gutter-mode linum-mode auto-complete-mode autopair-mode)
+  2726
+  '(2369 nil)
+  nil
+  nil
+  '((buffer-file-coding-system . undecided-unix)))
+
+(desktop-create-buffer 206
+  "/home/avijit/github/travel-graph/travelgraph/static/javascripts/main.js"
+  "main.js"
+  'js2-mode
+  '(anzu-mode git-gutter-mode linum-mode auto-complete-mode autopair-mode)
+  359
+  '(nil nil)
+  nil
+  nil
+  '((buffer-file-coding-system . undecided-unix)))
+
