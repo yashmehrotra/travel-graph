@@ -7,7 +7,7 @@
     $('.answered-tags-selected').chosen();
   });
 </script>
-<script type="text/javascript" src="{{ url_for('static', filename='javascripts/ques_id.js') }}"></script>
+<!-- <script type="text/javascript" src="{{ url_for('static', filename='javascripts/ques_id.js') }}"></script> -->
 {% endblock %}
 
 {% block body %}
@@ -61,25 +61,18 @@
 </div>
 
 <!-- FOR ANSWERS TEXTAREA -->
-<div id="answer-textarea-grid" class="uk-grid uk-hidden">
+<div id="answer-textarea-grid" class="uk-grid uk-hidden" ng-controller="PostAnswerCtrl">
 
-  <!-- USED AS A TEMPORARY FIX! -->
   <div class="uk-width-1-5"></div>
   
   <div class="uk-width-3-5">
-    <!-- <form> -->
 
-    <textarea id="answer-text" name="answer-text">
+    <textarea id="answer-text" name="answer-text" ck-editor ng-model="text">
       Post Your Answer Here.
     </textarea>
-
-    <script type="text/javascript">
-      CKEDITOR.replace('answer-text');
-      var objEditor = CKEDITOR.instances["answer-text"];  // for getting html
-    </script>
     
     <p>
-      <button class="uk-button uk-button-success uk-margin-top" id="post-ans">Post</button>
+      <button class="uk-button uk-button-success uk-margin-top" id="post-ans" ng-click="postAnswer()">Post</button>
     </p>
 
     <!-- </form> -->
@@ -103,7 +96,6 @@
 </div>
 
 <div class="uk-grid" id="ans-count">
-  <!-- USED AS A TEMPORARY FIX! -->
   <div class="uk-width-1-5"></div>
   <div class="uk-width-3-5">
     <div class="uk-panel uk-panel-box uk-panel-box-primary">
@@ -116,7 +108,7 @@
 
 <!-- ANSWERS APPENDED INSIDE THIS DIV -->
 <!-- <div class="uk-grid" id="answers-grid"></div>	 -->
-<div class="uk-grid" id="answers-grid" ng-controller="AnswersCtrl">
+<div class="uk-grid" id="answers-grid" ng-controller="GetAnswersCtrl">
   <div class="uk-grid uk-width-1-1" ng-repeat="answer_data in answers">
     <div class="uk-width-1-5"></div>
 
@@ -138,6 +130,5 @@
     <div class="uk-width-1-5 uk-margin-top"></div>
   </div>
 </div>
-<!-- <article class="uk-comment uk-width-2-5"><header class="uk-comment-header"><img class="uk-comment-avatar" src="../../static/images/placeholder_avatar.svg" alt="user-img" style="height: 40px; width: 40px;">Answered by <a href="">' + result.answers[i].user_details.username + '</a><ul class="uk-comment-meta"><li><span>Answered at 9:30pm on 11 Feb 2015</span></li></ul></header></article> -->
 
 {% endblock %}  

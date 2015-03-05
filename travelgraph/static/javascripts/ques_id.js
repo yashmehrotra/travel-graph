@@ -1,15 +1,16 @@
 $(function () {
     
-  // retreive id(s) from html
-  var ques_id = $('#ques-id').text();
-  var asker_user_id = $('#asker-user-id').text();
-  var logged_in_user_id = $('#logged-in-user-id').text();
+  // // // retreive id(s) from html
+  // var ques_id = $('#ques-id').text();
+  // var asker_user_id = $('#asker-user-id').text();
+  // var logged_in_user_id = $('#logged-in-user-id').text();
     
-  // follow and subscribe buttons should be disabled if the currently logged in user is the same as the question asker
-  if (asker_user_id == logged_in_user_id) {
-    $('#follow-asker').attr('disabled', true);
-    $('#subscribe-question').attr('disabled', true);
-  }
+  // // follow and subscribe buttons should be disabled if the currently logged in user is the same as the question asker
+  // if (asker_user_id == logged_in_user_id) {
+  //   $('#follow-asker').attr('disabled', true);
+  //   $('#subscribe-question').attr('disabled', true);
+ 
+ }
 
   // retreive all answers for the current question
   get_answers(ques_id);

@@ -1,4 +1,4 @@
-// Your app's root module...
+// Necessary for POST Requests to work!
 var app = angular.module('travel-graph', [], function($httpProvider) {
   // Use x-www-form-urlencoded Content-Type
   $httpProvider.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=utf-8';
@@ -45,18 +45,56 @@ var app = angular.module('travel-graph', [], function($httpProvider) {
   }];
 });
 
+// For ckeditor integration in AngularJS
+app.directive('ckEditor', [function () {
+  return {
+    require: '?ngModel',
+    restrict: 'C',
+    link: function(scope, elm, attr, ngModel) {
+      var ck = CKEDITOR.replace(elm[0]);
+      
+      if (!ngModel) return;
+      
+      ck.on('pasteState', function() {
+        scope.$apply(function() {
+          ngModel.$setViewValue(ck.getData());
+          
+        });
+      });   
+      
+      ngModel.$render = function(value) {
+        ck.setData(ngModel.$viewValue);
+      };
+    }
+  };
+}]);
+
+
+// Prevent conflict with Flask!
 app.config(function($interpolateProvider){
   $interpolateProvider.startSymbol('{[{');
   $interpolateProvider.endSymbol('}]}');
 });
 
-
+// For user to login/logout + storing current user data
 app.factory('UserSession', function($http) {
   var currentUser;
 
   return {
-    login: function($http) { 
-      // $http.post("/api/", );
+    login: function($http, data) { 
+      console.log("Data Received:", data);
+      $http({
+	method: 'POST',
+	url: "/api/login", 
+	data: data,
+      })
+      .success(function(data, status) {
+	console.log("Success: ", data);
+	window.location.replace('/ques/1');
+      })
+      .error(function(data, status){
+	console.log("Request Failed");      
+      });
     },
     logout: function($http) {
       $http.get("/api/logout")
@@ -66,40 +104,55 @@ app.factory('UserSession', function($http) {
 	  console.log("Logout Request Failed");
 	});
     },
-    // isLoggedIn: function() { },  // check status (logged in/logged out)
+    isLoggedIn: function(param) { 
+      console.log(param , "Received");
+      if (param) { 
+	return true; 
+      }
+	return false;
+    }, 
   }
 });
 
-// Login user from login.html page
-app.controller('LoginCtrl', ['$scope', '$http', function LoginCtrl($scope, $http) {
+// Login user from login.html view
+app.controller('LoginCtrl', ['$scope', '$http', 'UserSession', function LoginCtrl($scope, $http) {
   $scope.loginDetails = {};
-  $scope.loginUser = function (){
-    console.log($scope.loginDetails);
-    $http({
-      method: 'POST',
-      url: "/api/login", 
-      data: {
-      	'email': $scope.loginDetails.email,
-      	'password': $scope.loginDetails.password,
-      },
-    })
-    .success(function(data, status) {
-      console.log("Success: ", data);
-      window.location.replace('/ques/1');
-    })
-    .error(function(data, status){
-      console.log("Request Failed");      
-    });
+  var data = {
+    'email': $scope.loginDetails.email,
+    'password': $scope.loginDetails.password,
   };
+  console.log("Data sent:" , data);
+  $scope.loginUser = UserSession.login(data);
+  $scope.$watch( UserSession.isLoggedIn, function() {
+    $scope.isLoggedIn = UserSession.isLoggedIn(true);
+  });
 }]);
 
-
-function AnswersCtrl($scope, $http) {
+app.controller('GetAnswersCtrl', ['$scope', '$http', function GetAnswersCtrl($scope, $http) {
   $http.get("/api/content/get_answers/1/")
     .success(function(data, status) {
-      console.log(data);
       $scope.answers = data.answers;
     }).error(function(data, status) {
       console.log("Request Failed");
     });
-}
+}]);
+
+app.controller('PostAnswerCtrl', ['$scope', '$http', function PostAnswerCtrl($scope, $http) {
+  $scope.postAnswer = function() {
+    var data = {
+      // 'question_id': ,              // re-think implementation again
+      'answer': $scope.value,
+    };
+    $http({
+      method: 'POST',
+      url: "/api/content/add_answer", 
+      data: data,
+    })
+      .success(function(data, status) {
+	console.log(data);
+	$scope.answers = data.answers;
+      }).error(function(data, status) {
+	console.log("Request Failed");
+      });
+  };
+}]);
