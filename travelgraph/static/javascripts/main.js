@@ -84,32 +84,32 @@ app.factory('UserSession', function($http) {
     login: function($http, data) { 
       console.log("Data Received:", data);
       $http({
-	method: 'POST',
-	url: "/api/login", 
-	data: data,
+  method: 'POST',
+  url: "/api/login", 
+  data: data,
       })
       .success(function(data, status) {
-	console.log("Success: ", data);
-	window.location.replace('/ques/1');
+  console.log("Success: ", data);
+  window.location.replace('/ques/1');
       })
       .error(function(data, status){
-	console.log("Request Failed");      
+  console.log("Request Failed");      
       });
     },
     logout: function($http) {
       $http.get("/api/logout")
-	.success(function(data, status) {
-	  console.log(data);
-	}).error(function(data, status){
-	  console.log("Logout Request Failed");
-	});
+  .success(function(data, status) {
+    console.log(data);
+  }).error(function(data, status){
+    console.log("Logout Request Failed");
+  });
     },
     isLoggedIn: function(param) { 
       console.log(param , "Received");
       if (param) { 
-	return true; 
+  return true; 
       }
-	return false;
+  return false;
     }, 
   }
 });
@@ -149,10 +149,10 @@ app.controller('PostAnswerCtrl', ['$scope', '$http', function PostAnswerCtrl($sc
       data: data,
     })
       .success(function(data, status) {
-	console.log(data);
-	$scope.answers = data.answers;
+  console.log(data);
+  $scope.answers = data.answers;
       }).error(function(data, status) {
-	console.log("Request Failed");
+  console.log("Request Failed");
       });
   };
-}]);
+}])

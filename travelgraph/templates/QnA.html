@@ -14,15 +14,15 @@
 
 <div class="uk-grid">
   <!-- FOR ASKER'S NAME, AVATAR AND RANK -->
-  <div class="uk-width-1-5">
+  <div class="uk-width-1-5" ng-controller="QuestionAskerCtrl">
     
     <article class="uk-comment">
       <header class="uk-comment-header">
 	
 	<img class="uk-comment-avatar" alt="avatar" src="{{ url_for('static', filename='images/placeholder_avatar.svg') }}"/>
-	<div hidden id="asker-user-id">{{ data.user.user_id }}</div>
-	<h4 class="uk-comment-title">{{ data.user.first_name + " " + data.user.last_name }}</h4>
-	<div class="uk-badge uk-badge-warning uk-badge-mini">Rank</div>
+	<div id="asker-user-id" ng-model="askerData.user_id"></div>
+	<h4 class="uk-comment-title" ng-model="askerData.user_name"></h4>
+	<div class="uk-badge uk-badge-warning uk-badge-mini" ng-model="askerData.user_rank">Rank</div>
       </header>
     </article>
 
@@ -66,11 +66,11 @@
   <div class="uk-width-1-5"></div>
   
   <div class="uk-width-3-5">
-
-    <textarea id="answer-text" name="answer-text" ck-editor ng-model="text">
+    <textarea id="answer-text" name="answer-text" class="ck-editor" ng-model="text">
       Post Your Answer Here.
     </textarea>
-    
+
+    <div ng-bind-html-unsafe="text"></div>
     <p>
       <button class="uk-button uk-button-success uk-margin-top" id="post-ans" ng-click="postAnswer()">Post</button>
     </p>

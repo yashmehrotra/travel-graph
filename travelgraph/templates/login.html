@@ -9,10 +9,11 @@
 {% block body %}
 <h1>Login</h1>
 Enter your details<br>
-<form ng-controller="LoginCtrl" novalidate>
+<form ng-controller="LoginLogoutCtrl" novalidate>
   Email :<input id="email" type="email" name="email" ng-model="loginDetails.email" /><br>
   Password :<input id="password" type="password" name="password" ng-model="loginDetails.password" />
   <button id="login-button" ng-click="loginUser()">Login</button>
+  <button id="logout-button" ng-click="logoutUser()">Logout</button>
 </form>
 <h2>If you didnt signup</h2>
 <a href="signup">Click here to signup</a>
