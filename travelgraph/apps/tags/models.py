@@ -37,11 +37,12 @@ class Tags(Base):
     __tablename__ = "Tags"
 
     tag_id = Column(BigInteger, autoincrement=True, primary_key=True)
-    type   = Column(UnicodeText())
+    type   = Column(BigInteger) # Add foreign key
     tag    = Column(UnicodeText())
 
 
-    def get_tag_id(self, tag):
+    @staticmethod
+    def get_tag_id(tag):
         '''
         Retrieves tag_id of a given tag.
         If no tag exists then a new tag is creaed.
@@ -50,6 +51,9 @@ class Tags(Base):
         query_tag = session.query(Tags).filter_by(tag=tag).first()
 
         if not query_tag:
+            # The tag we searched for doesn't exist
+            # Hence we create a new tag
+            
             new_tag = Tags(type='', tag=tag)
             session.add(new_tag)
             session.commit()
@@ -60,10 +64,13 @@ class Tags(Base):
             return query_tag.tag_id
 
 
-    def get_tag(self, tag_id):
+    @staticmethod
+    def get_tag(tag_id):
         '''
         Get all the tag details corresponding to the given tag_id.
         '''
+
+        response = {}
 
         tag = session.query(Tags).filter_by(tag_id=tag_id).first()
 
@@ -76,9 +83,61 @@ class Tags(Base):
         return response
 
 
+class TagType(Base):
+    '''
+    The tag_type table
+    '''
+
+    __tablename__ = "tag_type"
+
+    id   = Column(BigInteger, autoincrement=True, primary_key=True)
+    type = Column(UnicodeText())
+
+
+class DoobieTagsMapping(Base):
+    '''
+    The Doobie_tags_mapping table
+    '''
+
+    __tablename__ = "Doobie_tags_mapping"
+
+    id          = Column(BigInteger, autoincrement=True, primary_key=True)
+    doobie_type = Column(BigInteger)
+    mapping_id  = Column(BigInteger)
+    tag_id      = Column(BigInteger) # Add appropriate foreign keys
+
+
+    @staticmethod
+    def map_tag_to_doobie(tag, mapping_id, doobie_type):
+        '''
+        Map tag to doobie - provide better desc here
+        '''
+
+        tag_id = Tags.get_tag_id(tag)
+        doobie_type_id = '1' # in questions, self.doobie_type = 1 etc
+        pass
+
+
+    @staticmethod
+    def get_doobie_tags(doobie_type, mapping_id):
+        '''
+        Get all tags for a specific doobie
+        '''
+
+        tags = []
+
+        query = session.query(DoobieTagsMapping).\
+                        filter(DoobieTagsMapping.doobie_type == doobie_type,
+                               DoobieTagsMapping.mapping_id == mapping_id)
+
+        tag_ids = [ row.tag_id for row in query ]
+
+        for tag_id in tag_ids:
+            tags.append(Tags.get_tag(tag_id))
+
+        return tags
+
+
 # Below is for the stupid testing
 pdb.set_trace()
-x = Tags().get_tag_id(u'yash')
-
-
-
+x = Tags.get_tag('1')
