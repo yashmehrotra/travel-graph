@@ -23,6 +23,9 @@ from sqlalchemy import create_engine
 from travelgraph.apps.doobies.models import DoobieType
 from travelgraph.apps.doobies.models import Doobie
 
+from travelgraph.apps.tags.models import DoobieTagsMapping
+from travelgraph.apps.tags.models import Tags
+
 SQLALCHEMY_ENGINE = 'postgresql://yash:44rrff@localhost:5432/'
 DATABASE = 'G2'
 
@@ -67,11 +70,14 @@ class Questions(Base):
         session.add(question)
         session.commit()
 
+        change_var_name = DoobieType.map_doobie(doobie_type, mapping_id)
+
         # Mapping Tags to Doobie
         doobie_type = Questions.doobie_type
         mapping_id = question.question_id
-
-        change_var_name = DoobieType.map_doobie(doobie_type, mapping_id)
+        # Make sure tags are in a unicoded list
+        for tag in tags:
+            DoobieTagsMapping.map_tag_to_doobie(tag, doobie_type, mapping_id)
 
         ques_dict = {
             'question_id': question.question_id,
@@ -80,7 +86,7 @@ class Questions(Base):
             'user_id': question.user_id,
             'created_ts': question.created_ts,
             'updated_ts': question.updated_ts,
-            'tags': 'get tags asshole',
+            'tags': DoobieTagsMapping.get_doobie_tags(doobie_type, mapping_id),
         }
 
         response.update({
@@ -98,7 +104,9 @@ class Questions(Base):
         Retrieve the question details through question_id
         '''
 
-        response = {}
+        ###
+        ### RAISE ERROR IF QUESTION NOT FOUND OR SOMETHING
+        ###
 
         question = session.query(Question).\
                            filter(Question.question_id==question_id).\
@@ -111,16 +119,11 @@ class Questions(Base):
             'user_id': question.user_id,
             'created_ts': question.created_ts,
             'updated_ts': question.updated_ts,
-            'tags': 'get tags asshole',
+            'tags': DoobieTagsMapping.get_doobie_tags(doobie_type,
+                                                    question.question_id),
         }
 
-        response.update({
-            'status': 'success',
-            'message': 'add message',
-            'question': ques_dict,
-        })
-
-        return response
+        return ques_dict
 
 
     @staticmethod
@@ -145,3 +148,35 @@ class Questions(Base):
         })
 
         return response
+
+
+    @staticmethod
+    def view_tag_questions(tag):
+        '''
+        Get all the questions corresponding to a particular tag
+        '''
+
+        response = {
+            'questions': [],
+        }
+
+        tagged_doobies = Tags.get_tagged_doobies({
+                        'tag': tag,
+                        'doobie_type': Question.doobie_type,
+                    })
+
+        for question in tagged_doobies['doobies']:
+            response['questions'].append(Question.get_question(
+                                    question['mapping_id']))
+
+        response.update({
+            'status': 'success',
+            'message': 'add message',
+        })
+
+        return response
+
+
+    @staticmethod
+    def user_subscribe_question():
+        pass

@@ -46,6 +46,11 @@ class Doobie(Base):
         pass
 
 
+    @staticmethod
+    def get_doobie_ie(doobie_type, mapping_id):
+        pass
+
+
 class DoobieType(Base):
     '''
     For keeping a count of diffent types of Doobies

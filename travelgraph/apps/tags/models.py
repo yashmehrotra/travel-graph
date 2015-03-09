@@ -108,14 +108,27 @@ class DoobieTagsMapping(Base):
 
 
     @staticmethod
-    def map_tag_to_doobie(tag, mapping_id, doobie_type):
+    def map_tag_to_doobie(tag, doobie_type, mapping_id):
         '''
         Map tag to doobie - provide better desc here
         '''
 
+        response = {}
+
         tag_id = Tags.get_tag_id(tag)
-        doobie_type_id = '1' # in questions, self.doobie_type = 1 etc
-        pass
+        
+        new_mapping = DoobieTagsMapping(doobie_type=doobie_type,
+                                        mapping_id=mapping_id,
+                                        tag_id=tag_id)
+
+        session.add(new_mapping)
+        session.commit()
+
+        response.update({
+            'status': 'success'
+        })
+
+        return response
 
 
     @staticmethod
@@ -137,6 +150,40 @@ class DoobieTagsMapping(Base):
 
         return tags
 
+
+    @staticmethod
+    def get_tagged_doobies(**params):
+        '''
+        Get all the doobies related to a tag
+        '''
+
+        response = {}
+
+        # Either tag or tag_id should be in the params, raise error if not
+
+        tag_id = params.get('tag_id', Tags.get_tag_id(params.get('tag')))
+
+        query = session.query(DoobieTagsMapping).\
+                        filter(DoobieTagsMapping.tag_id == tag_id)
+
+        if params.get('doobie_type'):
+            query = query.filter(
+                    DoobieTagsMapping.doobie_type == params['doobie_type'])
+
+        doobies = []
+
+        for row in query:
+            doobies.append({
+                'doobie_type': row.doobie_type,
+                'mapping_id': row.mapping_id,
+            })
+
+        response.update({
+            'status': 'success',
+            'doobies': doobies,
+        })
+
+        return response
 
 # Below is for the stupid testing
 pdb.set_trace()
