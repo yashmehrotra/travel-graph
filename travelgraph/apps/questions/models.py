@@ -51,8 +51,8 @@ class Questions(Base):
     title       = Column(UnicodeText())
     description = Column(UnicodeText())
     user_id     = Column(BigInteger)
-    created_ts  = Column(DateTime, default=datetime.utcnow)
-    updated_ts  = Column(DateTime, default=datetime.utcnow)
+    created_ts  = Column(DateTime, default=datetime.now())
+    updated_ts  = Column(DateTime, default=datetime.now())
 
     @staticmethod
     def add_question(title, description, user_id, tags):
