@@ -293,7 +293,7 @@ app.controller('QuestionCtrl', function QuestionCtrl($scope, $http, CurrentQuest
     var data = {
       question_id: $scope.questionData.questionId,
       answer: $scope.text,
-      answer_tags: "abc, def",
+      answer_tags: "abc, def"
     };
     $http({
       method: 'POST',
@@ -344,7 +344,8 @@ app.controller('NewUserCtrl', function NewUserCtrl($scope, $http) {
       email: $scope.newUserDetails.email,
       password: $scope.newUserDetails.password,
       first_name: $scope.newUserDetails.firstName,
-      last_name: $scope.newUserDetails.lastName
+      last_name: $scope.newUserDetails.lastName,
+      method: "normal"
     };
     $http({
       method: 'POST',
