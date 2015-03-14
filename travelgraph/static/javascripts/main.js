@@ -45,26 +45,69 @@ var app = angular.module('travel-graph', [], function($httpProvider) {
   }];
 });
 
+app.run(['$route', function($route)  {
+  $route.reload();
+}]);
+
+
 // For ckeditor integration in AngularJS
 app.directive('ckEditor', [function () {
   return {
     require: '?ngModel',
     restrict: 'C',
-    link: function(scope, elm, attr, ngModel) {
+    link: function (scope, elm, attr, model) {
+      var isReady = false;
+      var data = [];
       var ck = CKEDITOR.replace(elm[0]);
       
-      if (!ngModel) return;
-      
-      ck.on('pasteState', function() {
-        scope.$apply(function() {
-          ngModel.$setViewValue(ck.getData());
-          
+      function setData() {
+        if (!data.length) {
+          return;
+        }
+        
+        var d = data.splice(0, 1);
+        ck.setData(d[0] || '<span></span>', function () {
+          setData();
+          isReady = true;
         });
-      });   
+      }
+
+      ck.on('instanceReady', function (e) {
+        if (model) {
+          setData();
+        }
+      });
       
-      ngModel.$render = function(value) {
-        ck.setData(ngModel.$viewValue);
-      };
+      elm.bind('$destroy', function () {
+        ck.destroy(false);
+      });
+
+      if (model) {
+        ck.on('change', function () {
+          scope.$apply(function () {
+            var data = ck.getData();
+            if (data == '<span></span>') {
+              data = null;
+            }
+            model.$setViewValue(data);
+          });
+        });
+
+        model.$render = function (value) {
+          if (model.$viewValue === undefined) {
+            model.$setViewValue(null);
+            model.$viewValue = null;
+          }
+
+          data.push(model.$viewValue);
+
+          if (isReady) {
+            isReady = false;
+            setData();
+          }
+        };
+      }
+      
     }
   };
 }]);
@@ -76,83 +119,266 @@ app.config(function($interpolateProvider){
   $interpolateProvider.endSymbol('}]}');
 });
 
-// For user to login/logout + storing current user data
-app.factory('UserSession', function($http) {
-  var currentUser;
+app.config(['$routeProvider', '$locationProvider',
+  function($routeProvider, $locationProvider) {
+    $routeProvider
+      .when('/', {
+	templateUrl: '/static/partials/login.html',
+	controller: 'MainCtrl'
+      })
+      .when('/ques/:quesId', {
+	templateUrl: '/static/partials/QnA.html',
+	controller: 'QuestionCtrl'
+      })
+      .when('/signup', {
+	templateUrl: '/static/partials/signup.html',
+	controller: 'NewUserCtrl'
+      })
+      .when('/question', {
+	templateUrl: '/static/partials/question.html',
+	controller: 'AddQuestionCtrl'
+      })
+      .otherwise({
+	redirectTo: '/'
+      })
+    ;
+    $locationProvider.html5Mode(true);
+  }]);
+
+
+app.factory( 'AuthService', function($http) {
+  var user;
 
   return {
-    login: function($http, data) { 
-      console.log("Data Received:", data);
-      $http({
-  method: 'POST',
-  url: "/api/login", 
-  data: data,
-      })
-      .success(function(data, status) {
-  console.log("Success: ", data);
-  window.location.replace('/ques/1');
-      })
-      .error(function(data, status){
-  console.log("Request Failed");      
-      });
+    setUser : function(aUser){
+        user = aUser;
     },
-    logout: function($http) {
-      $http.get("/api/logout")
-  .success(function(data, status) {
-    console.log(data);
-  }).error(function(data, status){
-    console.log("Logout Request Failed");
-  });
-    },
-    isLoggedIn: function(param) { 
-      console.log(param , "Received");
-      if (param) { 
-  return true; 
-      }
-  return false;
-    }, 
-  }
+    isLoggedIn : function(){
+        return(user)? user : false;
+    }
+  };
+
 });
 
-// Login user from login.html view
-app.controller('LoginCtrl', ['$scope', '$http', 'UserSession', function LoginCtrl($scope, $http) {
-  $scope.loginDetails = {};
-  var data = {
-    'email': $scope.loginDetails.email,
-    'password': $scope.loginDetails.password,
+app.factory( 'CurrentQuestionService', function($http) {
+  var currentQuestionData;
+
+  return {
+    setData : function(data){
+      currentQuestionData = data;
+    },
+    getData : function(){
+      return(currentQuestionData)? currentQuestionData : false;
+    }
   };
-  console.log("Data sent:" , data);
-  $scope.loginUser = UserSession.login(data);
-  $scope.$watch( UserSession.isLoggedIn, function() {
-    $scope.isLoggedIn = UserSession.isLoggedIn(true);
-  });
+
+});
+
+
+// Needs Debugging ..
+app.controller('MainCtrl', ['$scope', '$http', 'AuthService', 'CurrentQuestionService', '$location', function ($scope, $http, AuthService, CurrentQuestionService, $location) {
+
+  $scope.$watch(AuthService.isLoggedIn, function (value, oldValue) {
+
+    if(!value && oldValue) {
+      console.log("Disconnect");
+      // $location.path('/');
+    }
+    
+    // As soon as the user logs in..
+    if(value) {
+      console.log("Connect");
+
+      // Get a list of all the questions
+      $http({
+	method: 'GET',
+	url: '/api/content/view_all_ques'
+      })
+	.success(function(response, status){
+	  
+	  var temp_ques_id = response.questions[0].question_id;
+
+	  console.log("The first question is:");
+	    
+	  // Fetch the question details from id
+	  $http({
+	    method: 'GET',
+	    url: '/api/content/get_question/' + temp_ques_id + "/"
+	  })
+	    .success(function(response, status){
+	      console.log(response);
+	      
+	      // Set current question data 
+	      CurrentQuestionService.setData(response);
+		
+	      // Redirect to question page
+	      $location.path('/ques/' + temp_ques_id);
+	    })
+	    .error(function(response, status){
+	      console.log("Request Failed");
+	    });
+
+	})
+	.error(function(response, status){
+	  console.log("Request Failed");
+	});
+    }
+
+  }, true);
 }]);
 
-app.controller('GetAnswersCtrl', ['$scope', '$http', function GetAnswersCtrl($scope, $http) {
-  $http.get("/api/content/get_answers/1/")
-    .success(function(data, status) {
-      $scope.answers = data.answers;
-    }).error(function(data, status) {
-      console.log("Request Failed");
-    });
-}]);
+// For user login and logout
+app.controller('LoginLogoutCtrl', ['$scope', '$http', 'AuthService', function LoginLogoutCtrl($scope, $http, AuthService){
 
-app.controller('PostAnswerCtrl', ['$scope', '$http', function PostAnswerCtrl($scope, $http) {
-  $scope.postAnswer = function() {
+  $scope.loginDetails = {};
+  $scope.currentUserData = {};
+
+  $scope.loginUser = function() {
     var data = {
-      // 'question_id': ,              // re-think implementation again
-      'answer': $scope.value,
+      email: $scope.loginDetails.email,
+      password: $scope.loginDetails.password
+    };
+    $http({
+	method: 'POST',
+	url: '/api/login',
+	data: data
+      })
+	.success(function(response, status){
+	  console.log("Success:", response);
+	  $scope.currentUserData.userName = response.username;
+	  console.log(response.username);
+	  AuthService.setUser(response);
+	})
+	.error(function(response, status){
+	  console.log("Request Failed");
+	});
+  };
+
+  $scope.logoutUser = function (){
+    $http({
+	method: 'GET',
+	url: '/api/logout'
+      })
+	.success(function(data, status){
+	  console.log("Successfully Logged out!");
+	})
+	.error(function(data, status){
+	  console.log("Request Failed");	
+	});
+    console.log(AuthService.isLoggedIn());
+  };
+
+}]);
+
+// Check why routeParams are not working
+app.controller('QuestionCtrl', function QuestionCtrl($scope, $http, CurrentQuestionService) {
+  $scope.questionData = {};
+  $scope.askerDetails = {};
+  $scope.answerData = [];
+  $scope.answerCount;
+  $scope.text = "";
+  $scope.answerTags = [];
+
+  // console.log("The Question id is:", $routeParams.quesId);
+  var data = CurrentQuestionService.getData();
+  console.log(data);
+  $scope.questionData.questionId = data.question_id;
+  $scope.questionData.questionText = data.question_text;
+  $scope.questionData.questionTags = data.question_tags;
+
+  
+  $scope.postAnswer = function() {
+    console.log($scope.text);
+    console.log($scope.answerTags);
+    var data = {
+      question_id: $scope.questionData.questionId,
+      answer: $scope.text,
+      answer_tags: "abc, def",
     };
     $http({
       method: 'POST',
-      url: "/api/content/add_answer", 
-      data: data,
+      url: '/api/content/add_answer',
+      data: data
     })
-      .success(function(data, status) {
-  console.log(data);
-  $scope.answers = data.answers;
-      }).error(function(data, status) {
-  console.log("Request Failed");
-      });
+      .success(function(response, status){
+    	console.log("Success " , response);
+      })
+      .error(function(response, status){
+    	console.log("Request Failed");
+    	console.log($scope.questionData.questionId);
+    });
   };
-}])
+
+  $http({
+    method: 'GET',
+    url: '/api/user/' + data.user_id + '/'
+  })
+    .success(function(response, status){
+      $scope.askerDetails.name = response.user_data[4] + " " + response.user_data[5];
+    })
+    .error(function(response, status){
+      console.log("Request Failed");
+  });
+
+  $http({
+    method: 'GET',
+    url: '/api/content/get_answers/' + data.question_id + '/'
+  })
+    .success(function(response, status){
+      console.log(response.answers[0].answer);
+      $scope.answerData = response.answers;
+      console.log($scope.answerData);
+      $scope.answerCount = $scope.answerData.length;
+      console.log($scope.answerCount);
+    })
+    .error(function(response, status){
+      console.log("Request Failed");
+    });
+
+})
+
+app.controller('NewUserCtrl', function NewUserCtrl($scope, $http) {
+  $scope.newUserDetails = {};
+  $scope.addUser = function() {
+    var data = {
+      email: $scope.newUserDetails.email,
+      password: $scope.newUserDetails.password,
+      first_name: $scope.newUserDetails.firstName,
+      last_name: $scope.newUserDetails.lastName
+    };
+    $http({
+      method: 'POST',
+      url: '/api/signup',
+      data: data
+    })
+      .success(function(response, status){
+	console.log(response);
+      }).error(function(response, status){
+	console.log("Request Failed");
+      });
+  }
+});
+
+app.controller('AddQuestionCtrl', function AddQuestionCtrl($scope, $http){
+  $scope.questionData = {};
+  $scope.text = "";
+  $scope.postQuestion = function() {
+    var data = {
+      question_title: $scope.questionData.title, 
+      question_desc: $scope.text,
+      question_tags: $scope.questionData.tags
+    };
+    console.log(data);
+      $http({
+      method: 'POST',
+      url: '/api/content/add_question',
+      data: data
+    })
+      .success(function(response, status){
+	console.log(response);
+      })
+      .error(function(response, status){
+	console.log("Request Failed");
+      });
+  }
+});

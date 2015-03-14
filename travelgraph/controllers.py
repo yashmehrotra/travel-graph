@@ -11,4 +11,4 @@ from travelgraph import app
 @app.route('/login')
 @app.route('/blog')
 def basic_pages(**kwargs):
-	return make_response(open('travelgraph/templates/index.html').read())
+        return make_response(open('travelgraph/templates/index.html').read())
