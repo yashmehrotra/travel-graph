@@ -1,17 +1,18 @@
-<div>
-  <h1>Sign up</h1>
-  <p>Enter the details below to sign up</p>
+<form ng-submit="addUser()">
 
-  <!-- <form action="" id="sign-up-form"> -->
-  <input placeholder="Email" id="email" type="email" name="email" ng-model="newUserDetails.email" /><br>
-  <input placeholder="Password" id="password" type="password" name="password" ng-model="newUserDetails.password" /><br>
-  <input placeholder="First Name" id="first_name" type="text" name="first_name" ng-model="newUserDetails.firstName" /><br>
-  <input placeholder="Last Name" id="last_name" type="text" name="last_name" ng-model="newUserDetails.lastName" /><br>
-  <button class="button animated fadeInUp delay-1s" ng-click="addUser()">Sign up</button>
-  <!-- </form> -->
-</div>
+  <div>
+    <h1>Sign up</h1>
+    <p>Enter the details below to sign up</p>
+    <input placeholder="Email" id="email" type="email" name="email" ng-model="newUserDetails.email" /><br>
+    <input placeholder="Password" id="password" type="password" name="password" ng-model="newUserDetails.password" /><br>
+    <input placeholder="First Name" id="first_name" type="text" name="first_name" ng-model="newUserDetails.firstName" /><br>
+    <input placeholder="Last Name" id="last_name" type="text" name="last_name" ng-model="newUserDetails.lastName" /><br>
+    <button class="button animated fadeInUp delay-1s">Sign up</button>
+  </div>
 
-<div class="w-col w-col-6">
-  <h3>Facebook</h3>
-  <fb:login-button scope="public_profile,email" onlogin="checkLoginState();"></fb:login-button>
-</div>
+  <div class="w-col w-col-6">
+    <h3>Facebook</h3>
+    <fb:login-button scope="public_profile,email" onlogin="checkLoginState();" ng-click="addUser()"></fb:login-button>
+  </div>
+  
+</form>
