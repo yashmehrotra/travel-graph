@@ -178,3 +178,84 @@ class Users(Base):
 
         elif method == 'facebook':
             # Get user id and validate
+            # Use token
+            pass
+
+
+class Following(Base):
+    ''' 
+    User following another user
+    '''
+
+    __tablename__ = "Following"
+
+    user_id    = Column(BigInteger, primary_key=True)
+    follow_id  = Column(BigInteger, primary_key=True)
+    created_ts = Column(DateTime, default=datetime.now())
+
+    
+    @staticmethod
+    def user_follow(user_id, follow_id):
+        '''
+        When the user wants to follow another user
+        '''
+
+        response = {}
+
+        following = Following(user_id=user_id,
+                              follow_id=follow_id)
+
+        session.add(following)
+        session.commit()
+
+        response.update({
+            'status': 'success',
+            'message': 'User {0} now follows {1}',
+        })
+
+        return response
+
+
+    @staticmethod
+    def get_followers(user_id):
+        '''
+        Get a list of all people who follow the given user_id
+        '''
+
+        response = {
+            'followers': []
+        }
+
+        query = session.query(Following).\
+                        filter(Following.user_id == user_id)
+
+        response.update({
+            'status': 'success',
+            'followers': [ row.follow_id for row in query ],
+            'message' : 'some message',
+        })
+
+        return response
+
+
+    @staticmethod
+    def get_following(user_id):
+        '''
+        Get a list of all people who the given user_id follows
+        '''
+
+        response = {
+            'following': []
+        }
+
+        query = session.query(Following).\
+                        filter(Following.follow_id == user_id)
+
+        response.update({
+            'status': 'success',
+            'followers': [ row.user_id for row in query ],
+            'message' : 'some message',
+        })
+
+        return response
+
