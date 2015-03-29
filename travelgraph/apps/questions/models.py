@@ -44,7 +44,7 @@ class Questions(Base):
     
     DOOBIE_NAME = "questions"
     
-    doobie_type = DoobieType.get_doobie_type(doobie_name)
+    doobie_type = DoobieType.get_doobie_type(DOOBIE_NAME)
 
     
     question_id = Column(BigInteger, autoincrement=True, primary_key=True)

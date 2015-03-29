@@ -1,14 +1,14 @@
 $(function(){
-  $('#login-button').on('click', submit);
+  //   $('#login-button').on('click', submit);
   
-  // DEBUG THIS...
-  $('.login-input').on('keypress', function(event){
-    event.preventDefault();
-    if (event.which == 13) {
-      // alert("Hello");
-      submit();
-    }
-  });
+  // // DEBUG THIS...
+  // $('.login-input').on('keypress', function(event){
+  //   event.preventDefault();
+  //   if (event.which == 13) {
+  //     // alert("Hello");
+  //     submit();
+  //   }
+  // });
 
 });
 
@@ -21,8 +21,8 @@ function submit() {
         type: "POST",
         url: "api/login",
         data: {
-            'email':email,
-            'password':password,
+            'email': email,
+            'password': password,
         },
         success: function(result) {
             if(result) {

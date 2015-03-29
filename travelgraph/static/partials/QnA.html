@@ -1,0 +1,128 @@
+<!--
+    /*CHECK FOR HOW TO TAKE THE VALUES OF TAGS FOR AN ANSWER*/
+  -->
+
+<div class="uk-grid">
+  <!-- FOR ASKER'S NAME, AVATAR AND RANK -->
+  <div class="uk-width-1-5">
+    
+    <article class="uk-comment">
+      <header class="uk-comment-header">
+	
+	<img class="uk-comment-avatar" alt="avatar" src="/static/images/placeholder_avatar.svg">
+	<!-- <div id="asker-user-id">{[{ quesId }]}</div> -->
+	<h4 class="uk-comment-title">{[{ askerDetails.name }}</h4>
+	<div class="uk-badge uk-badge-warning uk-badge-mini">Rank</div>
+      </header>
+    </article>
+
+    <div class="uk-clearfix uk-margin-top uk-center">
+      <button class="uk-button uk-button-small uk-button-primary" id="follow-asker" type="button">Follow</button>
+    </div>
+    
+  </div>
+  
+  <!-- FOR QUES TEXT + OTHER DETAILS -->
+  <div class="uk-width-4-5">
+    <h2>{[{ questionData.questionText }]}</h2>
+
+    <div class="uk-grid">
+      <div class="uk-width-4-5">
+	<p>
+	  <!-- <button class="uk-button uk-button-mini" type="button">Tag</button> -->
+	  <button class="uk-button uk-button-mini" type="button" ng-repeat="tag in questionData.questionTags">{[{ tag }]}</button>
+	</p>	      
+      </div>
+
+      <div class="uk-width-1-5">
+	<button class="uk-button uk-button-small uk-button-danger uk-margin-right uk-float-right" id="subscribe-question" type="button">Subscribe</button>
+      </div>
+    </div>
+    
+    <hr>
+    <p>
+      <button id="answer-button" class="uk-button uk-button-success" type="button" ng-click="hideAnswerTextarea = !hideAnswerTextarea">Answer</button>
+    </p>
+    
+  </div>
+  
+</div>
+
+<!-- FOR ANSWERS TEXTAREA -->
+<div id="answer-textarea-grid" class="uk-grid" ng-show="!hideAnswerTextarea">
+
+  <div class="uk-width-1-5"></div>
+  
+  <div class="uk-width-3-5">
+
+    <form name="submitAnswer" ng-submit="postAnswer()">
+      <textarea id="answer-text" name="answerText" class="ck-editor" ng-model="text" required></textarea>
+      
+      <p>
+	<span style="color:red;" ng-show="submitAnswer.answerText.$error.required">*Required Fields</span><br>
+	<button class="uk-button uk-button-success uk-margin-top" id="post-ans">Post</button>
+      </p>
+    </form>
+    <!-- </form> -->
+  </div>
+
+  <!-- FOR ADDITION OF TAGS FOR A QUESTION -->
+  <div class="uk-width-1-5">
+    <select id="answer-tags-select" class="uk-width-1-1" name="answer-tags-select" multiple data-placeholder="add some tags.." ng-model="answerTags">
+      <option value="tag-1">tag-1</option>
+      <option value="tag-2">tag-2</option>
+      <option value="tag-3">tag-3</option>
+      <option value="tag-4">tag-4</option>
+      <option value="tag-5">tag-5</option>
+      <option value="tag-6">tag-6</option>
+      <option value="tag-7">tag-7</option>
+      <option value="tag-8">tag-8</option>
+      <option value="tag-9">tag-9</option>
+    </select>
+  </div>
+  
+</div>
+
+<div class="uk-grid" id="ans-count">
+  <div class="uk-width-1-5"></div>
+  <div class="uk-width-3-5">
+    <div class="uk-panel uk-panel-box uk-panel-box-primary">
+      <h5 id="answers-count-text">
+	<!-- NO. OF ANSWERS APPENDED HERE -->
+	{[{ answerCount + " Answers" }]}
+      </h5>
+    </div>
+  </div>
+</div>
+
+<!-- ANSWERS APPENDED INSIDE THIS DIV -->
+<div class="uk-grid" id="answers-grid">
+  <div class="uk-grid uk-width-1-1" ng-repeat="answer_data in answerData">
+  <!-- <div class="uk-grid uk-width-1-1" ng-repeat="answer_data in answerData"> -->
+    <div class="uk-width-1-5"></div>
+    
+    <div class="uk-width-3-5">
+      <hr>
+      <p ng-bind-html-unsafe="answer_data.answer"></p>
+      <article class="uk-comment uk-width-3-5">
+	<header class="uk-comment-header">
+	  <img class="uk-comment-avatar" src="../../static/images/placeholder_avatar.svg" alt="user-img" style="height: 40px; width: 40px;">Answered by {[{ answer_data.user_details.first_name + " " + answer_data.user_details.last_name }]}
+	  <ul class="uk-comment-meta">
+	    <li>
+	      <span>Answered at 9:30pm on 11 Feb 2015</span>
+	    </li>
+	  </ul>
+	</header>
+      </article>
+    </div>
+    
+    <div class="uk-width-1-5 uk-margin-top"></div>
+  </div>
+</div>
+
+<script type="text/javascript">
+  $(function (){
+    $('#answer-tags-select').chosen();
+    $('.answered-tags-selected').chosen();
+  });
+</script>

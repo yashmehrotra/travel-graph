@@ -1,15 +1,16 @@
 $(function () {
     
-  // retreive id(s) from html
-  var ques_id = $('#ques-id').text();
-  var asker_user_id = $('#asker-user-id').text();
-  var logged_in_user_id = $('#logged-in-user-id').text();
+  // // // retreive id(s) from html
+  // var ques_id = $('#ques-id').text();
+  // var asker_user_id = $('#asker-user-id').text();
+  // var logged_in_user_id = $('#logged-in-user-id').text();
     
-  // follow and subscribe buttons should be disabled if the currently logged in user is the same as the question asker
-  if (asker_user_id == logged_in_user_id) {
-    $('#follow-asker').attr('disabled', true);
-    $('#subscribe-question').attr('disabled', true);
-  }
+  // // follow and subscribe buttons should be disabled if the currently logged in user is the same as the question asker
+  // if (asker_user_id == logged_in_user_id) {
+  //   $('#follow-asker').attr('disabled', true);
+  //   $('#subscribe-question').attr('disabled', true);
+ 
+ }
 
   // retreive all answers for the current question
   get_answers(ques_id);
@@ -50,7 +51,7 @@ function get_answers(ques_id) {
     success: function(result) {
       if(result) {
         console.log(result);
-        append_answers(result);    // append all the retreived answers
+        // append_answers(result);    // append all the retreived answers
       } else {
         console.log('Problem with ajax');
       }
@@ -65,7 +66,7 @@ function add_ans(ques_id, ans_text) {
     data: {
       'question_id': ques_id,
       'answer': ans_text,
-      'answer_tags': 'a,b,c',
+      'answer_tags': 'a,b,c'
     },
     success: function(result) {
       if(result) {
