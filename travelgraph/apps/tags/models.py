@@ -155,6 +155,7 @@ class DoobieTagsMapping(Base):
     def get_tagged_doobies(**params):
         '''
         Get all the doobies related to a tag
+        also add which parameters should be passed
         '''
 
         response = {}

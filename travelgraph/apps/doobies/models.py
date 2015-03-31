@@ -82,3 +82,24 @@ class DoobieType(Base):
                               filter(DoobieType.name == doobie_name).first()
 
         return doobie_type
+
+
+class UserDoobieFollow(Base):
+    '''
+    When User Follows a Doobie
+    '''
+
+    __tablename__ = 'user_doobie_follow'
+
+    id         = Column(BigInteger, autoincrement=True, primary_key=True)
+    user_id    = Column(BigInteger, primary_key=True)
+    doobie_id  = Column(BigInteger, primary_key=True)
+    created_ts = Column(DateTime, default=datetime.now())
+
+    @staticmethod
+    def add_follower(user_id, doobie_id):
+        '''
+        When a user wants to follow a doobie
+        '''
+
+        pass
