@@ -45,34 +45,46 @@ var app = angular.module('travel-graph', [], function($httpProvider) {
   }];
 });
 
+
 // to fix routing issues...
-// app.run(['$route', function($route)  {
-//   $route.reload();
-// }]);
+/* app.run(['$route', function($route)  {
+ * $route.reload();
+ * }]);
+ */
 
 
 app.config(function ($stateProvider) {
     
   $stateProvider
     .state('welcome', {
-      url: '/login',
       data: {
-	requireLogin: false
+	requireLogin: false // this property will apply to all it's children
       }
     })
-    .state('app', {
+    .state('welcome.signup', {
+      url: '/signup',
+      templateUrl: "/static/partials/signup.html",
+    })
+    .state('welcome.login', {
+      url: '/login',
+      templateUrl: "/static/partials/new-login.html",
+    })
+    .state('forLoggedInUser', {
       abstract: true,
       data: {
-        requireLogin: true // this property will apply to all children of 'app'
+        requireLogin: true // this property will apply to all it's children
       }
     })
-    .state('app.dashboard', {
-      // child state of `app`
-      // requireLogin === true
+    .state('forLoggedInUser.askQuestion', {
+      url:'/ask_question',
+      templateUrl: "/static/partials/question.html"
+    })
+    .state('forLoggedInUser.viewQuestion', {
+      url:'/ques/:quesId',
+      templateUrl: "/static/partials/QnA.html"
     })
 
 });
-
 
 
 app.config(function ($httpProvider) {
@@ -123,7 +135,7 @@ app.service('loginModal', function ($modal, $rootScope) {
 
   return function() {
     var instance = $modal.open({
-      templateUrl: 'partials/new-login.html',
+      templateUrl: '/static/partials/new-login.html',
       controller: 'LoginModalCtrl',
       controllerAs: 'LoginModalCtrl'
     })
@@ -132,7 +144,6 @@ app.service('loginModal', function ($modal, $rootScope) {
   };
 
 });
-
 
 
 app.controller('LoginModalCtrl', function ($scope, UsersApi) {
