@@ -178,15 +178,16 @@ app.factory( 'CurrentQuestionService', function($http) {
 
 });
 
+// not in actual use currently
 app.factory( 'AllQuestionsService', function($http) {
-  var questionsList = [];
+  var allQuestionsData;
 
   return {
     setData : function(data){
-      questionsList = data;
+      allQuestionsData = data;
     },
     getData : function(){
-      return(questionsList)? questionsList : false;
+      return(allQuestionsData)? allQuestionsData : false;
     }
   };
 
@@ -206,51 +207,54 @@ app.controller('MainCtrl', ['$scope', '$http', 'AuthService', 'CurrentQuestionSe
     // As soon as the user logs in..
     if(value) {
       console.log("Connect");
+      $location.path('/all_questions');
 
       // Get a list of all the questions
-      $http({
-	method: 'GET',
-	url: '/api/content/view_all_ques'
-      })
-	.success(function(response, status){
-	  console.log(response);
+      // $http({
+      // 	method: 'GET',
+      // 	url: '/api/content/view_all_ques'
+      // })
+      // 	.success(function(response, status){
+      // 	  console.log(response);
 
-	  // if (response.questions[6] === undefined) {
-	  //   console.log("Hello");
-	  // }
+      // 	  // if (response.questions[6] === undefined) {
+      // 	  //   console.log("Hello");
+      // 	  // }
 	    
-	  if (response.questions.length === 0) {
-	    $location.path('/question');
-	  } else {
-	    AllQuestionsService.setData(response.questions);
-	  }
+      // 	  if (response.questions.length === 0) {
+      // 	    $location.path('/question');
+      // 	  } else {
+      // 	    // AllQuestionsService.setData(response);
+      // 	    // console.log(AllQuestionsService.getData());
+      // 	    $location.path('/all_questions');	    
+      // 	  }
 
-	  var temp_ques_id = response.questions[0].question_id;
+      // 	  var temp_ques_id = response.questions[0].question_id;
 	  
-	  console.log("The first question is:");
+      // 	  console.log("The first question is:");
 	    
-	  // Fetch the question details from id
-	  $http({
-	    method: 'GET',
-	    url: '/api/content/get_question/' + temp_ques_id + "/"
-	  })
-	    .success(function(response, status){
-	      console.log(response);
+      // 	  // Fetch the question details from id
+      // 	  $http({
+      // 	    method: 'GET',
+      // 	    url: '/api/content/get_question/' + temp_ques_id + "/"
+      // 	  })
+      // 	    .success(function(response, status){
+      // 	      console.log(response);
 	      
-	      // Set current question data 
-	      CurrentQuestionService.setData(response);
+      // 	      // Set current question data 
+      // 	      CurrentQuestionService.setData(response);
 		
-	      // Redirect to question page
-	      $location.path('/ques/' + temp_ques_id);
-	    })
-	    .error(function(response, status){
-	      console.log("Request Failed");
-	    });
+      // 	      // Redirect to question page
+      // 	      $location.path('/ques/' + temp_ques_id);
+      // 	    })
+      // 	    .error(function(response, status){
+      // 	      console.log("Request Failed");
+      // 	    });
 
-	})
-	.error(function(response, status){
-	  console.log("Request Failed");
-	});
+      // 	})
+      // 	.error(function(response, status){
+      // 	  console.log("Request Failed");
+      // 	});
     }
 
   }, true);
@@ -413,8 +417,40 @@ app.controller('AddQuestionCtrl', function AddQuestionCtrl($scope, $http){
   }
 });
 
-app.controller('AllQuestionsCtrl', function AllQuestionsCtrl($scope, AllQuestionsService){
-  $scope.questionsList;
-  $scope.questionsList = AllQuestionsService.getData();
-  console.log(AllQuestionsService.getData());
+app.controller('AllQuestionsCtrl', function AllQuestionsCtrl($scope, $http, CurrentQuestionService, $location){
+  $scope.questionsList = [];
+  $scope.goToQuestion = function(question_id) {
+  
+  console.log(question_id);
+
+    // Fetch the question details from id
+    $http({
+      method: 'GET',
+      url: '/api/content/get_question/' + question_id + "/"
+    })
+      .success(function(response, status){
+      	console.log(response);
+	
+      	// Set current question data 
+      	CurrentQuestionService.setData(response);
+	
+      	// Redirect to question page
+      	$location.path('/ques/' + question_id);
+      })
+      .error(function(response, status){
+      	console.log("Request Failed");
+      });
+ 
+  }
+  $http({
+    method: 'GET',
+    url: '/api/content/view_all_ques'
+  })
+    .success(function(response, status){
+      $scope.questionsList = response.questions;
+      console.log($scope.questionsList);
+    }).error(function(response, status){
+      console.log("Request Failed");
+    });
+
 });
