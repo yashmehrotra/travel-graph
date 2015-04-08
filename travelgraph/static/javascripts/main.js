@@ -138,6 +138,10 @@ app.config(['$routeProvider', '$locationProvider',
 	templateUrl: '/static/partials/question.html',
 	controller: 'AddQuestionCtrl'
       })
+      .when('/all_questions', {
+	templateUrl: '/static/partials/all_questions.html',
+	controller: 'AllQuestionsCtrl'
+      })
       .otherwise({
 	redirectTo: '/'
       })
@@ -174,9 +178,23 @@ app.factory( 'CurrentQuestionService', function($http) {
 
 });
 
+app.factory( 'AllQuestionsService', function($http) {
+  var questionsList = [];
+
+  return {
+    setData : function(data){
+      questionsList = data;
+    },
+    getData : function(){
+      return(questionsList)? questionsList : false;
+    }
+  };
+
+});
+
 
 // Needs Debugging ..
-app.controller('MainCtrl', ['$scope', '$http', 'AuthService', 'CurrentQuestionService', '$location', function ($scope, $http, AuthService, CurrentQuestionService, $location) {
+app.controller('MainCtrl', ['$scope', '$http', 'AuthService', 'CurrentQuestionService', 'AllQuestionsService', '$location', function ($scope, $http, AuthService, CurrentQuestionService, AllQuestionsService, $location) {
 
   $scope.$watch(AuthService.isLoggedIn, function (value, oldValue) {
 
@@ -195,9 +213,20 @@ app.controller('MainCtrl', ['$scope', '$http', 'AuthService', 'CurrentQuestionSe
 	url: '/api/content/view_all_ques'
       })
 	.success(function(response, status){
-	  
-	  var temp_ques_id = response.questions[0].question_id;
+	  console.log(response);
 
+	  // if (response.questions[6] === undefined) {
+	  //   console.log("Hello");
+	  // }
+	    
+	  if (response.questions.length === 0) {
+	    $location.path('/question');
+	  } else {
+	    AllQuestionsService.setData(response.questions);
+	  }
+
+	  var temp_ques_id = response.questions[0].question_id;
+	  
 	  console.log("The first question is:");
 	    
 	  // Fetch the question details from id
@@ -370,7 +399,7 @@ app.controller('AddQuestionCtrl', function AddQuestionCtrl($scope, $http){
       question_tags: $scope.questionData.tags
     };
     console.log(data);
-      $http({
+    $http({
       method: 'POST',
       url: '/api/content/add_question',
       data: data
@@ -382,4 +411,10 @@ app.controller('AddQuestionCtrl', function AddQuestionCtrl($scope, $http){
 	console.log("Request Failed");
       });
   }
+});
+
+app.controller('AllQuestionsCtrl', function AllQuestionsCtrl($scope, AllQuestionsService){
+  $scope.questionsList;
+  $scope.questionsList = AllQuestionsService.getData();
+  console.log(AllQuestionsService.getData());
 });

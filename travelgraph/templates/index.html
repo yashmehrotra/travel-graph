@@ -35,8 +35,34 @@
     <!--
 	*/* USE ng-include here */*
       -->
+    <!-- <div ng-include="'header.html'"></div> -->
 
-    <div ng-include="'header.html'"></div>
+    <!-- TOP NAVBAR -->
+    <nav class="uk-navbar" ng-controller="LoginLogoutCtrl">
+      <ul class="uk-navbar-nav">
+	<li><a href>Questions</a></li>
+	<li><a href>Tags</a></li>
+	<li><a href>Users</a></li>
+	<li><a href="/signup">Sign up</a></li>
+	<li><a href="/question">Ask a Question</a></li>
+      </ul>
+      <div class="uk-navbar-flip">
+	<ul class="uk-navbar-nav">
+	  <li class="uk-parent" data-uk-dropdown ng-model="currentUserData">
+	    <!-- <div hidden id="logged-in-user-id">{{ session['user_id'] }}</div> -->
+	    <!-- <a href="">{[{  }]}</a> -->
+	    {[{ currentUserData.userName }]}
+	    <div class="uk-dropdown uk-dropdown-navbar">
+	      <ul class="uk-nav uk-nav-navbar">
+		<li><a href="">Profile</a></li>
+		<li><a id="header-logout" href="">Logout</a></li>
+	      </ul>
+	    </div>
+	  </li>
+	</ul>
+      </div>
+    </nav>
+
     
     <!-- MAIN CONTAINERS -->
     <div style="padding: 20px 0;">
