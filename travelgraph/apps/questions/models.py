@@ -50,7 +50,7 @@ class Questions(Base):
     question_id = Column(BigInteger, autoincrement=True, primary_key=True)
     title       = Column(UnicodeText())
     description = Column(UnicodeText())
-    user_id     = Column(BigInteger)
+    user_id     = Column(BigInteger, primary_key=True)
     created_ts  = Column(DateTime, default=datetime.now())
     updated_ts  = Column(DateTime, default=datetime.now())
 
@@ -175,8 +175,3 @@ class Questions(Base):
         })
 
         return response
-
-
-    @staticmethod
-    def user_subscribe_question():
-        pass

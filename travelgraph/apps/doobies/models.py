@@ -47,7 +47,7 @@ class Doobie(Base):
 
 
     @staticmethod
-    def get_doobie_ie(doobie_type, mapping_id):
+    def get_doobie_id(doobie_type, mapping_id):
         pass
 
 
@@ -102,4 +102,40 @@ class UserDoobieFollow(Base):
         When a user wants to follow a doobie
         '''
 
-        pass
+        response = {}
+
+        doobie_follow = UserDoobieFollow(user_id=user_id, doobie_id=doobie_id)
+
+        session.add(doobie_follow)
+        session.commit()
+
+        response.update({
+            'status': 'success',
+            'message': 'add message'
+        })
+
+        return response
+
+
+    @staticmethod
+    def view_all_followed_doobies(user_id):
+        '''
+        Get all the doobie_ids a user follows
+        '''
+
+        followed_doobies = session.query(UserDoobieFollow.c.doobie_id).\
+                           filter(UserDoobieFollow.user_id==user_id)
+
+        return followed_doobies
+
+
+    @staticmethod
+    def view_all_doobie_followers(doobie_id):
+        '''
+        Get all the user_id's who follow the given doobie_id
+        '''
+
+        user_follows = session.query(UserDoobieFollow.c.user_id).\
+                        filter(UserDoobieFollow.doobie_id==doobie_id)
+
+        return user_follows
