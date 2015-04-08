@@ -164,7 +164,7 @@ def auth_user(email, method=None, **kwargs):
         result = cursor.fetchone()
 
         # Email Password combination does not match
-        if len(result) == 0:
+        if not result:
             response.update({
                 'status': 'failed',
                 'error':' Email Password combination does not match'
