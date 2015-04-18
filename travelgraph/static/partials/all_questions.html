@@ -1,10 +1,16 @@
-<div class="uk-grid">
-  <div class="uk-width-4-5">
-    <div class="uk-article" ng-repeat="question in questionsList">
-    <div class="uk-article">
-      <!-- <a href=""> -->
-      <p class="uk-article-lead" ng-click="goToQuestion(question.question_id)">{[{ question.question_text }]}</p>
-      <!-- </a> -->
+<div style="padding: 20px 0;">
+  <div class="uk-container uk-container-center">
+
+    <div class="uk-grid">
+      <div class="uk-width-4-5">
+	<div class="uk-article" ng-repeat="question in questionsList">
+	  <div class="uk-article">
+	    <!-- <a href=""> -->
+	    <p class="uk-article-lead" ng-click="goToQuestion(question.question_id)" style="cursor:pointer;">{[{ question.question_text }]}</p>
+	    <!-- </a> -->
+	  </div>
+	</div>
+      </div>
+
     </div>
   </div>
-</div>

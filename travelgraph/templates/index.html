@@ -18,6 +18,8 @@
     <link href="/static/stylesheets/uikit.docs.min.css" rel="stylesheet"/>
     <link rel="stylesheet" href="/static/stylesheets/prism.css">
     <link rel="stylesheet" href="/static/stylesheets/chosen.css">
+
+    <link rel="stylesheet" href="/static/stylesheets/set_background.css">
     
     <script src="/static/javascripts/jquery-2.1.3.min.js"></script>
     <script src="/static/javascripts/uikit.min.js"></script>
@@ -48,28 +50,34 @@
 	<li><a href="/question">Ask a Question</a></li>
       </ul>
       <div class="uk-navbar-flip">
+	<!-- <ul class="uk-navbar-nav"> -->
+	<!--   <\!-- <li class="uk-parent" data-uk-dropdown ng-model="currentUserData"> -\-> -->
+	<!--   <\!--   <\\!-- <div hidden id="logged-in-user-id">{{ session['user_id'] }}</div> -\\-> -\-> -->
+	<!--   <\!--   <\\!-- <a href="">{[{  }]}</a> -\\-> -\-> -->
+	<!--   <\!--   {[{ currentUserData.userName }]} -\-> -->
+	<!--   <\!--   <div class="uk-dropdown uk-dropdown-navbar"> -\-> -->
+	<!--   <\!--     <ul class="uk-nav uk-nav-navbar"> -\-> -->
+	<!--   <\!-- 	<li><a href="">Profile</a></li> -\-> -->
+	<!--   <\!-- 	<li><a id="header-logout" href="">Logout</a></li> -\-> -->
+	<!--   <\!--     </ul> -\-> -->
+	<!--   <\!--   </div> -\-> -->
+	<!--   <\!-- </li> -\-> -->
+	<!-- </ul> -->
+      </div>
+      <div class="uk-navbar-flip">
 	<ul class="uk-navbar-nav">
-	  <li class="uk-parent" data-uk-dropdown ng-model="currentUserData">
-	    <!-- <div hidden id="logged-in-user-id">{{ session['user_id'] }}</div> -->
-	    <!-- <a href="">{[{  }]}</a> -->
-	    {[{ currentUserData.userName }]}
-	    <div class="uk-dropdown uk-dropdown-navbar">
-	      <ul class="uk-nav uk-nav-navbar">
-		<li><a href="">Profile</a></li>
-		<li><a id="header-logout" href="">Logout</a></li>
-	      </ul>
-	    </div>
-	  </li>
+	<li><a href="/login">Login</a></li>
 	</ul>
       </div>
     </nav>
 
+    <ng-view></ng-view>
     
     <!-- MAIN CONTAINERS -->
-    <div style="padding: 20px 0;">
-      <div class="uk-container uk-container-center" ng-view>
-      </div>
-    </div>
+    <!-- <div style="padding: 20px 0;"> -->
+      <!-- <div class="uk-container uk-container-center" ng-view> -->
+      <!-- </div> -->
+    <!-- </div> -->
     
   </body>
 </html>

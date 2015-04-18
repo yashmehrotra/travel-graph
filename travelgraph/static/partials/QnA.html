@@ -1,80 +1,79 @@
-<!--
-    /*CHECK FOR HOW TO TAKE THE VALUES OF TAGS FOR AN ANSWER*/
-  -->
-
-<div class="uk-grid">
-  <!-- FOR ASKER'S NAME, AVATAR AND RANK -->
-  <div class="uk-width-1-5">
-    
-    <article class="uk-comment">
-      <header class="uk-comment-header">
-	
-	<img class="uk-comment-avatar" alt="avatar" src="/static/images/placeholder_avatar.svg">
-	<!-- <div id="asker-user-id">{[{ quesId }]}</div> -->
-	<h4 class="uk-comment-title">{[{ askerDetails.name }]}</h4>
-	<div class="uk-badge uk-badge-warning uk-badge-mini">Rank</div>
-      </header>
-    </article>
-
-    <div class="uk-clearfix uk-margin-top uk-center">
-      <button class="uk-button uk-button-small uk-button-primary" id="follow-asker" type="button">Follow</button>
-    </div>
-    
-  </div>
-  
-  <!-- FOR QUES TEXT + OTHER DETAILS -->
-  <div class="uk-width-4-5">
-    <h2>{[{ questionData.questionText }]}</h2>
+<div style="padding: 20px 0;">
+  <div class="uk-container uk-container-center">
 
     <div class="uk-grid">
+      <!-- FOR ASKER'S NAME, AVATAR AND RANK -->
+      <div class="uk-width-1-5">
+	
+	<article class="uk-comment">
+	  <header class="uk-comment-header">
+	    
+	    <img class="uk-comment-avatar" alt="avatar" src="/static/images/placeholder_avatar.svg">
+	    <!-- <div id="asker-user-id">{[{ quesId }]}</div> -->
+	    <h4 class="uk-comment-title">{[{ askerDetails.name }]}</h4>
+	    <div class="uk-badge uk-badge-warning uk-badge-mini">Rank</div>
+	  </header>
+	</article>
+
+	<div class="uk-clearfix uk-margin-top uk-center">
+	  <button class="uk-button uk-button-small uk-button-primary" id="follow-asker" type="button">Follow</button>
+	</div>
+	
+      </div>
+      
+      <!-- FOR QUES TEXT + OTHER DETAILS -->
       <div class="uk-width-4-5">
+	<h2>{[{ questionData.questionText }]}</h2>
+
+	<div class="uk-grid">
+	  <div class="uk-width-4-5">
+	    <p>
+	      <!-- <button class="uk-button uk-button-mini" type="button">Tag</button> -->
+	      <button class="uk-button uk-button-mini" type="button" ng-repeat="tag in questionData.questionTags">{[{ tag.tag_value }]}</button>
+	    </p>	      
+	  </div>
+
+	  <div class="uk-width-1-5">
+	    <button class="uk-button uk-button-small uk-button-danger uk-margin-right uk-float-right" id="subscribe-question" type="button">Subscribe</button>
+	  </div>
+	</div>
+	
+	<hr>
 	<p>
-	  <!-- <button class="uk-button uk-button-mini" type="button">Tag</button> -->
-	  <button class="uk-button uk-button-mini" type="button" ng-repeat="tag in questionData.questionTags">{[{ tag.tag_value }]}</button>
-	</p>	      
+	  <button id="answer-button" class="uk-button uk-button-success" type="button" ng-click="hideAnswerTextarea = !hideAnswerTextarea">Answer</button>
+	</p>
+	
+      </div>
+      
+    </div>
+
+    <!-- FOR ANSWERS TEXTAREA -->
+    <div id="answer-textarea-grid" class="uk-grid" ng-show="!hideAnswerTextarea">
+
+      <div class="uk-width-1-5"></div>
+      
+      <div class="uk-width-3-5">
+
+	<form name="submitAnswer" ng-submit="postAnswer()">
+	  <textarea id="answer-text" name="answerText" class="ck-editor" ng-model="text" required></textarea>
+	  
+	  <p>
+	    <span style="color:red;" ng-show="submitAnswer.answerText.$error.required">*Required Fields</span><br>
+	    <button class="uk-button uk-button-success uk-margin-top" id="post-ans">Post</button>
+	  </p>
+	</form>
+	<!-- </form> -->
       </div>
 
+      <!-- FOR ADDITION OF TAGS FOR A QUESTION -->
       <div class="uk-width-1-5">
-	<button class="uk-button uk-button-small uk-button-danger uk-margin-right uk-float-right" id="subscribe-question" type="button">Subscribe</button>
-      </div>
-    </div>
-    
-    <hr>
-    <p>
-      <button id="answer-button" class="uk-button uk-button-success" type="button" ng-click="hideAnswerTextarea = !hideAnswerTextarea">Answer</button>
-    </p>
-    
-  </div>
-  
+	<!-- <select id="answer-tags-select" class="uk-width-1-1" name="answer-tags-select" multiple data-placeholder="add some tags.." ng-model="answerTags" ng-options="tag.value for tag in answerTags track by tag.value"> -->
+	<!-- <option value="tag-8">tag-8</option> -->
+	<!-- <option value="tag-9">tag-9</option> -->
+	<input name="" type="text" placeholder="add some tags.." ng-model="answerTags">
+</select>
 </div>
 
-<!-- FOR ANSWERS TEXTAREA -->
-<div id="answer-textarea-grid" class="uk-grid" ng-show="!hideAnswerTextarea">
-
-  <div class="uk-width-1-5"></div>
-  
-  <div class="uk-width-3-5">
-
-    <form name="submitAnswer" ng-submit="postAnswer()">
-      <textarea id="answer-text" name="answerText" class="ck-editor" ng-model="text" required></textarea>
-      
-      <p>
-	<span style="color:red;" ng-show="submitAnswer.answerText.$error.required">*Required Fields</span><br>
-	<button class="uk-button uk-button-success uk-margin-top" id="post-ans">Post</button>
-      </p>
-    </form>
-    <!-- </form> -->
-  </div>
-
-  <!-- FOR ADDITION OF TAGS FOR A QUESTION -->
-  <div class="uk-width-1-5">
-    <!-- <select id="answer-tags-select" class="uk-width-1-1" name="answer-tags-select" multiple data-placeholder="add some tags.." ng-model="answerTags" ng-options="tag.value for tag in answerTags track by tag.value"> -->
-      <!-- <option value="tag-8">tag-8</option> -->
-      <!-- <option value="tag-9">tag-9</option> -->
-      <input name="" type="text" placeholder="add some tags.." ng-model="answerTags">
-    </select>
-  </div>
-  
 </div>
 
 <div class="uk-grid" id="ans-count">
@@ -92,7 +91,7 @@
 <!-- ANSWERS APPENDED INSIDE THIS DIV -->
 <div class="uk-grid" id="answers-grid">
   <div class="uk-grid uk-width-1-1" ng-repeat="answer_data in answerData">
-  <!-- <div class="uk-grid uk-width-1-1" ng-repeat="answer_data in answerData"> -->
+    <!-- <div class="uk-grid uk-width-1-1" ng-repeat="answer_data in answerData"> -->
     <div class="uk-width-1-5"></div>
     
     <div class="uk-width-3-5">
@@ -116,7 +115,9 @@
 
 <script type="text/javascript">
   $(function (){
-    $('#answer-tags-select').chosen();
-    $('.answered-tags-selected').chosen();
+  $('#answer-tags-select').chosen();
+  $('.answered-tags-selected').chosen();
   });
 </script>
+</div>
+</div>
