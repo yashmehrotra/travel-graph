@@ -11,7 +11,7 @@
 	
 	<img class="uk-comment-avatar" alt="avatar" src="/static/images/placeholder_avatar.svg">
 	<!-- <div id="asker-user-id">{[{ quesId }]}</div> -->
-	<h4 class="uk-comment-title">{[{ askerDetails.name }}</h4>
+	<h4 class="uk-comment-title">{[{ askerDetails.name }]}</h4>
 	<div class="uk-badge uk-badge-warning uk-badge-mini">Rank</div>
       </header>
     </article>
@@ -30,7 +30,7 @@
       <div class="uk-width-4-5">
 	<p>
 	  <!-- <button class="uk-button uk-button-mini" type="button">Tag</button> -->
-	  <button class="uk-button uk-button-mini" type="button" ng-repeat="tag in questionData.questionTags">{[{ tag }]}</button>
+	  <button class="uk-button uk-button-mini" type="button" ng-repeat="tag in questionData.questionTags">{[{ tag.tag_value }]}</button>
 	</p>	      
       </div>
 

@@ -313,7 +313,7 @@ app.controller('LoginLogoutCtrl', ['$scope', '$http', 'AuthService', function Lo
 }]);
 
 // Check why routeParams are not working
-app.controller('QuestionCtrl', function QuestionCtrl($route, $scope, $http, CurrentQuestionService) {
+app.controller('QuestionCtrl', function QuestionCtrl($route, $scope, $http, CurrentQuestionService, AuthService) {
   $scope.questionData = {};
   $scope.askerDetails = {};
   $scope.answerData = [];
@@ -351,13 +351,15 @@ app.controller('QuestionCtrl', function QuestionCtrl($route, $scope, $http, Curr
     	console.log($scope.questionData.questionId);
     });
   };
+  
+  data_user = AuthService.isLoggedIn();
 
   $http({
     method: 'GET',
-    url: '/api/user/' + data.user_id + '/'
+    url: '/api/user/' + data_user.user_id + '/'
   })
     .success(function(response, status){
-      $scope.askerDetails.name = response.user_data[4] + " " + response.user_data[5];
+      $scope.askerDetails.name = response.user_data.first_name + " " + response.user_data.last_name;
     })
     .error(function(response, status){
       console.log("Request Failed");
@@ -368,11 +370,15 @@ app.controller('QuestionCtrl', function QuestionCtrl($route, $scope, $http, Curr
     url: '/api/content/get_answers/' + data.question_id + '/'
   })
     .success(function(response, status){
-      console.log(response.answers[0].answer);
-      $scope.answerData = response.answers;
-      console.log($scope.answerData);
-      $scope.answerCount = $scope.answerData.length;
-      console.log($scope.answerCount);
+      if (response.answers.length == 0) {
+	  $scope.answersData = "No answers to display";
+      } else {
+	console.log(response.answers[0].answer);
+	$scope.answerData = response.answers;
+	console.log($scope.answerData);
+	$scope.answerCount = $scope.answerData.length;
+	console.log($scope.answerCount);
+      }
     })
     .error(function(response, status){
       console.log("Request Failed");
