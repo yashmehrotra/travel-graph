@@ -117,7 +117,7 @@ def create_user(email, method=None, **kwargs):
 
     elif method == 'facebook':
         
-        password = hashlib.md5(get_random_word()).hexdigest()
+        password = hashlib.md5(get_random_word(10)).hexdigest()
         
         # To see if user has already signed up and wants to login
         if len(result) != 0:
@@ -131,7 +131,7 @@ def create_user(email, method=None, **kwargs):
             (email, username, password, updated_ts,
                 created_ts, first_name, last_name, profile_photo)
             VALUES ('{0}', '{1}', '{2}', '{3}',
-                '{4}', '{5}', '{6}')""".format(
+                '{4}', '{5}', '{6}', '{7}')""".format(
                 email, username, password, updated_ts,
                 created_ts, first_name, last_name, profile_photo)
 

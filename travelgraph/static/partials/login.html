@@ -3,14 +3,17 @@ Enter your details<br>
 <form ng-controller="LoginLogoutCtrl" name="loginForm" ng-submit="loginUser()" novalidate>
   Email :<input id="email" type="email" name="email" ng-model="loginDetails.email" ng-blur="emailBlur = true" required="required">
   <!-- <span style="color:red;" ng-show="loginForm.email.$error.required && emailBlur">*Required Field</span><br> -->
-  <span ng-show="submitted && loginForm.loginDetails.email.$error.required">Required</span>
-  <span ng-show="submitted && loginForm.loginDetails.email.$error.email">Invalid email</span>
+  <!-- <span ng-show="submitted && loginForm.loginDetails.email.$error.required">Required</span> -->
+  <!-- <span ng-show="submitted && loginForm.loginDetails.email.$error.email">Invalid email</span> -->
   Password :<input id="password" type="password" name="password" ng-model="loginDetails.password" ng-blur="passwordBlur = true" required="required">
   <!-- <span style="color:red;" ng-show="loginForm.password.$error.required && passwordBlur">*Required Field</span><br> -->
-    <span ng-show="submitted && loginForm.loginDetails.password.$error.required">Required</span>
+    <!-- <span ng-show="submitted && loginForm.loginDetails.password.$error.required">Required</span> -->
   <div class="uk-alert uk-alert-danger" ng-show="loginForm.invalidCredentials">Invalid email address or password.</div>
   <button id="login-button" ng-click="submitted=true">Login</button>
   <!-- <button id="logout-button" ng-click="logoutUser()">Logout</button> -->
 </form>
 <h2>If you didnt signup</h2>
 <a href="/signup">Click here to signup</a>
+
+<fb:login-button scope="public_profile,email" onlogin="checkLoginState();"></fb:login-button>
+

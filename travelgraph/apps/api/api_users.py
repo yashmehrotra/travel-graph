@@ -23,7 +23,7 @@ def api_signup():
     '''
 
     email         = request.form.get('email')
-    password      = request.form.get('password')
+    password      = request.form.get('password', '')
     first_name    = request.form.get('first_name')
     last_name     = request.form.get('last_name')
     profile_photo = request.form.get('profile_photo','')
