@@ -282,6 +282,7 @@ def user_profile(user_id):
     cursor.execute(query_user_data)
     user_data = cursor.fetchone()
     # Above user_data should be looked into and should be converted into a proper dictionary
+    user_data = user_details(user_id)
 
     user_questions = models_questions.get_user_questions(user_id)['questions']
 
