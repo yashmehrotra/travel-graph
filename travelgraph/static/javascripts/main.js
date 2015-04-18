@@ -79,7 +79,7 @@ app.directive('ckEditor', [function () {
       });
       
       elm.bind('$destroy', function () {
-        ck.destroy(false);
+        // ck.destroy(false);
       });
 
       if (model) {
@@ -292,7 +292,6 @@ app.controller('LoginLogoutCtrl', ['$scope', '$http', 'AuthService', function Lo
 	.error(function(response, status){
 	  console.log("Request Failed");
 	  // function Invalid_credentials() {
-	    
 	  // }
 	});
   };
@@ -320,7 +319,8 @@ app.controller('QuestionCtrl', function QuestionCtrl($route, $scope, $http, Curr
   $scope.answerData = [];
   $scope.answerCount;
   $scope.text = "";
-  $scope.answerTags = [];
+
+  $scope.answerTags = "";
 
   // console.log("The Question id is:", $routeParams.quesId);
   var data = CurrentQuestionService.getData();
@@ -328,7 +328,6 @@ app.controller('QuestionCtrl', function QuestionCtrl($route, $scope, $http, Curr
   $scope.questionData.questionId = data.question_id;
   $scope.questionData.questionText = data.question_text;
   $scope.questionData.questionTags = data.question_tags;
-
   
   $scope.postAnswer = function() {
     console.log($scope.text);
@@ -336,7 +335,7 @@ app.controller('QuestionCtrl', function QuestionCtrl($route, $scope, $http, Curr
     var data = {
       question_id: $scope.questionData.questionId,
       answer: $scope.text,
-      answer_tags: $scope.questionTags
+      answer_tags: $scope.answerTags
     };
     $http({
       method: 'POST',
@@ -421,6 +420,7 @@ app.controller('AddQuestionCtrl', function AddQuestionCtrl($scope, $http){
     })
       .success(function(response, status){
 	console.log(response);
+	console.log($scope.questionData.title);
       })
       .error(function(response, status){
 	console.log("Request Failed");

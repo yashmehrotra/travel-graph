@@ -68,16 +68,10 @@
 
   <!-- FOR ADDITION OF TAGS FOR A QUESTION -->
   <div class="uk-width-1-5">
-    <select id="answer-tags-select" class="uk-width-1-1" name="answer-tags-select" multiple data-placeholder="add some tags.." ng-model="answerTags">
-      <option value="tag-1">tag-1</option>
-      <option value="tag-2">tag-2</option>
-      <option value="tag-3">tag-3</option>
-      <option value="tag-4">tag-4</option>
-      <option value="tag-5">tag-5</option>
-      <option value="tag-6">tag-6</option>
-      <option value="tag-7">tag-7</option>
-      <option value="tag-8">tag-8</option>
-      <option value="tag-9">tag-9</option>
+    <!-- <select id="answer-tags-select" class="uk-width-1-1" name="answer-tags-select" multiple data-placeholder="add some tags.." ng-model="answerTags" ng-options="tag.value for tag in answerTags track by tag.value"> -->
+      <!-- <option value="tag-8">tag-8</option> -->
+      <!-- <option value="tag-9">tag-9</option> -->
+      <input name="" type="text" placeholder="add some tags.." ng-model="answerTags">
     </select>
   </div>
   
