@@ -265,6 +265,7 @@ app.controller('LoginLogoutCtrl', ['$scope', '$http', 'AuthService', function Lo
 
   $scope.loginDetails = {};
   $scope.currentUserData = {};
+  $scope.invalidCredentials = false;
 
   $scope.loginUser = function() {
     var data = {
@@ -278,12 +279,21 @@ app.controller('LoginLogoutCtrl', ['$scope', '$http', 'AuthService', function Lo
       })
 	.success(function(response, status){
 	  console.log("Success:", response);
-	  $scope.currentUserData.userName = response.username;
-	  console.log(response.username);
-	  AuthService.setUser(response);
+	  if (response.status != 'failed') {
+	    $scope.currentUserData.userName = response.username;
+	    console.log(response.username);
+	    AuthService.setUser(response);
+	  } else {
+	    console.log("Invalid credentials");
+	    $scope.invalidCredentials = true;
+	    // invalid_credentials();
+	  }
 	})
 	.error(function(response, status){
 	  console.log("Request Failed");
+	  // function Invalid_credentials() {
+	    
+	  // }
 	});
   };
 
@@ -304,7 +314,7 @@ app.controller('LoginLogoutCtrl', ['$scope', '$http', 'AuthService', function Lo
 }]);
 
 // Check why routeParams are not working
-app.controller('QuestionCtrl', function QuestionCtrl($scope, $http, CurrentQuestionService) {
+app.controller('QuestionCtrl', function QuestionCtrl($route, $scope, $http, CurrentQuestionService) {
   $scope.questionData = {};
   $scope.askerDetails = {};
   $scope.answerData = [];
@@ -326,7 +336,7 @@ app.controller('QuestionCtrl', function QuestionCtrl($scope, $http, CurrentQuest
     var data = {
       question_id: $scope.questionData.questionId,
       answer: $scope.text,
-      answer_tags: "abc, def"
+      answer_tags: $scope.questionTags
     };
     $http({
       method: 'POST',
@@ -335,6 +345,7 @@ app.controller('QuestionCtrl', function QuestionCtrl($scope, $http, CurrentQuest
     })
       .success(function(response, status){
     	console.log("Success " , response);
+
       })
       .error(function(response, status){
     	console.log("Request Failed");
