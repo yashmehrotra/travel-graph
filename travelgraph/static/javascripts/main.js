@@ -752,11 +752,6 @@ app.config(['$routeProvider', '$locationProvider',
     $locationProvider.html5Mode(true);
   }]);
 
-// app.config(function(FacebookProvider) {
-//      // Set your appId through the setAppId method or
-//      // use the shortcut in the initialize method directly.
-//      FacebookProvider.init('1423273901281785');
-//   })
 
 app.factory( 'AuthService', function($http) {
   var user;
@@ -877,10 +872,16 @@ app.controller('LoginLogoutCtrl', ['$scope', '$http', 'AuthService', function Lo
   $scope.loginData = {};
 
   $scope.loginUser = function(loginData) {
+    if($scope.loginDetails.password === undefined || $scope.loginDetails.password.length === 0) {
+      $scope.loginDetails.method = 'facebook';
+      console.log('Login through FB');
+    } else {
+      $scope.loginDetails.method = 'normal';
+    }
     var data = {
       email: $scope.loginDetails.email,
       password: $scope.loginDetails.password,
-      method: 'normal'
+      method: $scope.loginDetails.method
     };
     $http({
       method: 'POST',
@@ -927,11 +928,11 @@ app.controller('LoginLogoutCtrl', ['$scope', '$http', 'AuthService', function Lo
 
   };
 
-  $scope.me = function() {
-    // Facebook.api('/me', function(response) {
-    //   $scope.user = response;
-    // });
-  };
+  // $scope.me = function() {
+  //   // Facebook.api('/me', function(response) {
+  //   //   $scope.user = response;
+  //   // });
+  // };
 
   $scope.logoutUser = function (){
     $http({
