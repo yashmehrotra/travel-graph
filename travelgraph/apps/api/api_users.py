@@ -22,14 +22,17 @@ def api_signup():
     Recieves a POST request to create the user
     '''
 
-    email      = request.form.get('email')
-    password   = request.form.get('password')
-    first_name = request.form.get('first_name')
-    last_name  = request.form.get('last_name')
-    method     = request.form.get('method')
+    email         = request.form.get('email')
+    password      = request.form.get('password')
+    first_name    = request.form.get('first_name')
+    last_name     = request.form.get('last_name')
+    profile_photo = request.form.get('profile_photo','')
+    method        = request.form.get('method')
 
-    result = models.create_user(email=email, method=method,
-        first_name=first_name, last_name=last_name,  password=password)
+    result = models.create_user(
+        email=email, method=method,
+        first_name=first_name, last_name=last_name,
+        profile_photo=profile_photo, password=password)
 
     return 'User created - {0}'.format(result)
 

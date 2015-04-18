@@ -59,6 +59,7 @@ def create_user(email, method=None, **kwargs):
 
     first_name = kwargs.get('first_name')
     last_name  = kwargs.get('last_name')
+    profile_photo = kwargs.get('profile_photo','')
 
     created_ts = datetime.now()
     updated_ts = datetime.now()
@@ -128,11 +129,11 @@ def create_user(email, method=None, **kwargs):
         else:
             query = """ INSERT INTO "user" 
             (email, username, password, updated_ts,
-                created_ts, first_name, last_name)
+                created_ts, first_name, last_name, profile_photo)
             VALUES ('{0}', '{1}', '{2}', '{3}',
                 '{4}', '{5}', '{6}')""".format(
                 email, username, password, updated_ts,
-                created_ts, first_name, last_name)
+                created_ts, first_name, last_name, profile_photo)
 
             cursor.execute(query)
             postgre.commit()
@@ -333,6 +334,7 @@ def user_details(user_id):
         'first_name': user_data['first_name'],
         'last_name': user_data['last_name'],
         'username': user_data['username'],
+        'profile_photo': user_data['profile_photo'],
     })
 
     return user_details
