@@ -20,7 +20,7 @@ def api_add_question():
     '''
     The question details should be added
     '''
-    question_title = request.form.get('question_text')
+    question_title = request.form.get('question_title')
     question_desc  = request.form.get('question_desc')
     question_tags  = request.form.get('question_tags')
 
