@@ -98,11 +98,11 @@ def create_user(email, method=None, **kwargs):
 
         query = """ INSERT INTO "user" 
             (email, username, password, updated_ts,
-                created_ts, first_name, last_name, bio)
+                created_ts, first_name, last_name, bio, profile_photo)
             VALUES ('{0}', '{1}', '{2}', '{3}',
-                '{4}', '{5}', '{6}', '{7}')""".format(
+                '{4}', '{5}', '{6}', '{7}', '{8}')""".format(
                 email, username, password, updated_ts,
-                created_ts, first_name, last_name, bio)
+                created_ts, first_name, last_name, bio, profile_photo)
 
         cursor.execute(query)
         postgre.commit()
