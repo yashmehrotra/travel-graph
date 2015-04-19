@@ -9,8 +9,12 @@ from travelgraph import app
 # routing for basic pages (pass routing onto the Angular app)
 @app.route('/')
 @app.route('/login')
+@app.route('/signup')
+@app.route('/all_questions')
+@app.route('/question')
+@app.route('/ques/<ques_id>')
 @app.route('/blog')
-def basic_pages(**kwargs):
+def basic_pages(*args, **kwargs):
         return make_response(open('travelgraph/templates/index.html').read())
 
 # from flask import render_template, session

@@ -334,6 +334,7 @@ def user_details(user_id):
         'user_id': user_data['user_id'],
         'first_name': user_data['first_name'],
         'last_name': user_data['last_name'],
+        'email': user_data['email'],
         'username': user_data['username'],
         'profile_photo': user_data['profile_photo'],
     })

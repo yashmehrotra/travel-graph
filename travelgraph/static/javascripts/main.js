@@ -593,7 +593,7 @@
 
 
 // Necessary for POST Requests to work!
-var app = angular.module('travel-graph', [], function($httpProvider) {
+var app = angular.module('travel-graph', ['ngCookies'], function($httpProvider) {
   // Use x-www-form-urlencoded Content-Type
   $httpProvider.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=utf-8';
 
@@ -643,6 +643,20 @@ app.run(['$route', function($route)  {
   $route.reload();
 }]);
 
+
+app.run(['$rootScope', '$location', '$cookieStore', 'AuthService', function ($rootScope, $location, $cookieStore, AuthService) {
+    $rootScope.$on('$routeChangeStart', function (event) {
+      
+      if ($cookieStore.get('user_auth')) {
+	console.log('ALLOW');
+	console.log($cookieStore.get('user_auth'));
+      } else {
+        console.log('DENY');
+	event.preventDefault();
+        $location.path('/login');
+      }
+    });
+}]);
 
 // For ckeditor integration in AngularJS
 app.directive('ckEditor', [function () {
@@ -798,18 +812,42 @@ app.factory( 'AllQuestionsService', function($http) {
 
 
 // Needs Debugging ..
-app.controller('MainCtrl', ['$scope', '$http', 'AuthService', 'CurrentQuestionService', 'AllQuestionsService', '$location', function ($scope, $http, AuthService, CurrentQuestionService, AllQuestionsService, $location) {
+app.controller('MainCtrl', ['$scope', '$http', 'AuthService', 'CurrentQuestionService', 'AllQuestionsService', '$location', '$cookieStore', function ($scope, $http, AuthService, CurrentQuestionService, AllQuestionsService, $location, $cookieStore) {
 
   $scope.$watch(AuthService.isLoggedIn, function (value, oldValue) {
 
     if(!value && oldValue) {
       console.log("Disconnect");
-      // $location.path('/');
+      $cookieStore.put('user_auth', false);
+      $location.path('/');
     }
     
     // As soon as the user logs in..
     if(value) {
       console.log("Connect");
+      data_user = AuthService.isLoggedIn();
+
+      $http({
+        method: 'GET',
+        url: '/api/user/' + data_user.user_id + '/'
+      })
+        .success(function(response, status){
+	  console.log(response);
+	  var cookieData = {
+	    'user_id': response.user_id,
+	    'username': response.username,
+	    'first_name': response.first_name,
+	    'last_name': response.last_name,
+	    'email': response.email,
+	    'profile_photo': response.profile_photo
+	  }
+	  $cookieStore.put('user_auth', cookieData);
+        })
+        .error(function(response, status){
+          console.log("Request Failed");
+      });
+
+
       $location.path('/all_questions');
 
       // Get a list of all the questions
@@ -864,7 +902,7 @@ app.controller('MainCtrl', ['$scope', '$http', 'AuthService', 'CurrentQuestionSe
 }]);
 
 // For user login and logout
-app.controller('LoginLogoutCtrl', ['$scope', '$http', 'AuthService', function LoginLogoutCtrl($scope, $http, AuthService, NewUserCtrl){
+app.controller('LoginLogoutCtrl', ['$scope', '$http', 'AuthService', function LoginLogoutCtrl($scope, $http, AuthService, NewUserCtrl, $cookieStore){
 
   $scope.loginDetails = {};
   $scope.currentUserData = {};
@@ -872,16 +910,10 @@ app.controller('LoginLogoutCtrl', ['$scope', '$http', 'AuthService', function Lo
   $scope.loginData = {};
 
   $scope.loginUser = function(loginData) {
-    if($scope.loginDetails.password === undefined || $scope.loginDetails.password.length === 0) {
-      $scope.loginDetails.method = 'facebook';
-      console.log('Login through FB');
-    } else {
-      $scope.loginDetails.method = 'normal';
-    }
     var data = {
       email: $scope.loginDetails.email,
       password: $scope.loginDetails.password,
-      method: $scope.loginDetails.method
+      method: 'normal'
     };
     $http({
       method: 'POST',
@@ -892,7 +924,8 @@ app.controller('LoginLogoutCtrl', ['$scope', '$http', 'AuthService', function Lo
 	console.log("Success:", response);
 	if (response.status != 'failed') {
 	  $scope.currentUserData.userName = response.username;
-	  console.log(response.username);
+	  console.log(response);
+	  // console.log($scope.currentUserData);
 	  AuthService.setUser(response);
 	} else {
 	  console.log("Invalid credentials");
@@ -941,39 +974,67 @@ app.controller('LoginLogoutCtrl', ['$scope', '$http', 'AuthService', function Lo
     })
       .success(function(data, status){
 	console.log("Successfully Logged out!");
+	AuthService.setUser(false);
       })
       .error(function(data, status){
 	console.log("Request Failed");	
       });
-    console.log(AuthService.isLoggedIn());
+    // console.log(AuthService.isLoggedIn());
   };
 
 }]);
 
-// Check why routeParams are not working
-app.controller('QuestionCtrl', function QuestionCtrl($route, $scope, $http, CurrentQuestionService, AuthService) {
+// For displaying a question and answer page
+app.controller('QuestionCtrl', function QuestionCtrl($route, $scope, $http, CurrentQuestionService, AuthService, $cookieStore, $routeParams, $route) {
   $scope.questionData = {};
   $scope.askerDetails = {};
   $scope.answerData = [];
   $scope.answerCount;
   $scope.text = "";
-
-  $scope.answerTags = "";
-
-  // console.log("The Question id is:", $routeParams.quesId);
-  var data = CurrentQuestionService.getData();
-  console.log(data);
-  $scope.questionData.questionId = data.question_id;
-  $scope.questionData.questionText = data.question_text;
-  $scope.questionData.questionTags = data.question_tags;
   
+  $scope.answerTags = "";
+  
+  // Fetch the question_id details from route
+  var question_id = $routeParams.quesId;
+  console.log("The Question id is:", question_id);
+
+  // Fetch the question details from id
+    $http({
+      method: 'GET',
+      url: '/api/content/get_question/' + question_id + "/"
+    })
+      .success(function(response, status){
+      	console.log(response);
+	$scope.questionData.questionId = question_id;
+	$scope.questionData.questionText = response.question_text;
+	$scope.questionData.questionTags = response.question_tags;
+	askerDetails.user_id = response.user_id;
+	
+	$http({
+	  method: 'GET',
+	  url: '/api/user/' + askerDetails.user_id + '/'
+	})
+	  .success(function(response, status){
+	    $scope.askerDetails.name = response.first_name + " " + response.last_name;
+	  })
+	  .error(function(response, status){
+	    console.log("Request Failed");
+	  });
+	
+      })
+      .error(function(response, status){
+      	console.log("Request Failed");
+      });
+
+
   $scope.postAnswer = function() {
     console.log($scope.text);
     console.log($scope.answerTags);
     var data = {
-      question_id: $scope.questionData.questionId,
+      question_id: question_id,
       answer: $scope.text,
-      answer_tags: $scope.answerTags
+      answer_tags: $scope.answerTags,
+      user_id: $cookieStore.get('user_auth').user_id
     };
     $http({
       method: 'POST',
@@ -982,30 +1043,17 @@ app.controller('QuestionCtrl', function QuestionCtrl($route, $scope, $http, Curr
     })
       .success(function(response, status){
     	console.log("Success " , response);
-
+	$route.reload();
       })
       .error(function(response, status){
     	console.log("Request Failed");
-    	console.log($scope.questionData.questionId);
     });
   };
-  
-  data_user = AuthService.isLoggedIn();
 
+  // Get the answers to the current question
   $http({
     method: 'GET',
-    url: '/api/user/' + data_user.user_id + '/'
-  })
-    .success(function(response, status){
-      $scope.askerDetails.name = response.user_data.first_name + " " + response.user_data.last_name;
-    })
-    .error(function(response, status){
-      console.log("Request Failed");
-  });
-
-  $http({
-    method: 'GET',
-    url: '/api/content/get_answers/' + data.question_id + '/'
+    url: '/api/content/get_answers/' + question_id + '/'
   })
     .success(function(response, status){
       if (response.answers.length == 0) {
@@ -1024,7 +1072,7 @@ app.controller('QuestionCtrl', function QuestionCtrl($route, $scope, $http, Curr
 
 })
 
-app.controller('NewUserCtrl', function NewUserCtrl($scope, $http) {
+app.controller('NewUserCtrl', function NewUserCtrl($scope, $http, $cookieStore) {
   $scope.newUserDetails = {};
   
   $scope.addUser = function(loginData) {
