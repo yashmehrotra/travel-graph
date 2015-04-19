@@ -34,7 +34,8 @@ def api_signup():
         first_name=first_name, last_name=last_name,
         profile_photo=profile_photo, password=password)
 
-    return 'User created - {0}'.format(result)
+    #return 'User created - {0}'.format(result)
+    return jsonify(result)
 
 
 @app.route('/api/login', methods=['POST'])
