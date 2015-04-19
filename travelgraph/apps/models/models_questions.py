@@ -11,8 +11,9 @@ def add_question(user_id, question_title, question_desc, question_tags):
 
     # All tags should be low case
 
-    question_tags = question_tags.split(',')
-    question_tags = [ str(tag.lower().strip()) for tag in question_tags ]
+    if question_tags:
+        question_tags = question_tags.split(',')
+        question_tags = [ str(tag.lower().strip()) for tag in question_tags ]
 
     question_title = unicode(question_title)
     question_desc = str(question_desc)
@@ -38,8 +39,9 @@ def add_question(user_id, question_title, question_desc, question_tags):
     question_id = cursor.fetchone()[0]
 
     # Add these tags to mapping table
-    for tag in question_tags:
-        models_tags.map_tag_to_doobie(tag, question_id, 'question')
+    if question_tags:
+        for tag in question_tags:
+            models_tags.map_tag_to_doobie(tag, question_id, 'question')
 
     map_to_doobie(question_id, user_id)
 
