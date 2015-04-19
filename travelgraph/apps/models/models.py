@@ -199,7 +199,12 @@ def auth_user(email, method=None, **kwargs):
             response = create_user(email, method, **kwargs)
             return response
         else:
-            response = {'status':'success','message':'user exists fb'}
+            response = {
+                'status': 'success',
+                'message': 'user-info is correct',
+                'user_id': result[0]['user_id'],
+                'username': result[0]['username'],
+            }
             return response
 
 
