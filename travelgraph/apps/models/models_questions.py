@@ -74,8 +74,8 @@ def get_question(question_id):
             'question_desc': result['description'],
             'question_tags': get_question_tags(result['question_id']),
             'user_id': result['user_id'],
-            'created_ts': result['created_ts']
-            'updated_ts': result['updated_ts']
+            'created_ts': result['created_ts'],
+            'updated_ts': result['updated_ts'],
         })
 
     return response
