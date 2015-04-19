@@ -1,8 +1,8 @@
 <div style="padding: 20px 0;">
-  <div class="uk-container uk-container-center">
+  <div class="uk-container uk-container-center" ng-controller="LoginLogoutCtrl">
     <h1>Login</h1>
     Enter your details<br>
-    <form ng-controller="LoginLogoutCtrl" name="loginForm" ng-submit="loginUser(loginDetails)" novalidate>
+    <form name="loginForm" ng-submit="loginUser(loginDetails)" novalidate>
       Email :<input id="email" type="email" name="email" ng-model="loginDetails.email" ng-blur="emailBlur = true" required="required">
       <!-- <span style="color:red;" ng-show="loginForm.email.$error.required && emailBlur">*Required Field</span><br> -->
       <!-- <span ng-show="submitted && loginForm.loginDetails.email.$error.required">Required</span> -->
@@ -18,8 +18,8 @@
     <a href="/signup">Click here to signup</a>
 
     <!-- <fb:login-button scope="public_profi<\!-- le,email" onlogin="checkLoginState();" ng-click="fbLogin()"></fb:login-button> -->
-    <fb:login-button scope="public_profile,email" ng-click="fbLogin()"></fb:login-button>
-    <!-- <button ng-click="loginUser()">LoginFB</button> -->
+    <!-- <fb:login-button scope="public_profile,email" ng-click="fbLogin()"></fb:login-button> -->
+    <button ng-click="FbLogin()">LoginFB</button>
     
   </div>
 </div>

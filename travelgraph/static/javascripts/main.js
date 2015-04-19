@@ -1,34 +1,3 @@
-// facebook module 
-// angular.module('app', [''])
-  // .controller('authenticationCtrl', function($scope, Facebook) {
-
-  //   $scope.login = function() {
-  //     // From now on you can use the Facebook service just as Facebook api says
-  //     console.log('logged in');
-  //     Facebook.login(function(response) {
-  // 	console.log(response);
-  //       // Do something with response.
-  //     });
-  //   };
-
-  //   $scope.getLoginStatus = function() {
-  //     Facebook.getLoginStatus(function(response) {
-  //       if(response.status === 'connected') {
-  //         $scope.loggedIn = true;
-  //       } else {
-  //         $scope.loggedIn = false;
-  //       }
-  //     });
-  //   };
-
-  //   $scope.me = function() {
-  //     Facebook.api('/me', function(response) {
-  //       $scope.user = response;
-  //     });
-  //   };
-  // });
-
-
 // Necessary for POST Requests to work!
 var app = angular.module('travel-graph', ['ngCookies', 'ngFacebook'], function($httpProvider) {
   // Use x-www-form-urlencoded Content-Type
@@ -76,65 +45,44 @@ var app = angular.module('travel-graph', ['ngCookies', 'ngFacebook'], function($
   }];
 });
 
+
+app.config( function( $facebookProvider ) {
+  $facebookProvider.setAppId('1423273901281785');
+});
+
+
 app.run(['$route', function($route)  {
   $route.reload();
 }]);
 
 
 app.run(['$rootScope', '$location', '$cookieStore', 'AuthService', function ($rootScope, $location, $cookieStore, AuthService) {
-    $rootScope.$on('$routeChangeStart', function (event) {
-      
-      if ($cookieStore.get('user_auth')) {
-	console.log('ALLOW');
-	console.log($cookieStore.get('user_auth'));
-      } else {
-        console.log('DENY');
-	event.preventDefault();
-	console.log($location.path());
+  $rootScope.$on('$routeChangeStart', function (event) {
+    if ($cookieStore.get('user_auth')) {
+      console.log('ALLOW');
+      console.log($cookieStore.get('user_auth'));
+    } else {
+	console.log('DENY');
+	var path = $location.path();
+	if (path == "/login" || path == "/signup" || path == "/") {
+	  console.log("Allowed");
+	} else {
+	  event.preventDefault();
+	  $location.path('/'); 
+	}
       }
     });
 }]);
 
-
-app.config(function($facebookProvider) {
-  $facebookProvider.setAppId('1423273901281785');
-});
-
 app.run( function( $rootScope ) {
-   (function(d, s, id) {
+  (function(d, s, id) {
     var js, fjs = d.getElementsByTagName(s)[0];
     if (d.getElementById(id)) return;
     js = d.createElement(s); js.id = id;
     js.src = "//connect.facebook.net/en_US/sdk.js";
     fjs.parentNode.insertBefore(js, fjs);
-  }(document, 'script', 'facebook-jssdk'));
+  }(document, 'script', 'facebook-jssdk'));  
 });
-
-  // app.controller('authenticationCtrl', function($scope, Facebook) {
-
-  //   $scope.login = function() {
-  //     // From now on you can use the Facebook service just as Facebook api says
-  //     Facebook.login(function(response) {
-  //       // Do something with response.
-  //     });
-  //   };
-
-  //   $scope.getLoginStatus = function() {
-  //     Facebook.getLoginStatus(function(response) {
-  //       if(response.status === 'connected') {
-  //         $scope.loggedIn = true;
-  //       } else {
-  //         $scope.loggedIn = false;
-  //       }
-  //     });
-  //   };
-
-  //   $scope.me = function() {
-  //     Facebook.api('/me', function(response) {
-  //       $scope.user = response;
-  //     });
-  //   };
-  // });
 
 // For ckeditor integration in AngularJS
 app.directive('ckEditor', [function () {
@@ -210,7 +158,6 @@ app.config(['$routeProvider', '$locationProvider',
     $routeProvider
       .when('/', {
 	templateUrl: '/static/partials/home.html',
-	// templateUrl: '/static/partials/login.html',
 	// controller: 'MainCtrl'
       })
       .when('/login', {
@@ -290,7 +237,7 @@ app.factory( 'AllQuestionsService', function($http) {
 
 
 // Needs Debugging ..
-app.controller('MainCtrl', ['$scope', '$http', 'AuthService', 'CurrentQuestionService', 'AllQuestionsService', '$location', '$cookieStore', function ($scope, $http, AuthService, CurrentQuestionService, AllQuestionsService, $location, $cookieStore) {
+app.controller('MainCtrl', ['$scope', '$http', 'AuthService', 'CurrentQuestionService', 'AllQuestionsService', '$location', '$cookieStore', '$facebook', function ($scope, $http, AuthService, CurrentQuestionService, AllQuestionsService, $location, $cookieStore, $facebook) {
 
   $scope.$watch(AuthService.isLoggedIn, function (value, oldValue) {
 
@@ -324,59 +271,73 @@ app.controller('MainCtrl', ['$scope', '$http', 'AuthService', 'CurrentQuestionSe
         .error(function(response, status){
           console.log("Request Failed");
       });
-
-
+      // Redirect user once logged in..
       $location.path('/all_questions');
-
-      // Get a list of all the questions
-      // $http({
-      // 	method: 'GET',
-      // 	url: '/api/content/view_all_ques'
-      // })
-      // 	.success(function(response, status){
-      // 	  console.log(response);
-
-      // 	  // if (response.questions[6] === undefined) {
-      // 	  //   console.log("Hello");
-      // 	  // }
-	    
-      // 	  if (response.questions.length === 0) {
-      // 	    $location.path('/question');
-      // 	  } else {
-      // 	    // AllQuestionsService.setData(response);
-      // 	    // console.log(AllQuestionsService.getData());
-      // 	    $location.path('/all_questions');	    
-      // 	  }
-
-      // 	  var temp_ques_id = response.questions[0].question_id;
-	  
-      // 	  console.log("The first question is:");
-	    
-      // 	  // Fetch the question details from id
-      // 	  $http({
-      // 	    method: 'GET',
-      // 	    url: '/api/content/get_question/' + temp_ques_id + "/"
-      // 	  })
-      // 	    .success(function(response, status){
-      // 	      console.log(response);
-	      
-      // 	      // Set current question data 
-      // 	      CurrentQuestionService.setData(response);
-		
-      // 	      // Redirect to question page
-      // 	      $location.path('/ques/' + temp_ques_id);
-      // 	    })
-      // 	    .error(function(response, status){
-      // 	      console.log("Request Failed");
-      // 	    });
-
-      // 	})
-      // 	.error(function(response, status){
-      // 	  console.log("Request Failed");
-      // 	});
     }
 
   }, true);
+
+  $scope.FbLogin = function() {
+    console.log("FB login function");
+    $facebook.login().then(function() {
+      console.log('Logged in with FB');
+      $facebook.api("/me", {'fields':'picture,id,email,first_name,last_name'}).then(
+	function(response) {
+	  console.log(response);
+	  var data = {
+	    email: response.email,
+	    first_name: response.first_name,
+	    last_name: response.last_name,
+	    profile_photo: response.picture.data.url,
+	    method: "facebook"
+	  };
+
+	  console.log(data);
+
+	  $http({
+	    method: 'POST',
+	    url: '/api/signup',
+	    data: data
+	  })
+	    .success(function(response, status){
+	      console.log("Signup with FB success!");
+	      console.log(response);
+	      console.log("User exists fb");
+	      $scope.loginAfterFb(data);
+	    }).error(function(response, status){
+	      console.log("Request Failed");
+	    });
+	}
+
+      );
+    });
+  }
+
+  $scope.loginAfterFb = function(data) {
+      
+    var data = {
+      email: data.email,
+      method: 'facebook'
+    };
+    
+    $http({
+      method: 'POST',
+      url: '/api/login',
+      data: data
+    })
+      .success(function(response, status){
+	console.log("Success:", response);
+	if (response.status == 'success') {
+	  console.log(response);
+	  AuthService.setUser(response);
+	}
+      })
+      .error(function(response, status){
+	console.log("Request Failed");
+      });
+	
+  }
+
 }]);
 
 
@@ -387,7 +348,7 @@ app.filter('reverse', function() {
 });
 
 // For user login and logout
-  app.controller('LoginLogoutCtrl', ['$scope', '$http', 'AuthService', '$facebook', function LoginLogoutCtrl($scope, $http, AuthService, NewUserCtrl, $cookieStore, $facebook){
+  app.controller('LoginLogoutCtrl', ['$scope', '$http', 'AuthService', function LoginLogoutCtrl($scope, $http, AuthService, NewUserCtrl, $cookieStore){
 
   $scope.loginDetails = {};
   $scope.currentUserData = {};
@@ -410,7 +371,6 @@ app.filter('reverse', function() {
 	if (response.status != 'failed') {
 	  $scope.currentUserData.userName = response.username;
 	  console.log(response);
-	  // console.log($scope.currentUserData);
 	  AuthService.setUser(response);
 	} else {
 	  console.log("Invalid credentials");
@@ -425,11 +385,11 @@ app.filter('reverse', function() {
       });
   };
   
-   $scope.fbLogin = function(){
-     console.log("FB login function");
-     $facebook.login().then(function() {
-       console.log('Logged in with FB');
-     });
+   // $scope.fbLogin = function(){
+     // console.log("FB login function");
+     // $facebook.login().then(function() {
+     //   console.log('Logged in with FB');
+     // });
   //   // Here we run a very simple test of the Graph API after login is
   //   // successful.  See statusChangeCallback() for when this call is made.
   //   function testAPI() {
@@ -444,7 +404,7 @@ app.filter('reverse', function() {
   //     });
   //   }
 
-  };
+  // };
 
   // $scope.me = function() {
   //   // Facebook.api('/me', function(response) {
