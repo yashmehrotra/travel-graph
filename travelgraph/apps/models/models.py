@@ -138,7 +138,7 @@ def create_user(email, method=None, **kwargs):
             cursor.execute(query)
             postgre.commit()
 
-            return json.dumps({'status': 'success','message': 'user added through facebook'})
+            return json.dumps({'status': 'success','message': 'user add fb'})
 
     return 'Done, also add exception here'
 
