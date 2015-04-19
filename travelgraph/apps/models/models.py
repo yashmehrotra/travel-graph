@@ -107,6 +107,8 @@ def create_user(email, method=None, **kwargs):
         cursor.execute(query)
         postgre.commit()
 
+        auth_user(email, method='facebook')
+
         response.update({
             'status':'success',
             'message':'user signed up normally',
