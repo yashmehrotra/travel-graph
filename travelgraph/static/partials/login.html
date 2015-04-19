@@ -1,3 +1,18 @@
+<style type="text/css">
+  #fb-button {
+background: url(/static/images/facebook-button.png);
+width: 202px;
+height: 45px;
+border-left-width: 0px;
+border-right-width: 0px;
+border-bottom-width: 0px;
+border-top-width: 0px;
+padding-left: 0px;
+padding-bottom: 0px;
+padding-right: 0px;
+padding-top: 0px;
+}
+</style>
 <div style="padding: 20px 0;">
   <div class="uk-container uk-container-center" ng-controller="LoginLogoutCtrl">
     <h1>Login</h1>
@@ -14,7 +29,8 @@
       <button id="login-button" ng-click="submitted=true">Login</button>
       <!-- <button id="logout-button" ng-click="logoutUser()">Logout</button> -->
     </form>
-    <button ng-click="FbLogin()">Change button with fb</button>
+    <br><br>
+    <button id="fb-button" ng-click="FbLogin()"></button>
     <h2>If you didnt signup</h2>
     <a href="/signup">Click here to signup</a>
 
