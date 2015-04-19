@@ -3,11 +3,12 @@
 
     <div class="uk-grid">
       <div class="uk-width-4-5">
-	<div class="uk-article" ng-repeat="question in questionsList">
+	<div class="uk-article" ng-repeat="question in questionsList | reverse">
 	  <div class="uk-article">
 	    <!-- <a href=""> -->
-	    <p class="uk-article-lead" ng-click="goToQuestion(question.question_id)" style="cursor:pointer;">{[{ question.question_text }]}</p>
-	    <!-- </a> -->
+	    <p class="uk-article-lead uk-text-large" ng-click="goToQuestion(question.question_id)" style="cursor:pointer;">{[{ question.question_text }]}</p>
+	    <p class="uk-text-muted" ng-click="goToQuestion(question.question_id)" style="cursor:pointer;" ng-bind-html-unsafe="question.question_desc"></p>
+	    <button class="uk-button uk-button-mini" type="button" ng-repeat="tag in question.question_tags">{[{ tag.tag_value }]}</button>
 	  </div>
 	</div>
       </div>

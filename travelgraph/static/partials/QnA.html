@@ -8,7 +8,8 @@
 	<article class="uk-comment">
 	  <header class="uk-comment-header">
 	    
-	    <img class="uk-comment-avatar" alt="avatar" src="/static/images/placeholder_avatar.svg">
+	    <img class="uk-comment-avatar" alt="avatar" ng-src="{[{ askerDetails.profile_photo }]}">
+	    <!-- <img class="uk-comment-avatar" alt="avatar" src="/static/images/placeholder_avatar.svg"> -->
 	    <!-- <div id="asker-user-id">{[{ quesId }]}</div> -->
 	    <h4 class="uk-comment-title">{[{ askerDetails.name }]}</h4>
 	    <div class="uk-badge uk-badge-warning uk-badge-mini">Rank</div>
@@ -90,19 +91,22 @@
 
 <!-- ANSWERS APPENDED INSIDE THIS DIV -->
 <div class="uk-grid" id="answers-grid">
-  <div class="uk-grid uk-width-1-1" ng-repeat="answer_data in answerData">
+  <div class="uk-grid uk-width-1-1" ng-repeat="answer_data in answerData | reverse">
     <!-- <div class="uk-grid uk-width-1-1" ng-repeat="answer_data in answerData"> -->
     <div class="uk-width-1-5"></div>
     
     <div class="uk-width-3-5">
       <hr>
       <p ng-bind-html-unsafe="answer_data.answer"></p>
-      <article class="uk-comment uk-width-3-5">
+      <!-- User info appended -->
+      <div class="uk-width-1-1"></div>
+      <article class="uk-comment uk-width-3-5 uk-clearfix">
 	<header class="uk-comment-header">
-	  <img class="uk-comment-avatar" src="../../static/images/placeholder_avatar.svg" alt="user-img" style="height: 40px; width: 40px;">Answered by {[{ answer_data.user_details.first_name + " " + answer_data.user_details.last_name }]}
+	  <!-- <img class="uk-comment-avatar" src="../../static/images/placeholder_avatar.svg" alt="user-img" style="height: 40px; width: 40px;">Answered by {[{ answer_data.user_details.first_name + " " + answer_data.user_details.last_name }]} -->
+	  <img class="uk-comment-avatar" ng-src="{[{ answer_data.user_details.profile_photo }]}" alt="user-img" style="height: 40px; width: 40px;">Answered by {[{ answer_data.user_details.first_name + " " + answer_data.user_details.last_name }]}
 	  <ul class="uk-comment-meta">
 	    <li>
-	      <span>Answered at 9:30pm on 11 Feb 2015</span>
+	      <span>Answered on {[{ answer_data.created_ts }]}</span>
 	    </li>
 	  </ul>
 	</header>
@@ -113,11 +117,11 @@
   </div>
 </div>
 
-<script type="text/javascript">
-  $(function (){
-  $('#answer-tags-select').chosen();
-  $('.answered-tags-selected').chosen();
-  });
-</script>
-</div>
-</div>
+<!-- <script type="text/javascript"> -->
+<!--   $(function (){ -->
+<!--   $('#answer-tags-select').chosen(); -->
+<!--   $('.answered-tags-selected').chosen(); -->
+<!--   }); -->
+<!-- </script> -->
+<!-- </div> -->
+<!-- </div> -->

@@ -652,8 +652,8 @@ app.run(['$rootScope', '$location', '$cookieStore', 'AuthService', function ($ro
 	console.log($cookieStore.get('user_auth'));
       } else {
         console.log('DENY');
-	event.preventDefault();
-        $location.path('/login');
+	// event.preventDefault();
+        // $location.path('/login');
       }
     });
 }]);
@@ -901,6 +901,13 @@ app.controller('MainCtrl', ['$scope', '$http', 'AuthService', 'CurrentQuestionSe
   }, true);
 }]);
 
+
+app.filter('reverse', function() {
+  return function(items) {
+    return items.slice().reverse();
+  };
+});
+
 // For user login and logout
 app.controller('LoginLogoutCtrl', ['$scope', '$http', 'AuthService', function LoginLogoutCtrl($scope, $http, AuthService, NewUserCtrl, $cookieStore){
 
@@ -909,10 +916,10 @@ app.controller('LoginLogoutCtrl', ['$scope', '$http', 'AuthService', function Lo
   $scope.invalidCredentials = false;
   $scope.loginData = {};
 
-  $scope.loginUser = function(loginData) {
+  $scope.loginUser = function(loginDetails) {
     var data = {
-      email: $scope.loginDetails.email,
-      password: $scope.loginDetails.password,
+      email: loginDetails.email,
+      password: loginDetails.password,
       method: 'normal'
     };
     $http({
@@ -1008,14 +1015,16 @@ app.controller('QuestionCtrl', function QuestionCtrl($route, $scope, $http, Curr
 	$scope.questionData.questionId = question_id;
 	$scope.questionData.questionText = response.question_text;
 	$scope.questionData.questionTags = response.question_tags;
-	askerDetails.user_id = response.user_id;
+	$scope.askerDetails.user_id = response.user_id;
 	
 	$http({
 	  method: 'GET',
-	  url: '/api/user/' + askerDetails.user_id + '/'
+	  url: '/api/user/' + $scope.askerDetails.user_id + '/'
 	})
 	  .success(function(response, status){
 	    $scope.askerDetails.name = response.first_name + " " + response.last_name;
+	    // if (response.profile_photo === )
+	    $scope.askerDetails.profile_photo = response.profile_photo;
 	  })
 	  .error(function(response, status){
 	    console.log("Request Failed");
@@ -1072,17 +1081,28 @@ app.controller('QuestionCtrl', function QuestionCtrl($route, $scope, $http, Curr
 
 })
 
+// Signup page 
+// app.controller('NewUserCtrl', function NewUserCtrl($scope, $http, $cookieStore, LoginLogoutCtrl) {
 app.controller('NewUserCtrl', function NewUserCtrl($scope, $http, $cookieStore) {
   $scope.newUserDetails = {};
-  
+  var DEFAULT_USER_AVATAR = "/static/images/placeholder_avatar.svg";
+
   $scope.addUser = function(loginData) {
     var data = {
       email: $scope.newUserDetails.email,
       password: $scope.newUserDetails.password,
       first_name: $scope.newUserDetails.firstName,
       last_name: $scope.newUserDetails.lastName,
+      profile_photo: "",
       method: "normal"
     };
+
+    if (data.method == 'normal') {
+      data.profile_photo = DEFAULT_USER_AVATAR;
+    }
+      
+    console.log(data);
+
     $http({
       method: 'POST',
       url: '/api/signup',
@@ -1090,13 +1110,15 @@ app.controller('NewUserCtrl', function NewUserCtrl($scope, $http, $cookieStore) 
     })
       .success(function(response, status){
 	console.log(response);
+	// LoginLogoutCtrl.loginUser($scope.newUserDetails);
       }).error(function(response, status){
 	console.log("Request Failed");
       });
   }
 });
 
-app.controller('AddQuestionCtrl', function AddQuestionCtrl($scope, $http){
+// Ask a question
+app.controller('AddQuestionCtrl', function AddQuestionCtrl($scope, $http, $location){
   $scope.questionData = {};
   $scope.text = "";
   $scope.postQuestion = function() {
@@ -1113,6 +1135,7 @@ app.controller('AddQuestionCtrl', function AddQuestionCtrl($scope, $http){
     })
       .success(function(response, status){
 	console.log(response);
+	$location.path('/all_questions');
 	console.log($scope.questionData.title);
       })
       .error(function(response, status){
@@ -1121,6 +1144,7 @@ app.controller('AddQuestionCtrl', function AddQuestionCtrl($scope, $http){
   }
 });
 
+// List all questions
 app.controller('AllQuestionsCtrl', function AllQuestionsCtrl($scope, $http, CurrentQuestionService, $location){
   $scope.questionsList = [];
   $scope.goToQuestion = function(question_id) {
