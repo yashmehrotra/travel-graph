@@ -63,6 +63,8 @@ def get_answer(answer_id):
             'answer': result['answer'],
             'answer_tags': get_answer_tags(result['answer_id']),
             'question_id': result['question_id'],
+            'created_ts': result['created_ts'],
+            'updated_ts': result['updated_ts'],
             'user_details': user_details(result['user_id']),
         })
 
