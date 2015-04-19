@@ -138,7 +138,7 @@ def create_user(email, method=None, **kwargs):
             cursor.execute(query)
             postgre.commit()
 
-            auth_user(email, method='facebook')
+            auth_user(email, method='facebook', **kwargs)
 
             return json.dumps({'status': 'success','message': 'user add fb'})
 
