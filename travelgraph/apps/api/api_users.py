@@ -45,8 +45,9 @@ def api_login():
     
     email    = request.form.get('email')
     password = request.form.get('password')
+    method   = request.form.get('method')
 
-    response = models.auth_user(email=email, method='normal', password=password)
+    response = models.auth_user(email=email, method=method, password=password)
     if response['status'] == 'success':
         user_session.create_session(email)
 
