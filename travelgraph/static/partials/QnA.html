@@ -25,7 +25,8 @@
       <!-- FOR QUES TEXT + OTHER DETAILS -->
       <div class="uk-width-4-5">
 	<h2>{[{ questionData.questionText }]}</h2>
-
+	<!-- <p class="uk-text-muted">{[{ questionData.questionDescription }]}</p> -->
+	<p class="uk-text-muted" ng-bind-html-unsafe="questionData.questionDescription"></p>
 	<div class="uk-grid">
 	  <div class="uk-width-4-5">
 	    <p>

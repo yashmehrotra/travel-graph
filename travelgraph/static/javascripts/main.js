@@ -452,6 +452,7 @@ app.controller('QuestionCtrl', function QuestionCtrl($route, $scope, $http, Curr
       	console.log(response);
 	$scope.questionData.questionId = question_id;
 	$scope.questionData.questionText = response.question_text;
+	$scope.questionData.questionDescription = response.question_desc;
 	$scope.questionData.questionTags = response.question_tags;
 	$scope.askerDetails.user_id = response.user_id;
 	
