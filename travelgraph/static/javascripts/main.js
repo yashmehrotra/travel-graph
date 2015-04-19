@@ -68,7 +68,7 @@ app.run(['$rootScope', '$location', '$cookieStore', 'AuthService', function ($ro
 	  console.log("Allowed");
 	} else {
 	  event.preventDefault();
-	  $location.path('/'); 
+	  $location.path('/login'); 
 	}
       }
     });
