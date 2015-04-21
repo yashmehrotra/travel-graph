@@ -162,7 +162,7 @@ app.config(['$routeProvider', '$locationProvider',
       })
       .when('/login', {
 	templateUrl: '/static/partials/login.html',
-	controller: 'MainCtrl'
+	// controller: 'MainCtrl'   // MainCtrl should be application wide
       })
       .when('/ques/:quesId', {
 	templateUrl: '/static/partials/QnA.html',
@@ -170,7 +170,7 @@ app.config(['$routeProvider', '$locationProvider',
       })
       .when('/signup', {
 	templateUrl: '/static/partials/signup.html',
-	controller: 'NewUserCtrl'
+	// controller: 'NewUserCtrl'
       })
       .when('/question', {
 	templateUrl: '/static/partials/question.html',
@@ -239,43 +239,42 @@ app.factory( 'AllQuestionsService', function($http) {
 // Needs Debugging ..
 app.controller('MainCtrl', ['$scope', '$http', 'AuthService', 'CurrentQuestionService', 'AllQuestionsService', '$location', '$cookieStore', '$facebook', function ($scope, $http, AuthService, CurrentQuestionService, AllQuestionsService, $location, $cookieStore, $facebook) {
 
-  $scope.$watch(AuthService.isLoggedIn, function (value, oldValue) {
+  $scope.newUserDetails = {};
+  var DEFAULT_USER_AVATAR = "/static/images/placeholder_avatar.svg";
+  $scope.loggedIn = false; // Just to check whether the user is logged in or not
+  $scope.userData = {};
+  $scope.loginDetails = {};
+  $scope.currentUserData = {};
+  $scope.invalidCredentials = false;
+  $scope.loginData = {};
 
-    if(!value && oldValue) {
-      console.log("Disconnect");
-      $cookieStore.put('user_auth', false);
-      $location.path('/');
-    }
-    
-    // As soon as the user logs in..
-    if(value) {
-      console.log("Connect");
-      data_user = AuthService.isLoggedIn();
-
-      $http({
-        method: 'GET',
-        url: '/api/user/' + data_user.user_id + '/'
-      })
-        .success(function(response, status){
+  $scope.loginUser = function(loginDetails) {
+    var data = {
+      email: loginDetails.email,
+      password: loginDetails.password,
+      method: 'normal'
+    };
+    $http({
+      method: 'POST',
+      url: '/api/login',
+      data: data
+    })
+      .success(function(response, status){
+	console.log("Success:", response);
+	if (response.status == 'success') {
+	  $scope.currentUserData.userName = response.username;
 	  console.log(response);
-	  var cookieData = {
-	    'user_id': response.user_id,
-	    'username': response.username,
-	    'first_name': response.first_name,
-	    'last_name': response.last_name,
-	    'email': response.email,
-	    'profile_photo': response.profile_photo
-	  }
-	  $cookieStore.put('user_auth', cookieData);
-        })
-        .error(function(response, status){
-          console.log("Request Failed");
+	  AuthService.setUser(response);
+	} else {
+	  console.log("Invalid credentials");
+	  $scope.invalidCredentials = true;
+	  // invalid_credentials();
+	}
+      })
+      .error(function(response, status){
+	console.log("Request Failed");
       });
-      // Redirect user once logged in..
-      $location.path('/all_questions');
-    }
-
-  }, true);
+  };
 
   $scope.FbLogin = function() {
     console.log("FB login function");
@@ -338,80 +337,6 @@ app.controller('MainCtrl', ['$scope', '$http', 'AuthService', 'CurrentQuestionSe
 	
   }
 
-}]);
-
-
-app.filter('reverse', function() {
-  return function(items) {
-    return items.slice().reverse();
-  };
-});
-
-// For user login and logout
-  app.controller('LoginLogoutCtrl', ['$scope', '$http', 'AuthService', function LoginLogoutCtrl($scope, $http, AuthService, NewUserCtrl, $cookieStore){
-
-  $scope.loginDetails = {};
-  $scope.currentUserData = {};
-  $scope.invalidCredentials = false;
-  $scope.loginData = {};
-
-  $scope.loginUser = function(loginDetails) {
-    var data = {
-      email: loginDetails.email,
-      password: loginDetails.password,
-      method: 'normal'
-    };
-    $http({
-      method: 'POST',
-      url: '/api/login',
-      data: data
-    })
-      .success(function(response, status){
-	console.log("Success:", response);
-	if (response.status != 'failed') {
-	  $scope.currentUserData.userName = response.username;
-	  console.log(response);
-	  AuthService.setUser(response);
-	} else {
-	  console.log("Invalid credentials");
-	  $scope.invalidCredentials = true;
-	  // invalid_credentials();
-	}
-      })
-      .error(function(response, status){
-	console.log("Request Failed");
-	// function Invalid_credentials() {
-	// }
-      });
-  };
-  
-   // $scope.fbLogin = function(){
-     // console.log("FB login function");
-     // $facebook.login().then(function() {
-     //   console.log('Logged in with FB');
-     // });
-  //   // Here we run a very simple test of the Graph API after login is
-  //   // successful.  See statusChangeCallback() for when this call is made.
-  //   function testAPI() {
-  //     console.log('Welcome!  Fetching your information.... ');
-  //     FB.api('/me',{'fields':'picture,id,first_name,email,last_name'}, function(response) {
-  // 	console.log('Successful login for: ' + response.name);      
-  // 	console.log(response);
-  // 	$scope.loginData = response;
-  // 	$scope.loginData.method = 'facebook';
-  // 	NewUserCtrl.addUser($scope.loginData);
-  // 	$scope.loginUser($scope.loginData);
-  //     });
-  //   }
-
-  // };
-
-  // $scope.me = function() {
-  //   // Facebook.api('/me', function(response) {
-  //   //   $scope.user = response;
-  //   // });
-  // };
-
   $scope.logoutUser = function (){
     $http({
       method: 'GET',
@@ -427,7 +352,95 @@ app.filter('reverse', function() {
     // console.log(AuthService.isLoggedIn());
   };
 
+
+  $scope.addUser = function(loginData) {
+    var data = {
+      email: $scope.newUserDetails.email,
+      password: $scope.newUserDetails.password,
+      first_name: $scope.newUserDetails.firstName,
+      last_name: $scope.newUserDetails.lastName,
+      profile_photo: "",
+      method: "normal"
+    };
+
+    if (data.method == 'normal') {
+      data.profile_photo = DEFAULT_USER_AVATAR;
+    }
+      
+    console.log(data);
+
+    $http({
+      method: 'POST',
+      url: '/api/signup',
+      data: data
+    })
+      .success(function(response, status){
+	console.log(response);
+	// login here once the user is signed up....
+      }).error(function(response, status){
+	console.log("Request Failed");
+      });
+  }
+
+
+  if ($cookieStore.get('user_auth') == true) {
+    $scope.loggedIn = true;
+    $scope.userData.user_id = $cookieStore.get('user_auth').user_id;
+    $scope.userData.username_id = $cookieStore.get('user_auth').username_id;
+    $scope.userData.first_name = $cookieStore.get('user_auth').first_name;
+    $scope.userData.last_name_id = $cookieStore.get('user_auth').last_name_id;
+    $scope.userData.email_ = $cookieStore.get('user_auth').email;
+    $scope.userData.profile_photo = $cookieStore.get('user_auth').profile_photo;
+    $location.path('/all_questions'); // redirect to questions page
+  }
+
+  $scope.$watch(AuthService.isLoggedIn, function (value, oldValue) {
+
+    if(!value && oldValue) {
+      console.log("Disconnect");
+      $cookieStore.put('user_auth', false);
+      $location.path('/');
+    }
+    
+    // As soon as the user logs in..
+    if(value) {
+      console.log("Connect");
+      $scope.loggedIn = true;
+      data_user = AuthService.isLoggedIn();
+      
+      $http({
+        method: 'GET',
+        url: '/api/user/' + data_user.user_id + '/'
+      })
+        .success(function(response, status){
+	  console.log(response);
+	  var cookieData = {
+	    'user_id': response.user_id,
+	    'username': response.username,
+	    'first_name': response.first_name,
+	    'last_name': response.last_name,
+	    'email': response.email,
+	    'profile_photo': response.profile_photo
+	  }
+	  $cookieStore.put('user_auth', cookieData);
+	  $scope.userData = cookieData;
+	  $location.path('/all_questions');
+        })
+        .error(function(response, status){
+          console.log("Request Failed");
+      });
+    }
+
+  }, true);
+
 }]);
+
+
+app.filter('reverse', function() {
+  return function(items) {
+    return items.slice().reverse();
+  };
+});
 
 // For displaying a question and answer page
 app.controller('QuestionCtrl', function QuestionCtrl($route, $scope, $http, CurrentQuestionService, AuthService, $cookieStore, $routeParams, $route) {
@@ -519,42 +532,6 @@ app.controller('QuestionCtrl', function QuestionCtrl($route, $scope, $http, Curr
     });
 
 })
-
-// Signup page 
-// app.controller('NewUserCtrl', function NewUserCtrl($scope, $http, $cookieStore, LoginLogoutCtrl) {
-app.controller('NewUserCtrl', function NewUserCtrl($scope, $http, $cookieStore) {
-  $scope.newUserDetails = {};
-  var DEFAULT_USER_AVATAR = "/static/images/placeholder_avatar.svg";
-
-  $scope.addUser = function(loginData) {
-    var data = {
-      email: $scope.newUserDetails.email,
-      password: $scope.newUserDetails.password,
-      first_name: $scope.newUserDetails.firstName,
-      last_name: $scope.newUserDetails.lastName,
-      profile_photo: "",
-      method: "normal"
-    };
-
-    if (data.method == 'normal') {
-      data.profile_photo = DEFAULT_USER_AVATAR;
-    }
-      
-    console.log(data);
-
-    $http({
-      method: 'POST',
-      url: '/api/signup',
-      data: data
-    })
-      .success(function(response, status){
-	console.log(response);
-	// LoginLogoutCtrl.loginUser($scope.newUserDetails);
-      }).error(function(response, status){
-	console.log("Request Failed");
-      });
-  }
-});
 
 // Ask a question
 app.controller('AddQuestionCtrl', function AddQuestionCtrl($scope, $http, $location){
