@@ -79,7 +79,7 @@ class Questions(Base):
         for tag in tags:
             DoobieTagsMapping.map_tag_to_doobie(tag, doobie_type, mapping_id)
 
-        ques_dict = {
+        response = {
             'question_id': question.question_id,
             'title': question.title,
             'description': question.description,
@@ -88,12 +88,6 @@ class Questions(Base):
             'updated_ts': question.updated_ts,
             'tags': DoobieTagsMapping.get_doobie_tags(doobie_type, mapping_id),
         }
-
-        response.update({
-            'status': 'success',
-            'message': 'Question successfully added',
-            'question': ques_dict,
-        })
 
         return response
 
@@ -112,7 +106,7 @@ class Questions(Base):
                            filter(Question.question_id==question_id).\
                            first()
 
-        ques_dict = {
+        question_data = {
             'question_id': question.question_id,
             'title': question.title,
             'description': question.description,
@@ -123,7 +117,7 @@ class Questions(Base):
                                                     question.question_id),
         }
 
-        return ques_dict
+        return question_data
 
 
     @staticmethod

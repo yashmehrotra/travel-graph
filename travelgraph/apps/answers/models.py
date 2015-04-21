@@ -64,16 +64,24 @@ class Answers(Base):
         session.add(new_answer)
         session.commit()
 
+        answer_id = new_answer.anwser_id
+
+        ##
+        ## What about tags
+        ##
+
         response = {
-            'status': 'success',
-            'message': 'new answer added successfully'
+            'anwser_id': anwser_id,
+            'answer': answer,
+            'question_id': question_id,
+            'user_id': user_id,
         }
 
         return response
 
 
     @staticmethod
-    def get_answer_details(anwser_id):
+    def get_answer(anwser_id):
         '''
         Get the whole answer details
         '''
@@ -85,7 +93,7 @@ class Answers(Base):
         answer = session.query(Answer).\
                     filter(Answer.answer_id == answer_id)
 
-        answer_dict = {
+        answer_data = {
             'answer_id': answer.answer_id,
             'answer': answer.answer,
             'question_id': answer.question_id,
@@ -94,7 +102,7 @@ class Answers(Base):
             'updated_ts': answer.updated_ts
         }
 
-        return answer_dict
+        return answer_data
 
 
     @staticmethod
