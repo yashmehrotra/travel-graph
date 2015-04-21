@@ -1,6 +1,6 @@
 
     <!-- TOP NAVBAR -->
-    <nav class="uk-navbar" ng-switch on="loggedIn">
+    <nav class="uk-navbar" ng-switch on="$localStorage.isLoggedIn">
       <ul class="uk-navbar-nav">
 	<li><a href="/all_questions">Questions</a></li>
 	<li><a href>Tags</a></li>

@@ -1,5 +1,5 @@
 // Necessary for POST Requests to work!
-var app = angular.module('travel-graph', ['ngCookies', 'ngFacebook'], function($httpProvider) {
+var app = angular.module('travel-graph', ['ngStorage', 'ngFacebook'], function($httpProvider) {
   // Use x-www-form-urlencoded Content-Type
   $httpProvider.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=utf-8';
 
@@ -56,11 +56,11 @@ app.run(['$route', function($route)  {
 }]);
 
 
-app.run(['$rootScope', '$location', '$cookieStore', 'AuthService', function ($rootScope, $location, $cookieStore, AuthService) {
+app.run(['$rootScope', '$location', '$localStorage', 'AuthService', function ($rootScope, $location, $localStorage, AuthService) {
   $rootScope.$on('$routeChangeStart', function (event) {
-    if ($cookieStore.get('user_auth')) {
+    if ($localStorage.isLoggedIn == true) {
       console.log('ALLOW');
-      console.log($cookieStore.get('user_auth'));
+      console.log($localStorage.user_auth);
     } else {
 	console.log('DENY');
 	var path = $location.path();
@@ -220,33 +220,19 @@ app.factory( 'CurrentQuestionService', function($http) {
 
 });
 
-// not in actual use currently
-app.factory( 'AllQuestionsService', function($http) {
-  var allQuestionsData;
-
-  return {
-    setData : function(data){
-      allQuestionsData = data;
-    },
-    getData : function(){
-      return(allQuestionsData)? allQuestionsData : false;
-    }
-  };
-
-});
-
-
 // Needs Debugging ..
-app.controller('MainCtrl', ['$scope', '$http', 'AuthService', 'CurrentQuestionService', 'AllQuestionsService', '$location', '$cookieStore', '$facebook', function ($scope, $http, AuthService, CurrentQuestionService, AllQuestionsService, $location, $cookieStore, $facebook) {
+app.controller('MainCtrl', ['$scope', '$http', 'AuthService', 'CurrentQuestionService', '$location', '$localStorage', '$facebook', function ($scope, $http, AuthService, CurrentQuestionService, $location, $localStorage, $facebook) {
+
+  var DEFAULT_USER_AVATAR = "/static/images/placeholder_avatar.svg";
 
   $scope.newUserDetails = {};
-  var DEFAULT_USER_AVATAR = "/static/images/placeholder_avatar.svg";
-  $scope.loggedIn = false; // Just to check whether the user is logged in or not
   $scope.userData = {};
   $scope.loginDetails = {};
   $scope.currentUserData = {};
   $scope.invalidCredentials = false;
   $scope.loginData = {};
+  // console.log($localStorage.isLoggedIn);
+  
 
   $scope.loginUser = function(loginDetails) {
     var data = {
@@ -376,6 +362,7 @@ app.controller('MainCtrl', ['$scope', '$http', 'AuthService', 'CurrentQuestionSe
     })
       .success(function(response, status){
 	console.log(response);
+	$scope.loginUser(data);
 	// login here once the user is signed up....
       }).error(function(response, status){
 	console.log("Request Failed");
@@ -383,14 +370,13 @@ app.controller('MainCtrl', ['$scope', '$http', 'AuthService', 'CurrentQuestionSe
   }
 
 
-  if ($cookieStore.get('user_auth') == true) {
-    $scope.loggedIn = true;
-    $scope.userData.user_id = $cookieStore.get('user_auth').user_id;
-    $scope.userData.username_id = $cookieStore.get('user_auth').username_id;
-    $scope.userData.first_name = $cookieStore.get('user_auth').first_name;
-    $scope.userData.last_name_id = $cookieStore.get('user_auth').last_name_id;
-    $scope.userData.email_ = $cookieStore.get('user_auth').email;
-    $scope.userData.profile_photo = $cookieStore.get('user_auth').profile_photo;
+  if ($localStorage.isLoggedIn == true) {
+    $scope.userData.user_id = $localStorage.user_auth.user_id;
+    $scope.userData.username_id = $localStorage.user_auth.username_id;
+    $scope.userData.first_name = $localStorage.user_auth.first_name;
+    $scope.userData.last_name_id = $localStorage.user_auth.last_name_id;
+    $scope.userData.email_ = $localStorage.user_auth.email;
+    $scope.userData.profile_photo = $localStorage.user_auth.profile_photo;
     $location.path('/all_questions'); // redirect to questions page
   }
 
@@ -398,14 +384,14 @@ app.controller('MainCtrl', ['$scope', '$http', 'AuthService', 'CurrentQuestionSe
 
     if(!value && oldValue) {
       console.log("Disconnect");
-      $cookieStore.put('user_auth', false);
-      $location.path('/');
+      $localStorage.isLoggedIn = false;
+      $location.path('/'); // Redirect to main page...
     }
     
     // As soon as the user logs in..
     if(value) {
       console.log("Connect");
-      $scope.loggedIn = true;
+      $localStorage.isLoggedIn = true;
       data_user = AuthService.isLoggedIn();
       
       $http({
@@ -414,7 +400,7 @@ app.controller('MainCtrl', ['$scope', '$http', 'AuthService', 'CurrentQuestionSe
       })
         .success(function(response, status){
 	  console.log(response);
-	  var cookieData = {
+	  var storageData = {
 	    'user_id': response.user_id,
 	    'username': response.username,
 	    'first_name': response.first_name,
@@ -422,9 +408,9 @@ app.controller('MainCtrl', ['$scope', '$http', 'AuthService', 'CurrentQuestionSe
 	    'email': response.email,
 	    'profile_photo': response.profile_photo
 	  }
-	  $cookieStore.put('user_auth', cookieData);
-	  $scope.userData = cookieData;
-	  $location.path('/all_questions');
+	  $localStorage.user_auth = storageData;
+	  $scope.userData = storageData;
+	  $location.path('/all_questions'); // Redirect once logged in...
         })
         .error(function(response, status){
           console.log("Request Failed");
@@ -443,7 +429,7 @@ app.filter('reverse', function() {
 });
 
 // For displaying a question and answer page
-app.controller('QuestionCtrl', function QuestionCtrl($route, $scope, $http, CurrentQuestionService, AuthService, $cookieStore, $routeParams, $route) {
+app.controller('QuestionCtrl', function QuestionCtrl($route, $scope, $http, CurrentQuestionService, AuthService, $localStorage, $routeParams, $route) {
   $scope.questionData = {};
   $scope.askerDetails = {};
   $scope.answerData = [];
@@ -495,7 +481,7 @@ app.controller('QuestionCtrl', function QuestionCtrl($route, $scope, $http, Curr
       question_id: question_id,
       answer: $scope.text,
       answer_tags: $scope.answerTags,
-      user_id: $cookieStore.get('user_auth').user_id
+      user_id: $localStorage.user_auth.user_id
     };
     $http({
       method: 'POST',
