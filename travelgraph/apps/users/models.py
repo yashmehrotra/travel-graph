@@ -154,6 +154,10 @@ class Users(Base):
         Validate email and password
         '''
 
+        ##
+        ## ADD A CHECK TO SEE WHETHER EMAIL IS FOUND IN QUERY OR NOT
+        ##
+
         response = {}
 
         method = params['method']
@@ -170,16 +174,26 @@ class Users(Base):
 
             if query.password == password:
                 response.update({
-                    'status': 'success',
+                    'user_id': query.user_id,
+                    'auth': True,
+                    'method': 'EMAIL',
                 })
                 
             else:
-                # Error Response
+                response.update({
+                    'auth': False,
+                    'error': 'Wrong Credentials',
+                })
 
         elif method == 'facebook':
             # Get user id and validate
             # Use token
-            pass
+            response.update({
+                'auth': True,
+                'method': 'FACEBOOK',
+            })
+        
+        return response
 
 
 class Following(Base):
@@ -209,8 +223,8 @@ class Following(Base):
         session.commit()
 
         response.update({
-            'status': 'success',
-            'message': 'User {0} now follows {1}',
+            'user_id': user_id,
+            'follow_id': follow_id,
         })
 
         return response
@@ -258,4 +272,28 @@ class Following(Base):
         })
 
         return response
+
+
+        @staticmethod
+        def get_user_data(user_id):
+            '''Get all the stuff stored in the basic user table '''
+
+            user = session.query(Users).\
+                            filter(Users.user_id == user_id).\
+                            first()
+
+            user_data = {
+                'user_id': user.user_id,
+                'username': user.username,
+                'email': user.email,
+                'first_name': user.first_name,
+                'last_name': user.last_name,
+                'profile_photo': user.profile_photo,
+                'bio': user.bio,
+                'created_ts': user.created_ts,
+                'updated_ts': user.updated_ts,
+                'login_ts': user.login_ts,
+            }
+
+            return user_data
 
