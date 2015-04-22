@@ -65,7 +65,7 @@ app.run(['$rootScope', '$location', '$localStorage', 'AuthService', function ($r
 	console.log('DENY');
 	var path = $location.path();
 	if (path == "/login" || path == "/signup" || path == "/") {
-	  console.log("Allowed");
+	  console.log("Allowed for the current location");
 	} else {
 	  event.preventDefault();
 	  $location.path('/login'); 
@@ -153,6 +153,7 @@ app.config(function($interpolateProvider){
   $interpolateProvider.endSymbol('}]}');
 });
 
+
 app.config(['$routeProvider', '$locationProvider',
   function($routeProvider, $locationProvider) {
     $routeProvider
@@ -197,31 +198,17 @@ app.factory( 'AuthService', function($http) {
 
   return {
     setUser : function(aUser){
-        user = aUser;
+      user = aUser;
     },
     isLoggedIn : function(){
-        return(user)? user : false;
-    }
-  };
-
-});
-
-app.factory( 'CurrentQuestionService', function($http) {
-  var currentQuestionData;
-
-  return {
-    setData : function(data){
-      currentQuestionData = data;
-    },
-    getData : function(){
-      return(currentQuestionData)? currentQuestionData : false;
+      return(user)? user : false;
     }
   };
 
 });
 
 // Needs Debugging ..
-app.controller('MainCtrl', ['$scope', '$http', 'AuthService', 'CurrentQuestionService', '$location', '$localStorage', '$facebook', function ($scope, $http, AuthService, CurrentQuestionService, $location, $localStorage, $facebook) {
+app.controller('MainCtrl', ['$scope', '$http', 'AuthService', '$location', '$localStorage', '$facebook', function ($scope, $http, AuthService, $location, $localStorage, $facebook) {
 
   var DEFAULT_USER_AVATAR = "/static/images/placeholder_avatar.svg";
 
@@ -231,8 +218,19 @@ app.controller('MainCtrl', ['$scope', '$http', 'AuthService', 'CurrentQuestionSe
   $scope.currentUserData = {};
   $scope.invalidCredentials = false;
   $scope.loginData = {};
-  // console.log($localStorage.isLoggedIn);
-  
+  $scope.loggedIn = false;
+
+  if ($localStorage.isLoggedIn == true) {
+    $scope.loggedIn = $localStorage.isLoggedIn;
+    $scope.userData.user_id = $localStorage.user_auth.user_id;
+    $scope.userData.username_id = $localStorage.user_auth.username_id;
+    $scope.userData.first_name = $localStorage.user_auth.first_name;
+    $scope.userData.last_name_id = $localStorage.user_auth.last_name_id;
+    $scope.userData.email_ = $localStorage.user_auth.email;
+    $scope.userData.profile_photo = $localStorage.user_auth.profile_photo;
+    $location.path('/all_questions'); // redirect to questions page
+  }
+
 
   $scope.loginUser = function(loginDetails) {
     var data = {
@@ -331,6 +329,7 @@ app.controller('MainCtrl', ['$scope', '$http', 'AuthService', 'CurrentQuestionSe
       .success(function(data, status){
 	console.log("Successfully Logged out!");
 	AuthService.setUser(false);
+	console.log(AuthService.isLoggedIn());
       })
       .error(function(data, status){
 	console.log("Request Failed");	
@@ -352,7 +351,7 @@ app.controller('MainCtrl', ['$scope', '$http', 'AuthService', 'CurrentQuestionSe
     if (data.method == 'normal') {
       data.profile_photo = DEFAULT_USER_AVATAR;
     }
-      
+
     console.log(data);
 
     $http({
@@ -369,22 +368,12 @@ app.controller('MainCtrl', ['$scope', '$http', 'AuthService', 'CurrentQuestionSe
       });
   }
 
-
-  if ($localStorage.isLoggedIn == true) {
-    $scope.userData.user_id = $localStorage.user_auth.user_id;
-    $scope.userData.username_id = $localStorage.user_auth.username_id;
-    $scope.userData.first_name = $localStorage.user_auth.first_name;
-    $scope.userData.last_name_id = $localStorage.user_auth.last_name_id;
-    $scope.userData.email_ = $localStorage.user_auth.email;
-    $scope.userData.profile_photo = $localStorage.user_auth.profile_photo;
-    $location.path('/all_questions'); // redirect to questions page
-  }
-
   $scope.$watch(AuthService.isLoggedIn, function (value, oldValue) {
 
     if(!value && oldValue) {
       console.log("Disconnect");
       $localStorage.isLoggedIn = false;
+      $scope.loggedIn = $localStorage.isLoggedIn;
       $location.path('/'); // Redirect to main page...
     }
     
@@ -392,6 +381,7 @@ app.controller('MainCtrl', ['$scope', '$http', 'AuthService', 'CurrentQuestionSe
     if(value) {
       console.log("Connect");
       $localStorage.isLoggedIn = true;
+      $scope.loggedIn = $localStorage.isLoggedIn;
       data_user = AuthService.isLoggedIn();
       
       $http({
@@ -429,7 +419,7 @@ app.filter('reverse', function() {
 });
 
 // For displaying a question and answer page
-app.controller('QuestionCtrl', function QuestionCtrl($route, $scope, $http, CurrentQuestionService, AuthService, $localStorage, $routeParams, $route) {
+app.controller('QuestionCtrl', function QuestionCtrl($route, $scope, $http, AuthService, $localStorage, $routeParams, $route) {
   $scope.questionData = {};
   $scope.askerDetails = {};
   $scope.answerData = [];
@@ -547,7 +537,7 @@ app.controller('AddQuestionCtrl', function AddQuestionCtrl($scope, $http, $locat
 });
 
 // List all questions
-app.controller('AllQuestionsCtrl', function AllQuestionsCtrl($scope, $http, CurrentQuestionService, $location){
+app.controller('AllQuestionsCtrl', function AllQuestionsCtrl($scope, $http, $location){
   $scope.questionsList = [];
   $scope.goToQuestion = function(question_id) {
   
@@ -560,12 +550,7 @@ app.controller('AllQuestionsCtrl', function AllQuestionsCtrl($scope, $http, Curr
     })
       .success(function(response, status){
       	console.log(response);
-	
-      	// Set current question data 
-      	CurrentQuestionService.setData(response);
-	
-      	// Redirect to question page
-      	$location.path('/ques/' + question_id);
+      	$location.path('/ques/' + question_id); // Redirect to question page
       })
       .error(function(response, status){
       	console.log("Request Failed");

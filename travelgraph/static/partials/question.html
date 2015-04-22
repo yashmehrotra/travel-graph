@@ -1,13 +1,12 @@
-<!--
-    */CONVERT ALL ng-click to ng-submit to the form/*
-  -->
+<div ng-include src="'/static/partials/header.html'"></div>
 
-<!-- <script src="{{ url_for('static', filename='javascripts/question.js') }}"></script> -->
+
 <div class="uk-grid">
   
   <div class="uk-width-1-5"></div>
   
-  <form class="uk-form uk-form-horizontal">
+  <!-- <form class="uk-form uk-form-horizontal" ng-submit="postQuestion()" novalidate> -->
+  <form class="uk-form uk-form-horizontal" novalidate>
     
     <div class="uk-form-row">
       <label class="uk-form-label" for="question-text">Title</label>
@@ -31,9 +30,8 @@
     </div>
 
     <p>
-      <button class="uk-button uk-button-success uk-button-large uk-container-cente" id="question-submit-button" type="button" ng-click="postQuestion()">
-	Ask
-      </button>
+      <button class="uk-button uk-button-success uk-button-large uk-container-cente" ng-click="postQuestion()">Ask</button>
+      <!-- <button class="uk-button" ng-click="postQuestion()">Ask</button> -->
     </p>
     
   </form>
