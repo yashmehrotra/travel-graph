@@ -60,15 +60,14 @@ app.run(['$rootScope', '$location', '$localStorage', 'AuthService', function ($r
   $rootScope.$on('$routeChangeStart', function (event) {
     if ($localStorage.isLoggedIn == true) {
       console.log('ALLOW');
-      console.log($localStorage.user_auth);
     } else {
 	console.log('DENY');
 	var path = $location.path();
 	if (path == "/login" || path == "/signup" || path == "/") {
-	  console.log("Allowed for the current location");
+	  // console.log("Allowed for the current location");
 	} else {
 	  event.preventDefault();
-	  $location.path('/login'); 
+	  $location.path('/login');  // Redirect to login page
 	}
       }
     });
@@ -146,32 +145,27 @@ app.directive('ckEditor', [function () {
   };
 }]);
 
-
 // Prevent conflict with Flask!
 app.config(function($interpolateProvider){
   $interpolateProvider.startSymbol('{[{');
   $interpolateProvider.endSymbol('}]}');
 });
 
-
 app.config(['$routeProvider', '$locationProvider',
   function($routeProvider, $locationProvider) {
     $routeProvider
       .when('/', {
 	templateUrl: '/static/partials/home.html',
-	// controller: 'MainCtrl'
       })
       .when('/login', {
 	templateUrl: '/static/partials/login.html',
-	// controller: 'MainCtrl'   // MainCtrl should be application wide
+      })
+      .when('/signup', {
+	templateUrl: '/static/partials/signup.html',
       })
       .when('/ques/:quesId', {
 	templateUrl: '/static/partials/QnA.html',
 	controller: 'QuestionCtrl'
-      })
-      .when('/signup', {
-	templateUrl: '/static/partials/signup.html',
-	// controller: 'NewUserCtrl'
       })
       .when('/question', {
 	templateUrl: '/static/partials/question.html',
@@ -181,21 +175,22 @@ app.config(['$routeProvider', '$locationProvider',
 	templateUrl: '/static/partials/all_questions.html',
 	controller: 'AllQuestionsCtrl'
       })
-      // .when('/home', {
-      // 	templateUrl: '/static/partials/home.html'
-      // 	// controller: 'HomeCtrl'
-      // })
       .otherwise({
 	redirectTo: '/'
-      })
-    ;
+      });
     $locationProvider.html5Mode(true);
   }]);
 
+// Filter for displaying posts in the reverse order (latest first)
+app.filter('reverse', function() {
+  return function(items) {
+    return items.slice().reverse();
+  };
+});
 
+// Factory service for user login/logout updations..
 app.factory( 'AuthService', function($http) {
   var user;
-
   return {
     setUser : function(aUser){
       user = aUser;
@@ -204,10 +199,9 @@ app.factory( 'AuthService', function($http) {
       return(user)? user : false;
     }
   };
-
 });
 
-// Needs Debugging ..
+// Application-wide controller [Handles all login/logout & new user stuff]
 app.controller('MainCtrl', ['$scope', '$http', 'AuthService', '$location', '$localStorage', '$facebook', function ($scope, $http, AuthService, $location, $localStorage, $facebook) {
 
   var DEFAULT_USER_AVATAR = "/static/images/placeholder_avatar.svg";
@@ -220,6 +214,7 @@ app.controller('MainCtrl', ['$scope', '$http', 'AuthService', '$location', '$loc
   $scope.loginData = {};
   $scope.loggedIn = false;
 
+  // if the user credentials are already stored in localstorage..
   if ($localStorage.isLoggedIn == true) {
     $scope.loggedIn = $localStorage.isLoggedIn;
     $scope.userData.user_id = $localStorage.user_auth.user_id;
@@ -228,10 +223,11 @@ app.controller('MainCtrl', ['$scope', '$http', 'AuthService', '$location', '$loc
     $scope.userData.last_name_id = $localStorage.user_auth.last_name_id;
     $scope.userData.email_ = $localStorage.user_auth.email;
     $scope.userData.profile_photo = $localStorage.user_auth.profile_photo;
-    $location.path('/all_questions'); // redirect to questions page
   }
 
-
+  /**
+   * Functions for login/logout through email or Facebook..
+   */
   $scope.loginUser = function(loginDetails) {
     var data = {
       email: loginDetails.email,
@@ -244,10 +240,8 @@ app.controller('MainCtrl', ['$scope', '$http', 'AuthService', '$location', '$loc
       data: data
     })
       .success(function(response, status){
-	console.log("Success:", response);
 	if (response.status == 'success') {
 	  $scope.currentUserData.userName = response.username;
-	  console.log(response);
 	  AuthService.setUser(response);
 	} else {
 	  console.log("Invalid credentials");
@@ -261,12 +255,10 @@ app.controller('MainCtrl', ['$scope', '$http', 'AuthService', '$location', '$loc
   };
 
   $scope.FbLogin = function() {
-    console.log("FB login function");
+    console.log("Inside Fblogin Function");
     $facebook.login().then(function() {
-      console.log('Logged in with FB');
       $facebook.api("/me", {'fields':'picture,id,email,first_name,last_name'}).then(
 	function(response) {
-	  console.log(response);
 	  var data = {
 	    email: response.email,
 	    first_name: response.first_name,
@@ -274,52 +266,40 @@ app.controller('MainCtrl', ['$scope', '$http', 'AuthService', '$location', '$loc
 	    profile_photo: response.picture.data.url,
 	    method: "facebook"
 	  };
-
-	  console.log(data);
-
 	  $http({
 	    method: 'POST',
 	    url: '/api/signup',
 	    data: data
 	  })
 	    .success(function(response, status){
-	      console.log("Signup with FB success!");
-	      console.log(response);
-	      console.log("User exists fb");
 	      $scope.loginAfterFb(data);
 	    }).error(function(response, status){
 	      console.log("Request Failed");
 	    });
 	}
-
       );
     });
-  }
+  };
 
   $scope.loginAfterFb = function(data) {
-      
     var data = {
       email: data.email,
       method: 'facebook'
     };
-    
     $http({
       method: 'POST',
       url: '/api/login',
       data: data
     })
       .success(function(response, status){
-	console.log("Success:", response);
 	if (response.status == 'success') {
-	  console.log(response);
 	  AuthService.setUser(response);
 	}
       })
       .error(function(response, status){
 	console.log("Request Failed");
       });
-	
-  }
+  };
 
   $scope.logoutUser = function (){
     $http({
@@ -327,16 +307,15 @@ app.controller('MainCtrl', ['$scope', '$http', 'AuthService', '$location', '$loc
       url: '/api/logout'
     })
       .success(function(data, status){
-	console.log("Successfully Logged out!");
 	AuthService.setUser(false);
-	console.log(AuthService.isLoggedIn());
+	$localStorage.isLoggedIn = false;
+	$scope.loggedIn = $localStorage.isLoggedIn;
+	$location.path('/'); // Redirect to main page...
       })
       .error(function(data, status){
 	console.log("Request Failed");	
       });
-    // console.log(AuthService.isLoggedIn());
   };
-
 
   $scope.addUser = function(loginData) {
     var data = {
@@ -347,49 +326,34 @@ app.controller('MainCtrl', ['$scope', '$http', 'AuthService', '$location', '$loc
       profile_photo: "",
       method: "normal"
     };
-
     if (data.method == 'normal') {
       data.profile_photo = DEFAULT_USER_AVATAR;
     }
-
-    console.log(data);
-
     $http({
       method: 'POST',
       url: '/api/signup',
       data: data
     })
       .success(function(response, status){
-	console.log(response);
-	$scope.loginUser(data);
-	// login here once the user is signed up....
+	$scope.loginUser(data);	// login as soon as a user signs up....
       }).error(function(response, status){
 	console.log("Request Failed");
       });
-  }
+  };
 
+  // watch for user login.. 
   $scope.$watch(AuthService.isLoggedIn, function (value, oldValue) {
-
-    if(!value && oldValue) {
-      console.log("Disconnect");
-      $localStorage.isLoggedIn = false;
-      $scope.loggedIn = $localStorage.isLoggedIn;
-      $location.path('/'); // Redirect to main page...
-    }
-    
     // As soon as the user logs in..
     if(value) {
       console.log("Connect");
       $localStorage.isLoggedIn = true;
       $scope.loggedIn = $localStorage.isLoggedIn;
       data_user = AuthService.isLoggedIn();
-      
       $http({
         method: 'GET',
         url: '/api/user/' + data_user.user_id + '/'
       })
         .success(function(response, status){
-	  console.log(response);
 	  var storageData = {
 	    'user_id': response.user_id,
 	    'username': response.username,
@@ -397,8 +361,8 @@ app.controller('MainCtrl', ['$scope', '$http', 'AuthService', '$location', '$loc
 	    'last_name': response.last_name,
 	    'email': response.email,
 	    'profile_photo': response.profile_photo
-	  }
-	  $localStorage.user_auth = storageData;
+	  };
+	  $localStorage.user_auth = storageData; // Store the user auth info in localstorage
 	  $scope.userData = storageData;
 	  $location.path('/all_questions'); // Redirect once logged in...
         })
@@ -406,81 +370,72 @@ app.controller('MainCtrl', ['$scope', '$http', 'AuthService', '$location', '$loc
           console.log("Request Failed");
       });
     }
-
   }, true);
 
 }]);
 
-
-app.filter('reverse', function() {
-  return function(items) {
-    return items.slice().reverse();
-  };
-});
-
-// For displaying a question and answer page
+// For displaying a question and answers page
 app.controller('QuestionCtrl', function QuestionCtrl($route, $scope, $http, AuthService, $localStorage, $routeParams, $route) {
   $scope.questionData = {};
   $scope.askerDetails = {};
   $scope.answerData = [];
-  $scope.answerCount;
-  $scope.text = "";
-  
-  $scope.answerTags = "";
-  
-  // Fetch the question_id details from route
-  var question_id = $routeParams.quesId;
-  console.log("The Question id is:", question_id);
+  $scope.answerCount = 0;
+  $scope.postAnswerData = {};
+  $scope.postAnswerData.tags = "";
+  $scope.currentUserId = $localStorage.user_auth.user_id;
+  $scope.questionData.questionId = $routeParams.quesId;  // Fetch the question_id details from route
 
-  // Fetch the question details from id
+  // Fetch the current question details
+  var request_url = '/api/content/get_question/' + $scope.questionData.questionId + "/";
+  $http({
+    method: 'GET',
+    url: request_url,
+  })
+    .success(function(response, status){
+      $scope.questionData.questionText = response.question_text;
+      $scope.questionData.questionDescription = response.question_desc;
+      $scope.questionData.questionTags = response.question_tags;
+      $scope.askerDetails.userId = response.user_id;
+      $scope.getAskerData();
+      $scope.getAnswers();
+    })
+    .error(function(response, status){
+      console.log("Request Failed");
+    });
+  
+  // Fetch the asker details from the user id..
+  $scope.getAskerData = function(){
+    var request_url = '/api/user/' + $scope.askerDetails.userId + '/';
     $http({
       method: 'GET',
-      url: '/api/content/get_question/' + question_id + "/"
+      url: request_url,
     })
       .success(function(response, status){
-      	console.log(response);
-	$scope.questionData.questionId = question_id;
-	$scope.questionData.questionText = response.question_text;
-	$scope.questionData.questionDescription = response.question_desc;
-	$scope.questionData.questionTags = response.question_tags;
-	$scope.askerDetails.user_id = response.user_id;
-	
-	$http({
-	  method: 'GET',
-	  url: '/api/user/' + $scope.askerDetails.user_id + '/'
-	})
-	  .success(function(response, status){
-	    $scope.askerDetails.name = response.first_name + " " + response.last_name;
-	    // if (response.profile_photo === )
-	    $scope.askerDetails.profile_photo = response.profile_photo;
-	  })
-	  .error(function(response, status){
-	    console.log("Request Failed");
-	  });
-	
+	$scope.askerDetails.name = response.first_name + " " + response.last_name;
+	$scope.askerDetails.profilePhoto = response.profile_photo;
       })
       .error(function(response, status){
-      	console.log("Request Failed");
+	console.log("Request Failed");
       });
+  };
 
-
+  // Post an answer
   $scope.postAnswer = function() {
-    console.log($scope.text);
-    console.log($scope.answerTags);
     var data = {
-      question_id: question_id,
-      answer: $scope.text,
-      answer_tags: $scope.answerTags,
-      user_id: $localStorage.user_auth.user_id
+      question_id: $scope.questionData.questionId,
+      answer: $scope.postAnswerData.text,
+      answer_tags: $scope.postAnswerData.tags,
+      user_id: $scope.currentUserId,
     };
+    console.log(data);
     $http({
       method: 'POST',
       url: '/api/content/add_answer',
       data: data
     })
       .success(function(response, status){
-    	console.log("Success " , response);
-	$route.reload();
+	// Instead of reloading, ng-repeat should automatically update the dom
+	$route.reload();  // Reload once the user posts an answer..
       })
       .error(function(response, status){
     	console.log("Request Failed");
@@ -488,75 +443,57 @@ app.controller('QuestionCtrl', function QuestionCtrl($route, $scope, $http, Auth
   };
 
   // Get the answers to the current question
-  $http({
-    method: 'GET',
-    url: '/api/content/get_answers/' + question_id + '/'
-  })
-    .success(function(response, status){
-      if (response.answers.length == 0) {
-	  $scope.answersData = "No answers to display";
-      } else {
-	console.log(response.answers[0].answer);
-	$scope.answerData = response.answers;
-	console.log($scope.answerData);
-	$scope.answerCount = $scope.answerData.length;
-	console.log($scope.answerCount);
-      }
-    })
-    .error(function(response, status){
-      console.log("Request Failed");
-    });
-
-})
-
-// Ask a question
-app.controller('AddQuestionCtrl', function AddQuestionCtrl($scope, $http, $location){
-  $scope.questionData = {};
-  $scope.text = "";
-  $scope.postQuestion = function() {
-    var data = {
-      question_title: $scope.questionData.title, 
-      question_desc: $scope.text,
-      question_tags: $scope.questionData.tags
-    };
-    console.log(data);
+  $scope.getAnswers = function(){
+    var request_url = '/api/content/get_answers/' + $scope.questionData.questionId + '/'; 
     $http({
-      method: 'POST',
-      url: '/api/content/add_question',
-      data: data
+      method: 'GET',
+      url: request_url,
     })
       .success(function(response, status){
-	console.log(response);
-	$location.path('/all_questions');
-	console.log($scope.questionData.title);
+	if (response.answers.length == 0) {
+	  // $scope.answersData = "No answers to display";
+	} else {
+	  $scope.answerData = response.answers;
+	  $scope.answerCount = $scope.answerData.length;
+	}
       })
       .error(function(response, status){
 	console.log("Request Failed");
       });
-  }
+  };
+});
+
+// Ask a question
+app.controller('AddQuestionCtrl', function AddQuestionCtrl($scope, $http, $location){
+  $scope.questionData = {};
+
+  $scope.postQuestion = function() {
+    var request_url = '/api/content/add_question';
+    var data = {
+      question_title: $scope.questionData.title, 
+      question_desc: $scope.questionData.description,
+      question_tags: $scope.questionData.tags
+    };
+    $http({
+      method: 'POST',
+      url: request_url,
+      data: data
+    })
+      .success(function(response, status){
+	$location.path('/all_questions');
+      })
+      .error(function(response, status){
+	console.log("Request Failed");
+      });
+  };
+
 });
 
 // List all questions
 app.controller('AllQuestionsCtrl', function AllQuestionsCtrl($scope, $http, $location){
   $scope.questionsList = [];
-  $scope.goToQuestion = function(question_id) {
   
-  console.log(question_id);
-
-    // Fetch the question details from id
-    $http({
-      method: 'GET',
-      url: '/api/content/get_question/' + question_id + "/"
-    })
-      .success(function(response, status){
-      	console.log(response);
-      	$location.path('/ques/' + question_id); // Redirect to question page
-      })
-      .error(function(response, status){
-      	console.log("Request Failed");
-      });
- 
-  }
+  // Fetch the list of all questions..
   $http({
     method: 'GET',
     url: '/api/content/view_all_ques'
@@ -567,5 +504,10 @@ app.controller('AllQuestionsCtrl', function AllQuestionsCtrl($scope, $http, $loc
     }).error(function(response, status){
       console.log("Request Failed");
     });
+
+  $scope.goToQuestion = function(question_id) {
+    var redirect_to_url = '/ques/' + question_id;
+    $location.path(redirect_to_url); // Redirect to the question's page
+  };
 
 });

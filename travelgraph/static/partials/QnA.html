@@ -60,7 +60,7 @@
       <div class="uk-width-3-5">
 
 	<form name="submitAnswer" ng-submit="postAnswer()">
-	  <textarea id="answer-text" name="answerText" class="ck-editor" ng-model="text" required></textarea>
+	  <textarea id="answer-text" name="answerText" class="ck-editor" ng-model="postAnswerData.text" required></textarea>
 	  
 	  <p>
 	    <span style="color:red;" ng-show="submitAnswer.answerText.$error.required">*Required Fields</span><br>
@@ -75,7 +75,7 @@
 	<!-- <select id="answer-tags-select" class="uk-width-1-1" name="answer-tags-select" multiple data-placeholder="add some tags.." ng-model="answerTags" ng-options="tag.value for tag in answerTags track by tag.value"> -->
 	<!-- <option value="tag-8">tag-8</option> -->
 	<!-- <option value="tag-9">tag-9</option> -->
-	<input name="" type="text" placeholder="add some tags.." ng-model="answerTags">
+	<input name="" type="text" placeholder="add some tags.." ng-model="postAnswerData.tags">
 </select>
 </div>
 
