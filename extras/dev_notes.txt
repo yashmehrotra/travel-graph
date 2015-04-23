@@ -38,4 +38,8 @@ Avijit
 - evernote
 
 Ankur
-- 
+-
+
+Plugins Used - 
+- medium-editor
+- ckeditor 
