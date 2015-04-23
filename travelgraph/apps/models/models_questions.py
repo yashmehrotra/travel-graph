@@ -15,6 +15,7 @@ def add_question(user_id, question_title, question_desc, question_tags):
         question_tags = question_tags.split(',')
         question_tags = [ str(tag.lower().strip()) for tag in question_tags ]
         question_tags = filter(None, question_tags)
+        question_tags = list(set(question_tags))
 
     question_title = unicode(question_title)
     question_desc = str(question_desc)
