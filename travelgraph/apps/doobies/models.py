@@ -43,7 +43,23 @@ class Doobie(Base):
 
     @staticmethod
     def map_doobie(doobie_type, mapping_id):
-        pass
+        '''
+        Map questions/answers/etc with their doobie id
+        '''
+
+        mapped_doobie = Doobie(doobie_type=doobie_type,
+                               mapping_id=mapping_id)
+
+        session.add(mapped_doobie)
+        session.commit()
+
+        response = {
+            'doobie_id': mapped_doobie.doobie_id,
+            'doobie_type': mapped_doobie.doobie_type,
+            'mapping_id': mapped_doobie.mapping_id,
+        }
+
+        return response
 
 
     @staticmethod

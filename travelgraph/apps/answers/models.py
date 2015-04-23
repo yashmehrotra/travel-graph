@@ -66,15 +66,18 @@ class Answers(Base):
 
         answer_id = new_answer.anwser_id
 
-        ##
-        ## What about tags
-        ##
+        # It should return the id, make sure it does that
+        doobie_type = DoobieType.get_doobie_type(DOOBIE_NAME)
+
+        # Mapping answer to Doobie
+        doobie_mapping = Doobie.map_doobie(doobie_type, answer_id)
 
         response = {
-            'anwser_id': anwser_id,
-            'answer': answer,
-            'question_id': question_id,
-            'user_id': user_id,
+            'anwser_id': new_answer.anwser_id,
+            'answer': new_answer.answer,
+            'question_id': new_answer.question_id,
+            'user_id': new_answer.user_id,
+            'doobie_id': doobie_mapping.doobie_id,
         }
 
         return response
@@ -128,4 +131,5 @@ class Answers(Base):
             answer_ids = None
 
         return answer_ids
+
 
