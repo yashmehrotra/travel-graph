@@ -4,11 +4,15 @@
   <div class="uk-container uk-container-center">
     <h1>Login</h1>
     Enter your details<br>
-    <form name="loginForm" ng-submit="loginUser(loginDetails)" novalidate>
+    <form invalid name="loginForm" ng-submit="loginUser(loginDetails);" novalidate>
       Email :<input id="email" type="email" name="email" ng-model="loginDetails.email" ng-blur="emailBlur = true" required="required">
+      <br>
+      <div ng-show="submitted && loginForm.loginDetails.email.$dirty && loginForm.loginDetails.email.$invalid">Required</div>
       Password :<input id="password" type="password" name="password" ng-model="loginDetails.password" ng-blur="passwordBlur = true" required="required">
-      <div class="uk-alert uk-alert-danger" ng-show="loginForm.invalidCredentials">Invalid email address or password.</div>
+      <br>
+      <div ng-show="submitted && loginForm.loginDetails.password.$dirty && loginForm.loginDetails.password.$invalid">Required</div>
       <button id="login-button" ng-click="submitted=true">Login</button>
+      <div class="uk-alert uk-alert-danger" ng-show="invalidCredentials">Invalid email address or password.</div>
     </form>
     <br><br>
     <button id="fb-button" ng-click="FbLogin()"></button>

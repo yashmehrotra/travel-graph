@@ -1,5 +1,5 @@
 // Necessary for POST Requests to work!
-var app = angular.module('travel-graph', ['ngStorage', 'ngFacebook'], function($httpProvider) {
+var app = angular.module('travelGraph', ['ngStorage', 'ngFacebook'], function($httpProvider) {
   // Use x-www-form-urlencoded Content-Type
   $httpProvider.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=utf-8';
 
@@ -92,29 +92,24 @@ app.directive('ckEditor', [function () {
       var isReady = false;
       var data = [];
       var ck = CKEDITOR.replace(elm[0]);
-      
       function setData() {
         if (!data.length) {
           return;
         }
-        
         var d = data.splice(0, 1);
         ck.setData(d[0] || '<span></span>', function () {
           setData();
           isReady = true;
         });
       }
-
       ck.on('instanceReady', function (e) {
         if (model) {
           setData();
         }
       });
-      
       elm.bind('$destroy', function () {
         // ck.destroy(false);
       });
-
       if (model) {
         ck.on('change', function () {
           scope.$apply(function () {
@@ -125,22 +120,18 @@ app.directive('ckEditor', [function () {
             model.$setViewValue(data);
           });
         });
-
         model.$render = function (value) {
           if (model.$viewValue === undefined) {
             model.$setViewValue(null);
             model.$viewValue = null;
           }
-
           data.push(model.$viewValue);
-
           if (isReady) {
             isReady = false;
             setData();
           }
         };
       }
-      
     }
   };
 }]);
@@ -165,15 +156,15 @@ app.config(['$routeProvider', '$locationProvider',
       })
       .when('/ques/:quesId', {
 	templateUrl: '/static/partials/QnA.html',
-	controller: 'QuestionCtrl'
+	controller: 'QuestionController'
       })
       .when('/question', {
 	templateUrl: '/static/partials/question.html',
-	controller: 'AddQuestionCtrl'
+	controller: 'AddQuestionController'
       })
       .when('/all_questions', {
 	templateUrl: '/static/partials/all_questions.html',
-	controller: 'AllQuestionsCtrl'
+	controller: 'AllQuestionsController'
       })
       .otherwise({
 	redirectTo: '/'
@@ -189,7 +180,7 @@ app.filter('reverse', function() {
 });
 
 // Factory service for user login/logout updations..
-app.factory( 'AuthService', function($http) {
+app.factory( 'AuthService', function($http, $compile) {
   var user;
   return {
     setUser : function(aUser){
@@ -202,7 +193,7 @@ app.factory( 'AuthService', function($http) {
 });
 
 // Application-wide controller [Handles all login/logout & new user stuff]
-app.controller('MainCtrl', ['$scope', '$http', 'AuthService', '$location', '$localStorage', '$facebook', function ($scope, $http, AuthService, $location, $localStorage, $facebook) {
+app.controller('MainController', ['$scope', '$http', 'AuthService', '$location', '$localStorage', '$facebook', function ($scope, $http, AuthService, $location, $localStorage, $facebook) {
 
   var DEFAULT_USER_AVATAR = "/static/images/placeholder_avatar.svg";
 
@@ -213,6 +204,8 @@ app.controller('MainCtrl', ['$scope', '$http', 'AuthService', '$location', '$loc
   $scope.invalidCredentials = false;
   $scope.loginData = {};
   $scope.loggedIn = false;
+
+  console.log($scope.invalidCredentials);
 
   // if the user credentials are already stored in localstorage..
   if ($localStorage.isLoggedIn == true) {
@@ -246,7 +239,6 @@ app.controller('MainCtrl', ['$scope', '$http', 'AuthService', '$location', '$loc
 	} else {
 	  console.log("Invalid credentials");
 	  $scope.invalidCredentials = true;
-	  // invalid_credentials();
 	}
       })
       .error(function(response, status){
@@ -375,7 +367,7 @@ app.controller('MainCtrl', ['$scope', '$http', 'AuthService', '$location', '$loc
 }]);
 
 // For displaying a question and answers page
-app.controller('QuestionCtrl', function QuestionCtrl($route, $scope, $http, AuthService, $localStorage, $routeParams, $route) {
+app.controller('QuestionController', function QuestionController($route, $scope, $http, AuthService, $localStorage, $routeParams, $route) {
   $scope.questionData = {};
   $scope.askerDetails = {};
   $scope.answerData = [];
@@ -464,7 +456,7 @@ app.controller('QuestionCtrl', function QuestionCtrl($route, $scope, $http, Auth
 });
 
 // Ask a question
-app.controller('AddQuestionCtrl', function AddQuestionCtrl($scope, $http, $location){
+app.controller('AddQuestionController', function AddQuestionController($scope, $http, $location){
   $scope.questionData = {};
 
   $scope.postQuestion = function() {
@@ -490,7 +482,7 @@ app.controller('AddQuestionCtrl', function AddQuestionCtrl($scope, $http, $locat
 });
 
 // List all questions
-app.controller('AllQuestionsCtrl', function AllQuestionsCtrl($scope, $http, $location){
+app.controller('AllQuestionsController', function AllQuestionsController($scope, $http, $location){
   $scope.questionsList = [];
   
   // Fetch the list of all questions..
