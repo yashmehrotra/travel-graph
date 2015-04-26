@@ -28,3 +28,9 @@
     padding-right: 0px;
     padding-top: 0px;
 }
+input.ng-invalid.ng-dirty {
+  border: 1px solid red;
+}
+input.ng-valid.ng-dirty {
+  border: 1px solid green;
+}

@@ -222,6 +222,7 @@ app.controller('MainController', ['$scope', '$http', 'AuthService', '$location',
    * Functions for login/logout through email or Facebook..
    */
   $scope.loginUser = function(loginDetails) {
+    $scope.invalidCredentials = false;
     var data = {
       email: loginDetails.email,
       password: loginDetails.password,
@@ -237,7 +238,6 @@ app.controller('MainController', ['$scope', '$http', 'AuthService', '$location',
 	  $scope.currentUserData.userName = response.username;
 	  AuthService.setUser(response);
 	} else {
-	  console.log("Invalid credentials");
 	  $scope.invalidCredentials = true;
 	}
       })
@@ -310,6 +310,7 @@ app.controller('MainController', ['$scope', '$http', 'AuthService', '$location',
   };
 
   $scope.addUser = function(loginData) {
+    $scope.invalidCredentials = false;
     var data = {
       email: $scope.newUserDetails.email,
       password: $scope.newUserDetails.password,
@@ -327,7 +328,11 @@ app.controller('MainController', ['$scope', '$http', 'AuthService', '$location',
       data: data
     })
       .success(function(response, status){
-	$scope.loginUser(data);	// login as soon as a user signs up....
+	if(response.status == "success") { 
+	  $scope.loginUser(data);	// login as soon as a user signs up....
+	} else {
+	  $scope.invalidCredentials = true;
+	}
       }).error(function(response, status){
 	console.log("Request Failed");
       });

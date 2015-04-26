@@ -2,17 +2,37 @@
 
 <div style="padding: 20px 0;">
   <div class="uk-container uk-container-center">
-    <form ng-submit="addUser()">
+    <form name="signupForm" ng-submit="signupForm.$valid && addUser()">
       <div>
 	<h1>Sign up</h1>
 	<p>Enter the details below to sign up</p>
-	<input placeholder="Email" id="email" type="email" name="email" ng-model="newUserDetails.email" /><br>
-	<input placeholder="Password" id="password" type="password" name="password" ng-model="newUserDetails.password" /><br>
-	<input placeholder="First Name" id="first_name" type="text" name="first_name" ng-model="newUserDetails.firstName" /><br>
-	<input placeholder="Last Name" id="last_name" type="text" name="last_name" ng-model="newUserDetails.lastName" /><br>
-	<button class="button animated fadeInUp delay-1s">Sign up</button>
+	<input placeholder="Email"
+	       type="email"
+	       name="email"
+	       ng-model="newUserDetails.email"
+	       ng-required="true">
+	<br>
+	<input placeholder="Password"
+	       type="password"
+	       name="password"
+	       ng-model="newUserDetails.password"
+	       ng-required="true">
+	<br>
+	<input placeholder="First Name"
+	       type="text"
+	       name="first_name"
+	       ng-model="newUserDetails.firstName"
+	       ng-required="true">
+	<br>
+	<input placeholder="Last Name"
+	       type="text"
+	       name="last_name"
+	       ng-model="newUserDetails.lastName"
+	       ng-required="true">
+	<br>
+	<button type="submit" class="">Sign up</button>
+	<div class="uk-alert uk-alert-danger" ng-show="invalidCredentials">Invalid email address or password.</div>
       </div>
     </form>
-    
   </div>
 </div>
