@@ -52,9 +52,14 @@ class Answers(Base):
     updated_ts  = Column(DateTime, default=datetime.now())
 
     @staticmethod
-    def add_answer(answer, question_id, user_id):
+    def add_answer(answer, question_id, user_id, tags=None):
         '''
         Adding a new answer
+        :params
+        - answer: unicode string
+        - question_id: bigint
+        - user_id: bigint
+        - tags: list
         '''
 
         new_answer = Answers(answer=answer,
@@ -71,6 +76,10 @@ class Answers(Base):
 
         # Mapping answer to Doobie
         doobie_mapping = Doobie.map_doobie(doobie_type, answer_id)
+
+        # The tags recieved here should be sanitized, or pass the list directly with doobie credentials and let tags app do the work hmm...
+        if tags:
+            pass
 
         response = {
             'anwser_id': new_answer.anwser_id,
