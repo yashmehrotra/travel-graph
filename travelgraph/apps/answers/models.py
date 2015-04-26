@@ -22,7 +22,7 @@ from sqlalchemy import create_engine
 
 from travelgraph.apps.doobies.models import DoobieType
 from travelgraph.apps.doobies.models import Doobie
-
+# Make sure this doesn't cause a problem in the future
 from travelgraph.apps.tags.models import DoobieTagsMapping
 from travelgraph.apps.tags.models import Tags
 
