@@ -19,8 +19,9 @@
 	  </header>
 	</article>
 
-	<div class="uk-clearfix uk-margin-top uk-center">
-	  <button class="uk-button uk-button-small uk-button-primary" id="follow-asker" type="button">Follow</button>
+	<div class="uk-clearfix uk-margin-top uk-center" ng-switch on="followsUser">
+	  <button class="uk-button uk-button-small uk-button-primary" type="button" ng-click="followUser()" ng-switch-when="false">Follow</button>
+	  <button class="uk-button uk-button-small" disabled type="button" ng-switch-when="true">Following</button>
 	</div>
 	
       </div>
@@ -38,8 +39,9 @@
 	    </p>	      
 	  </div>
 
-	  <div class="uk-width-1-5">
-	    <button class="uk-button uk-button-small uk-button-danger uk-margin-right uk-float-right" id="subscribe-question" type="button">Subscribe</button>
+	  <div class="uk-width-1-5" ng-switch on="subscribedQuestion">
+	    <button class="uk-button uk-button-small uk-button-danger uk-margin-right uk-float-right" ng-switch-when="false" type="button">Subscribe</button>
+	    <button class="uk-button uk-button-small uk-margin-right uk-float-right" disabled ng-switch-when="true" type="button">Subscribed</button>
 	  </div>
 	</div>
 	
