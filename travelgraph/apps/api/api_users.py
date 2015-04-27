@@ -123,8 +123,8 @@ def api_user_follow():
     return jsonify(result)
 
 
-@app.route('/api/get_followers/', methods=['POST'])
-def api_user_followers():
+@app.route('/api/get_followers/<user_id>', methods=['GET'])
+def api_user_followers(user_id):
     '''
     Stuff as usual
     Get people who follow user_id
@@ -136,8 +136,8 @@ def api_user_followers():
     return jsonify(result)
 
 
-@app.route('/api/get_following/', methods=['POST'])
-def api_user_following():
+@app.route('/api/get_following/<user_id>', methods=['GET'])
+def api_user_following(user_id):
     '''
     Stuff
     Get people who user_id follows
