@@ -150,3 +150,4 @@ def subscribe_question():
     result = models_questions.subscribe_question(question_id, user_id)
 
     return jsonify(result)
+
