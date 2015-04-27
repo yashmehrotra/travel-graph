@@ -343,6 +343,7 @@ app.controller('MainController', ['$scope', '$http', 'AuthService', '$location',
   // watch for user login.. 
   $scope.$watch(AuthService.isLoggedIn, function (value, oldValue) {
     // As soon as the user logs in..
+    // Can we make it a general function - called when logged in, followed someone etc.
     if(value) {
       console.log("Connect");
       $localStorage.isLoggedIn = true;
@@ -362,6 +363,7 @@ app.controller('MainController', ['$scope', '$http', 'AuthService', '$location',
 	    'last_name': response.last_name,
 	    'email': response.email,
 	    'profile_photo': response.profile_photo
+        // Do response.user_followers, response.user_following
 	  };
 	  $localStorage.user_auth = storageData; // Store the user auth info in localstorage
 	  $scope.userData = storageData;

@@ -344,6 +344,8 @@ def user_details(user_id):
         'email': user_data['email'],
         'username': user_data['username'],
         'profile_photo': user_data['profile_photo'],
+        'user_followers': get_followers(user_id),
+        'user_following': get_following(user_id),
     })
 
     return user_details
