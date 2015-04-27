@@ -108,7 +108,7 @@ app.directive('ckEditor', [function () {
         }
       });
       elm.bind('$destroy', function () {
-        // ck.destroy(false);
+        ck.destroy(false);
       });
       if (model) {
         ck.on('change', function () {
@@ -203,12 +203,12 @@ app.controller('MainController', ['$scope', '$http', 'AuthService', '$location',
   $scope.currentUserData = {};
   $scope.invalidCredentials = false;
   $scope.loginData = {};
+  
+  // Update this wherever login/logout is done.. use $watch/$on etc in future..
   $scope.loggedIn = false;
 
-  console.log($scope.invalidCredentials);
-
   // if the user credentials are already stored in localstorage..
-  if ($localStorage.isLoggedIn == true) {
+  if (typeof($localStorage.isLoggedIn) != 'undefined' && $localStorage.isLoggedIn == true) {
     $scope.loggedIn = $localStorage.isLoggedIn;
     $scope.userData.user_id = $localStorage.user_auth.user_id;
     $scope.userData.username_id = $localStorage.user_auth.username_id;
@@ -300,7 +300,9 @@ app.controller('MainController', ['$scope', '$http', 'AuthService', '$location',
     })
       .success(function(data, status){
 	AuthService.setUser(false);
-	$localStorage.isLoggedIn = false;
+	$localStorage.$reset({
+	  isLoggedIn: false
+	});
 	$scope.loggedIn = $localStorage.isLoggedIn;
 	$location.path('/'); // Redirect to main page...
       })
@@ -346,6 +348,8 @@ app.controller('MainController', ['$scope', '$http', 'AuthService', '$location',
       $localStorage.isLoggedIn = true;
       $scope.loggedIn = $localStorage.isLoggedIn;
       data_user = AuthService.isLoggedIn();
+	
+      // Fetch the user details
       $http({
         method: 'GET',
         url: '/api/user/' + data_user.user_id + '/'
@@ -361,14 +365,38 @@ app.controller('MainController', ['$scope', '$http', 'AuthService', '$location',
 	  };
 	  $localStorage.user_auth = storageData; // Store the user auth info in localstorage
 	  $scope.userData = storageData;
+        })
+        .error(function(response, status){
+          console.log("Request Failed");
+      });
+
+      // Fetch the list of users the user is following
+      $http({
+        method: 'GET',
+        url: '/api/user_follow/'
+      })
+        .success(function(response, status){
+	  $localStorage.users_followed = response; // Fetch the list of users the current user is following
+	})
+        .error(function(response, status){
+          console.log("Request Failed");
+      });
+
+      // Fetch the list of questions the user has subscribed to..
+      $http({
+        method: 'GET',
+        url: '/api/user/follow_question'
+      })
+        .success(function(response, status){
+	  $localStorage.questions_subscribed = response; // Fetch the list of users the current user is following
 	  $location.path('/all_questions'); // Redirect once logged in...
         })
         .error(function(response, status){
           console.log("Request Failed");
       });
+	
     }
   }, true);
-
 }]);
 
 // For displaying a question and answers page
@@ -382,6 +410,9 @@ app.controller('QuestionController', function QuestionController($route, $scope,
   $scope.currentUserId = $localStorage.user_auth.user_id;
   $scope.questionData.questionId = $routeParams.quesId;  // Fetch the question_id details from route
 
+  $scope.followsUser = false; // check default values
+  $scope.subscribedQuestion = false; // check default values
+    
   // Fetch the current question details
   var request_url = '/api/content/get_question/' + $scope.questionData.questionId + "/";
   $http({
@@ -416,6 +447,15 @@ app.controller('QuestionController', function QuestionController($route, $scope,
       });
   };
 
+  // If the current user is following the asker
+  if($localStorage.users_followed.indexOf($scope.askerDetails.userId) != -1) {
+    $scope.followsUser = true;
+  }
+  // If the current user has subscribed to this question
+  if($localStorage.questions_subscribed.indexOf($scope.questionData.questionId) != -1) {
+    $scope.subscribedQuestion = true;
+  }
+    
   // Post an answer
   $scope.postAnswer = function() {
     var data = {
@@ -458,6 +498,26 @@ app.controller('QuestionController', function QuestionController($route, $scope,
 	console.log("Request Failed");
       });
   };
+    
+  // Follow another user..
+  $scope.followAsker = function(){
+    var request_url = '/api/user_follow/';
+    var data = {
+      'user_id': $localStorage.user_auth.user_id,
+      'follow_id': $scope.askerDetails.userId
+    };
+    $http({
+      method: 'POST',
+      url: request_url,
+      data: data
+    })
+      .success(function(response, status){
+	// change button state.. ng-switch	
+      })
+      .error(function(response, status){
+    	console.log("Request Failed");
+    });
+  }
 });
 
 // Ask a question
