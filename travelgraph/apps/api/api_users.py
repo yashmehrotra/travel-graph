@@ -108,3 +108,24 @@ def api_user_details(user_id):
 
     return jsonify(result)
 
+
+@app.route('/api/user_follow/', methods=['POST','GET'])
+def api_user_follow():
+    '''
+    Stuff
+    '''
+
+    # Add a relationship
+    if request.method == 'POST':
+        user_id = request.form.get('user_id')
+        follow_id = request.form.get('follow_id')
+
+        result = models.user_details(user_id)
+
+    #Get relationships
+    elif request.method == 'GET':
+        # Return a list of followers
+        result = models.user_details(user_id)
+
+    return jsonify(result)
+
