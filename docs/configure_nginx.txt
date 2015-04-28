@@ -1,0 +1,36 @@
+Installing nginx
+
+$ sudo apt-get update
+$ sudo apt-get install nginx
+
+Start nginx
+
+$ sudo service nginx start
+
+Configure nginx by creating a new config file
+
+$ sudo rm /etc/nginx/sites-enabled/default
+$ sudo touch /etc/nginx/sites-available/travel_graph
+$ sudo ln -s /etc/nginx/sites-available/travel_graph /etc/nginx/sites-enabled/travel_graph
+
+In /etc/nginx/sites-enabled/travel_graph
+
+Add:
+-----------------------------------------------------------------------------------------
+server {
+        location / {
+            proxy_pass http://localhost:8000;
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+        }
+        location /static {
+            alias  /home/<username>/<path-to-travel_graph>/travelgraph/static/;
+        }
+}
+
+------------------------------------------------------------------------------------------
+
+Test it by running the command:
+$ make grun
+
+Go to http://0.0.0.0:5000/

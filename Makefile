@@ -7,3 +7,6 @@ run:
 
 lint:
 	@sh bin/lint.sh
+
+grun:
+	@gunicorn runserver:app -b 0.0.0.0:5000
