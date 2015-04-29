@@ -297,4 +297,38 @@ def get_followed_questions(user_id):
 
     response = {}
 
+    query = """ SELECT * FROM "user_doobie_follows" 
+                WHERE user_id = '{0}' """.format(user_id)
+
+    cursor.execute(query)
+    result = cursor.fetchall()
+
+    doobie_list = [ row['doobie_id'] for row in result ]
+
+    question_ids = [ get_question_id_doobie(doobie_id) 
+                     for doobie_id in doobie_list ]
+
+    response.update({
+        'status': 'success',
+        'question_ids': question_ids,
+        'user_id': user_id,
+    })
+
     return response
+
+
+def get_question_id_doobie(doobie_id):
+    '''
+    Return question_id when doobie_id is given
+    '''
+
+    #doobie_type_id = get_doobie_type_id('question')
+
+    query = """ SELECT * FROM "doobie" 
+                WHERE doobie_id = '{0}' """.format(doobie_id)
+
+    cursor.execute(query)
+    result = cursor.fetchone()
+
+    question_id = result['mapping_id']
+    return question_id
