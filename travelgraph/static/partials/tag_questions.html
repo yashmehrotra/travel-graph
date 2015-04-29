@@ -5,6 +5,7 @@
 
     <div class="uk-grid">
       <div class="uk-width-4-5">
+	<span class="uk-text-large">{[{ tagName }]}</span>
 	<div class="uk-article" ng-repeat="question in questionsList | reverse">
 	  <div class="uk-article">
 	    <p class="uk-article-lead uk-text-large" ng-click="goToQuestion(question.question_id)" style="cursor:pointer;">{[{ question.question_text }]}</p>

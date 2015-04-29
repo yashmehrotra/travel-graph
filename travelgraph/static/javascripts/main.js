@@ -166,6 +166,10 @@ app.config(['$routeProvider', '$locationProvider',
 	templateUrl: '/static/partials/all_questions.html',
 	controller: 'AllQuestionsController'
       })
+      .when('/view_tag/:tagName', {
+	templateUrl: '/static/partials/tag_questions.html',
+	controller: 'TagQuestionsController'
+      })
       .otherwise({
 	redirectTo: '/'
       });
@@ -203,7 +207,7 @@ app.controller('MainController', ['$scope', '$http', 'AuthService', '$location',
   $scope.currentUserData = {};
   $scope.invalidCredentials = false;
   $scope.loginData = {};
-  
+
   // Update this wherever login/logout is done.. use $watch/$on etc in future..
   $scope.loggedIn = false;
 
@@ -340,6 +344,17 @@ app.controller('MainController', ['$scope', '$http', 'AuthService', '$location',
       });
   };
 
+  // View a tag
+  $scope.goToTag = function(tagName) {
+    $location.path('/view_tag/' + tagName);
+  }
+    
+  // View a question
+  $scope.goToQuestion = function(question_id) {
+    var redirect_to_url = '/ques/' + question_id;
+    $location.path(redirect_to_url); // Redirect to the question's page
+  };
+
   // watch for user login.. 
   $scope.$watch(AuthService.isLoggedIn, function (value, oldValue) {
     // As soon as the user logs in..
@@ -366,36 +381,38 @@ app.controller('MainController', ['$scope', '$http', 'AuthService', '$location',
         // Do response.user_followers, response.user_following
 	  };
 	  $localStorage.user_auth = storageData; // Store the user auth info in localstorage
+	  $localStorage.users_followed = response.user_following;
 	  $scope.userData = storageData;
-        })
-        .error(function(response, status){
-          console.log("Request Failed");
-      });
-
-      // Fetch the list of users the user is following
-      $http({
-        method: 'GET',
-        url: '/api/user_follow/'
-      })
-        .success(function(response, status){
-	  $localStorage.users_followed = response; // Fetch the list of users the current user is following
-	})
-        .error(function(response, status){
-          console.log("Request Failed");
-      });
-
-      // Fetch the list of questions the user has subscribed to..
-      $http({
-        method: 'GET',
-        url: '/api/user/follow_question'
-      })
-        .success(function(response, status){
-	  $localStorage.questions_subscribed = response; // Fetch the list of users the current user is following
 	  $location.path('/all_questions'); // Redirect once logged in...
         })
         .error(function(response, status){
           console.log("Request Failed");
       });
+
+      // // Fetch the list of users the user is following
+      // $http({
+      //   method: 'GET',
+      //   url: '/api/user_follow/'
+      // })
+      //   .success(function(response, status){
+      // 	  $localStorage.users_followed = response; // Fetch the list of users the current user is following
+      // 	})
+      //   .error(function(response, status){
+      //     console.log("Request Failed");
+      // });
+
+      // // Fetch the list of questions the user has subscribed to..
+      // $http({
+      //   method: 'GET',
+      //   url: '/api/user/follow_question'
+      // })
+      //   .success(function(response, status){
+      // 	  $localStorage.questions_subscribed = response; // Fetch the list of users the current user is following
+      // 	 
+      //   })
+      //   .error(function(response, status){
+      //     console.log("Request Failed");
+      // });
 	
     }
   }, true);
@@ -563,10 +580,24 @@ app.controller('AllQuestionsController', function AllQuestionsController($scope,
     }).error(function(response, status){
       console.log("Request Failed");
     });
+});
 
-  $scope.goToQuestion = function(question_id) {
-    var redirect_to_url = '/ques/' + question_id;
-    $location.path(redirect_to_url); // Redirect to the question's page
-  };
+// List all questions related to a tag
+app.controller('TagQuestionsController', function TagQuestionsController($scope, $http, $routeParams, $location){
+  $scope.questionsList = [];
 
+  $scope.tagName = $routeParams.tagName; // Fetch the name of the tag from the url
+  
+  // Fetch the list of all questions related to this particular tag..
+  var request_url = '/api/content/view_tag/' + $scope.tagName;
+  $http({
+    method: 'GET',
+    url: request_url
+  })
+    .success(function(response, status){
+      $scope.questionsList = response.questions;
+      console.log($scope.questionsList);
+    }).error(function(response, status){
+      console.log("Request Failed");
+    });
 });
