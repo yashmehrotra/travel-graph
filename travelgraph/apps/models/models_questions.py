@@ -126,7 +126,7 @@ def view_tagged_questions(tags):
 
     for question_id in question_list:
         # Taking all the question data
-        response['question'].append(get_question(question_id))
+        response['questions'].append(get_question(question_id))
 
     response.update({
         'status':'success',
@@ -286,3 +286,15 @@ def get_question_tags(question_id):
                                 get_doobie_type_id('question'), question_id)
 
     return question_tags
+
+
+def get_followed_questions(user_id):
+    '''
+    Get a list of question ids followed by user
+    '''
+
+    # Get all doobie ids, and then do a reverse lookup for question ids
+
+    response = {}
+
+    return response

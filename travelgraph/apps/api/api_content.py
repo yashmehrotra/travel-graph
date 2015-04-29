@@ -138,7 +138,7 @@ def get_all_user_questions(user_id):
     return jsonify(result)
 
 
-@app.route('/api/user/follow_question', methods=['POST'])
+@app.route('/api/content/follow_question', methods=['POST'])
 def subscribe_question():
     '''
     User wants to subscribe to a question with question_id given
@@ -151,3 +151,13 @@ def subscribe_question():
 
     return jsonify(result)
 
+
+@app.route('/api/content/followed_questions/<user_id>', methods=['GET'])
+def list_followed_questions(user_id):
+    '''
+    Return a list of followed questions
+    '''
+
+    result = models_questions.get_followed_questions(user_id)
+
+    return jsonify(result)
