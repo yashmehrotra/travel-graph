@@ -17,7 +17,9 @@ def add_email(email):
 
     if not check_duplicate(email):
 
-        query = """  """
+        query = """ INSERT INTO "email_invite" 
+                    (email) VALUES ('{0}') """.format(email)
+
         cursor.execute(query)
         postgre.commit()
 
