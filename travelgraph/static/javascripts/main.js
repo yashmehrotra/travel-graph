@@ -371,6 +371,7 @@ app.controller('MainController', ['$scope', '$http', 'AuthService', '$location',
         url: '/api/user/' + data_user.user_id + '/'
       })
         .success(function(response, status){
+	  console.log(response);
 	  var storageData = {
 	    'user_id': response.user_id,
 	    'username': response.username,
