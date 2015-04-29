@@ -346,6 +346,8 @@ def user_details(user_id):
         'profile_photo': user_data['profile_photo'],
         'user_followers': get_followers(user_id),
         'user_following': get_following(user_id),
+        'followed_questions': models_questions.\
+                            get_followed_questions(user_id),
     })
 
     return user_details

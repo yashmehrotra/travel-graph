@@ -308,13 +308,7 @@ def get_followed_questions(user_id):
     question_ids = [ get_question_id_doobie(doobie_id) 
                      for doobie_id in doobie_list ]
 
-    response.update({
-        'status': 'success',
-        'question_ids': question_ids,
-        'user_id': user_id,
-    })
-
-    return response
+    return question_ids
 
 
 def get_question_id_doobie(doobie_id):
