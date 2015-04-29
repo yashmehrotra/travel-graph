@@ -7,13 +7,13 @@ var app = angular.module('travelGraph', ['ngStorage', 'ngFacebook'], function($h
    * The workhorse; converts an object to x-www-form-urlencoded serialization.
    * @param {Object} obj
    * @return {String}
-   */ 
+   */
   var param = function(obj) {
     var query = '', name, value, fullSubName, subName, subValue, innerObj, i;
-      
+
     for(name in obj) {
       value = obj[name];
-        
+
       if(value instanceof Array) {
         for(i=0; i<value.length; ++i) {
           subValue = value[i];
@@ -35,7 +35,7 @@ var app = angular.module('travelGraph', ['ngStorage', 'ngFacebook'], function($h
       else if(value !== undefined && value !== null)
         query += encodeURIComponent(name) + '=' + encodeURIComponent(value) + '&';
     }
-      
+
     return query.length ? query.substr(0, query.length - 1) : query;
   };
 
@@ -80,7 +80,7 @@ app.run( function( $rootScope ) {
     js = d.createElement(s); js.id = id;
     js.src = "//connect.facebook.net/en_US/sdk.js";
     fjs.parentNode.insertBefore(js, fjs);
-  }(document, 'script', 'facebook-jssdk'));  
+  }(document, 'script', 'facebook-jssdk'));
 });
 
 // For ckeditor integration in AngularJS
@@ -311,7 +311,7 @@ app.controller('MainController', ['$scope', '$http', 'AuthService', '$location',
 	$location.path('/'); // Redirect to main page...
       })
       .error(function(data, status){
-	console.log("Request Failed");	
+	      console.log("Request Failed");
       });
   };
 
@@ -334,7 +334,7 @@ app.controller('MainController', ['$scope', '$http', 'AuthService', '$location',
       data: data
     })
       .success(function(response, status){
-	if(response.status == "success") { 
+	if(response.status == "success") {
 	  $scope.loginUser(data);	// login as soon as a user signs up....
 	} else {
 	  $scope.invalidCredentials = true;
@@ -347,15 +347,15 @@ app.controller('MainController', ['$scope', '$http', 'AuthService', '$location',
   // View a tag
   $scope.goToTag = function(tagName) {
     $location.path('/view_tag/' + tagName);
-  }
-    
+  };
+
   // View a question
   $scope.goToQuestion = function(question_id) {
     var redirect_to_url = '/ques/' + question_id;
     $location.path(redirect_to_url); // Redirect to the question's page
   };
 
-  // watch for user login.. 
+  // watch for user login..
   $scope.$watch(AuthService.isLoggedIn, function (value, oldValue) {
     // As soon as the user logs in..
     // Can we make it a general function - called when logged in, followed someone etc.
@@ -364,27 +364,27 @@ app.controller('MainController', ['$scope', '$http', 'AuthService', '$location',
       $localStorage.isLoggedIn = true;
       $scope.loggedIn = $localStorage.isLoggedIn;
       data_user = AuthService.isLoggedIn();
-	
+
       // Fetch the user details
       $http({
         method: 'GET',
         url: '/api/user/' + data_user.user_id + '/'
       })
         .success(function(response, status){
-	  console.log(response);
-	  var storageData = {
-	    'user_id': response.user_id,
-	    'username': response.username,
-	    'first_name': response.first_name,
-	    'last_name': response.last_name,
-	    'email': response.email,
-	    'profile_photo': response.profile_photo
-        // Do response.user_followers, response.user_following
-	  };
-	  $localStorage.user_auth = storageData; // Store the user auth info in localstorage
-	  $localStorage.users_followed = response.user_following;
-	  $scope.userData = storageData;
-	  $location.path('/all_questions'); // Redirect once logged in...
+           console.log(response);
+	         var storageData = {
+             'user_id': response.user_id,
+             'username': response.username,
+             'first_name': response.first_name,
+             'last_name': response.last_name,
+             'email': response.email,
+             'profile_photo': response.profile_photo
+           };
+          $localStorage.user_auth = storageData; // Store the user auth info in localstorage
+          $localStorage.users_followed = response.user_following;
+          $localStorage.questions_subscribed = response.followed_questions;
+          $scope.userData = storageData;
+          $location.path('/all_questions'); // Redirect once logged in...
         })
         .error(function(response, status){
           console.log("Request Failed");
@@ -409,12 +409,12 @@ app.controller('MainController', ['$scope', '$http', 'AuthService', '$location',
       // })
       //   .success(function(response, status){
       // 	  $localStorage.questions_subscribed = response; // Fetch the list of users the current user is following
-      // 	 
+      //
       //   })
       //   .error(function(response, status){
       //     console.log("Request Failed");
-      // });
-	
+        // });
+
     }
   }, true);
 }]);
@@ -432,7 +432,7 @@ app.controller('QuestionController', function QuestionController($route, $scope,
 
   $scope.followsUser = false; // check default values
   $scope.subscribedQuestion = false; // check default values
-    
+
   // Fetch the current question details
   var request_url = '/api/content/get_question/' + $scope.questionData.questionId + "/";
   $http({
@@ -450,7 +450,7 @@ app.controller('QuestionController', function QuestionController($route, $scope,
     .error(function(response, status){
       console.log("Request Failed");
     });
-  
+
   // Fetch the asker details from the user id..
   $scope.getAskerData = function(){
     var request_url = '/api/user/' + $scope.askerDetails.userId + '/';
@@ -475,7 +475,7 @@ app.controller('QuestionController', function QuestionController($route, $scope,
   if($localStorage.questions_subscribed.indexOf($scope.questionData.questionId) != -1) {
     $scope.subscribedQuestion = true;
   }
-    
+
   // Post an answer
   $scope.postAnswer = function() {
     var data = {
@@ -501,7 +501,7 @@ app.controller('QuestionController', function QuestionController($route, $scope,
 
   // Get the answers to the current question
   $scope.getAnswers = function(){
-    var request_url = '/api/content/get_answers/' + $scope.questionData.questionId + '/'; 
+    var request_url = '/api/content/get_answers/' + $scope.questionData.questionId + '/';
     $http({
       method: 'GET',
       url: request_url,
@@ -518,13 +518,13 @@ app.controller('QuestionController', function QuestionController($route, $scope,
 	console.log("Request Failed");
       });
   };
-    
+
   // Follow another user..
-  $scope.followAsker = function(){
-    var request_url = '/api/user_follow/';
+  $scope.followUser = function(user_id){
+    var request_url = '/api/follow_user/';
     var data = {
       'user_id': $localStorage.user_auth.user_id,
-      'follow_id': $scope.askerDetails.userId
+      'follow_id': user_id
     };
     $http({
       method: 'POST',
@@ -532,10 +532,32 @@ app.controller('QuestionController', function QuestionController($route, $scope,
       data: data
     })
       .success(function(response, status){
-	// change button state.. ng-switch	
+        $localStorage.users_followed.push(user_id);
+        $scope.followsUser = true;
       })
       .error(function(response, status){
-    	console.log("Request Failed");
+    	  console.log("Request Failed");
+    });
+  }
+
+  // Subscribe to a question..
+  $scope.subscribeQuestion = function(question_id){
+    var request_url = '/api/content/follow_question';
+    var data = {
+      'user_id': $localStorage.user_auth.user_id,
+      'question_id': question_id
+    };
+    $http({
+      method: 'POST',
+      url: request_url,
+      data: data
+    })
+      .success(function(response, status){
+        $localStorage.questions_subscribed.push(question_id);
+        $scope.subscribedQuestion = true;
+      })
+      .error(function(response, status){
+    	  console.log("Request Failed");
     });
   }
 });
@@ -547,7 +569,7 @@ app.controller('AddQuestionController', function AddQuestionController($scope, $
   $scope.postQuestion = function() {
     var request_url = '/api/content/add_question';
     var data = {
-      question_title: $scope.questionData.title, 
+      question_title: $scope.questionData.title,
       question_desc: $scope.questionData.description,
       question_tags: $scope.questionData.tags
     };
@@ -569,7 +591,7 @@ app.controller('AddQuestionController', function AddQuestionController($scope, $
 // List all questions
 app.controller('AllQuestionsController', function AllQuestionsController($scope, $http, $location){
   $scope.questionsList = [];
-  
+
   // Fetch the list of all questions..
   $http({
     method: 'GET',
@@ -588,7 +610,7 @@ app.controller('TagQuestionsController', function TagQuestionsController($scope,
   $scope.questionsList = [];
 
   $scope.tagName = $routeParams.tagName; // Fetch the name of the tag from the url
-  
+
   // Fetch the list of all questions related to this particular tag..
   var request_url = '/api/content/view_tag/' + $scope.tagName;
   $http({

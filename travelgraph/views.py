@@ -14,6 +14,7 @@ from travelgraph import app
 @app.route('/question')
 @app.route('/ques/<ques_id>')
 @app.route('/blog')
+@app.route('/view_tag/<tag>')
 def basic_pages(*args, **kwargs):
         return make_response(open('travelgraph/templates/index.html').read())
 

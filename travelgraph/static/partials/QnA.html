@@ -12,15 +12,13 @@
 	  <header class="uk-comment-header">
 	    
 	    <img class="uk-comment-avatar" alt="avatar" ng-src="{[{ askerDetails.profilePhoto }]}">
-	    <!-- <img class="uk-comment-avatar" alt="avatar" src="/static/images/placeholder_avatar.svg"> -->
-	    <!-- <div id="asker-user-id">{[{ quesId }]}</div> -->
 	    <h4 class="uk-comment-title">{[{ askerDetails.name }]}</h4>
 	    <div class="uk-badge uk-badge-warning uk-badge-mini">Rank</div>
 	  </header>
 	</article>
 
 	<div class="uk-clearfix uk-margin-top uk-center" ng-switch on="followsUser">
-	  <button class="uk-button uk-button-small uk-button-primary" type="button" ng-click="followUser()" ng-switch-when="false">Follow</button>
+	  <button class="uk-button uk-button-small uk-button-primary" type="button" ng-click="followUser(askerDetails.userId)" ng-switch-when="false">Follow</button>
 	  <button class="uk-button uk-button-small" disabled type="button" ng-switch-when="true">Following</button>
 	</div>
 	
@@ -35,12 +33,12 @@
 	  <div class="uk-width-4-5">
 	    <p>
 	      <!-- <button class="uk-button uk-button-mini" type="button">Tag</button> -->
-	      <button class="uk-button uk-button-mini" type="button" ng-repeat="tag in questionData.questionTags">{[{ tag.tag_value }]}</button>
+	      <button class="uk-button uk-button-mini" type="button" ng-repeat="tag in questionData.questionTags" ng-click="goToTag(tag.tag_value)">{[{ tag.tag_value }]}</button>
 	    </p>	      
 	  </div>
 
 	  <div class="uk-width-1-5" ng-switch on="subscribedQuestion">
-	    <button class="uk-button uk-button-small uk-button-danger uk-margin-right uk-float-right" ng-switch-when="false" type="button">Subscribe</button>
+	    <button class="uk-button uk-button-small uk-button-danger uk-margin-right uk-float-right" ng-click="subscribeQuestion(questionData.questionId)" ng-switch-when="false" type="button">Subscribe</button>
 	    <button class="uk-button uk-button-small uk-margin-right uk-float-right" disabled ng-switch-when="true" type="button">Subscribed</button>
 	  </div>
 	</div>
