@@ -104,15 +104,22 @@ def view_tagged_questions(tags):
 
     for tag_id in tag_ids:
         # Compiling a list of all the questions related to the tag
-        query = """ SELECT question_id FROM "tag_questions"
-                    WHERE tag_id = '{0}' """.format(tag_id)
+        #query = """ SELECT question_id FROM "tag_questions"
+        #            WHERE tag_id = '{0}' """.format(tag_id)
+
+        doobie_type_id = get_doobie_type_id('question')
+
+        query = """ SELECT * FROM "doobie_tags_mapping"
+                    WHERE tag_id = '{0}' AND
+                        doobie_type = '{1}' """.format(
+                            tag_id, doobie_type_id)
 
         cursor.execute(query)
         result = cursor.fetchall()
 
         if result:
             for row in result:
-                question_list.append(row['question_id'])
+                question_list.append(row['mapping_id'])
 
     # We do not want duplicates, do we!
     question_list = list(set(question_list))
