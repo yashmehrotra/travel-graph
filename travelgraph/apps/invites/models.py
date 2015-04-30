@@ -80,6 +80,8 @@ def invite_user(email):
                 SET allowed = '1'
                 WHERE email = '{0}' """.format(email)
 
+    send_email_user(email)
+
     response = {
         'status': 'success',
         'message': 'user invited',
@@ -87,7 +89,7 @@ def invite_user(email):
 
     return response
 
-def send_email_user():
+def send_email_user(email):
     '''
     Send email to user stating he can signup
     '''
