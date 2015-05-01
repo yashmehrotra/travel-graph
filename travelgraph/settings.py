@@ -15,5 +15,5 @@ DATABASE_PORT = 'localhost:5432'
 
 MANDRILL_API_KEY = 'Dp007bLY1BZ6UnR7W4uIhA'
 GHOOM_EMAIL = 'babaji@ghoom.co'
-ADMIN_EMAILS = ['yashmehrotra95@gmail.com', '526avijit@gmail.com']
+ADMIN_EMAILS = ['flyankur@gmail.com', 'yashmehrotra95@gmail.com', '526avijit@gmail.com']
 
