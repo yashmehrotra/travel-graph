@@ -471,6 +471,17 @@ app.controller('QuestionController', function QuestionController($route, $scope,
   $scope.followsUser = false; // check default values
   $scope.subscribedQuestion = false; // check default values
 
+  //
+  // IMPORTANT TODO - 
+  //  DISCUSS ABOUT WHETHER RETURNING VALUES SHOULD BE STRINGS OR INTS
+  // WITH YASH
+  //
+
+  // If the current user has subscribed to this question
+  if($localStorage.questions_subscribed.indexOf(parseInt($scope.questionData.questionId)) != -1) {
+    $scope.subscribedQuestion = true;
+  }
+
   // Fetch the current question details
   var request_url = '/api/content/get_question/' + $scope.questionData.questionId + "/";
   $http({
@@ -484,6 +495,11 @@ app.controller('QuestionController', function QuestionController($route, $scope,
       $scope.askerDetails.userId = response.user_id;
       $scope.getAskerData();
       $scope.getAnswers();
+
+      // If the current user is following the asker
+      if($localStorage.users_followed.indexOf($scope.askerDetails.userId) != -1) {
+        $scope.followsUser = true;
+      }
     })
     .error(function(response, status){
       console.log("Request Failed");
@@ -492,27 +508,19 @@ app.controller('QuestionController', function QuestionController($route, $scope,
   // Fetch the asker details from the user id..
   $scope.getAskerData = function(){
     var request_url = '/api/user/' + $scope.askerDetails.userId + '/';
+    console.log($scope.askerDetails.userId);
     $http({
       method: 'GET',
       url: request_url,
     })
       .success(function(response, status){
-	$scope.askerDetails.name = response.first_name + " " + response.last_name;
-	$scope.askerDetails.profilePhoto = response.profile_photo;
+	      $scope.askerDetails.name = response.first_name + " " + response.last_name;
+	      $scope.askerDetails.profilePhoto = response.profile_photo;
       })
       .error(function(response, status){
-	console.log("Request Failed");
+	      console.log("Request Failed");
       });
   };
-
-  // If the current user is following the asker
-  if($localStorage.users_followed.indexOf($scope.askerDetails.userId) != -1) {
-    $scope.followsUser = true;
-  }
-  // If the current user has subscribed to this question
-  if($localStorage.questions_subscribed.indexOf($scope.questionData.questionId) != -1) {
-    $scope.subscribedQuestion = true;
-  }
 
   // Post an answer
   $scope.postAnswer = function() {
@@ -553,12 +561,13 @@ app.controller('QuestionController', function QuestionController($route, $scope,
 	}
       })
       .error(function(response, status){
-	console.log("Request Failed");
+	      console.log("Request Failed");
       });
   };
 
   // Follow another user..
   $scope.followUser = function(user_id){
+    user_id = user_id.toString();
     var request_url = '/api/follow_user/';
     var data = {
       'user_id': $localStorage.user_auth.user_id,
