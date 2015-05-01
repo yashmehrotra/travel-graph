@@ -3,6 +3,7 @@ import json
 import hashlib
 import random
 from datetime import datetime
+import mandrill
 
 from travelgraph import settings
 from travelgraph.apps.database import postgre, cursor
@@ -44,7 +45,34 @@ def send_email_admin(email):
     '''
     Send user's invite request to admin
     '''
-    pass
+    
+    html = """
+            <p>
+                Hello Ghoom Devta, this email {0} has requested for an
+                invite. It is in your power to allow him to use the magic
+                of Ghoom. Send a POST request with a email parameter 
+                as this email to /invite/accept/.
+            </p>
+            """.format(email)
+
+    subject = "Invite Requeseted for Ghoom"
+    from_email = settings.GHOOM_EMAIL
+
+    to = []
+    
+    for email in settings.ADMIN_EMAILS:
+        to.append({
+            'email': email,
+            'name': 'Admin',
+            'type': 'to'
+        })
+
+    from_name = 'Babaji'
+
+    email_response = post_email(to,subject,from_email,from_name,html)
+
+    return email_response
+
 
 
 def get_all_emails(allowed=False):
@@ -80,6 +108,9 @@ def invite_user(email):
                 SET allowed = '1'
                 WHERE email = '{0}' """.format(email)
 
+    cursor.execute(query)
+    postgre.commit()
+
     send_email_user(email)
 
     response = {
@@ -102,10 +133,54 @@ def check_duplicate(email):
     False otherwise
     '''
 
-    vip_list = get_all_emails(email)
+    vip_list = get_all_emails()
 
     for row in vip_list:
         if email == row['email']:
             return True
 
     return False
+
+
+def post_email(to,subject,from_email,from_name,html):
+    '''
+    The generic email poster
+
+    to example - [{
+                    'email': 'ynmehrotra@gmail.com',
+                    'name': 'Explorer',
+                    'type': 'to'}]
+    '''
+
+    try:
+        mandrill_client = mandrill.Mandrill(settings.MANDRILL_API_KEY)
+        
+        message = {
+            'from_email': from_email,
+            'from_name': from_name,
+            'headers': {'Reply-To': from_email},
+            'html': html,
+            'images': None,
+            'inline_css': None,
+            'metadata': {'website': 'www.ghoom.co'},
+            'subject': subject,
+            'to': to,
+            'view_content_link': None
+         }
+        
+        result = mandrill_client.messages.send(message=message, async=False)
+        
+        '''
+        [{'_id': 'abc123abc123abc123abc123abc123',
+          'email': 'recipient.email@example.com',
+          'reject_reason': 'hard-bounce',
+          'status': 'sent'}]
+        '''
+
+        return result
+
+    except Exception,e:
+        # Mandrill errors are thrown as exceptions
+        print 'A mandrill error occurred: %s - %s' % (e.__class__, e)
+        # A mandrill error occurred: <class 'mandrill.UnknownSubaccountError'> - No subaccount exists with the id 'customer-123'    
+        raise

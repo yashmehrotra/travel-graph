@@ -39,6 +39,11 @@ def get_allowed_emails():
     Send a list of allowed emails for signup
     '''
 
-    response = models.get_all_emails(allowed=True)
+    vip_list = models.get_all_emails(allowed=True)
+
+    response = {
+        'status': 'success',
+        'vip_list': vip_list,
+    }
 
     return jsonify(response)

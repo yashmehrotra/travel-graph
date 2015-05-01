@@ -12,3 +12,8 @@ DATABASE_TYPE = 'postgresql'
 DATABASE_USER = 'yash'
 DATABASE_PASS = '44rrff'
 DATABASE_PORT = 'localhost:5432'
+
+MANDRILL_API_KEY = 'Dp007bLY1BZ6UnR7W4uIhA'
+GHOOM_EMAIL = 'babaji@ghoom.co'
+ADMIN_EMAILS = ['yashmehrotra95@gmail.com', '526avijit@gmail.com']
+
