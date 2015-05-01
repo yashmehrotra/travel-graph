@@ -136,6 +136,23 @@ app.directive('ckEditor', [function () {
   };
 }]);
 
+// Directive to prompt for email address for invite/request..
+app.directive('ngConfirmClick', [
+        function(){
+            return {
+                link: function (scope, element, attr) {
+                    var msg = attr.ngConfirmClick;
+                    var clickAction = attr.confirmedClick;
+                    element.bind('click',function (event) {
+                        var email = window.prompt("Enter your email address!")
+                        if ( email.length != 0 ) {
+                            scope.$apply(clickAction(email));
+                        }
+                    });
+                }
+            };
+    }])
+
 // Prevent conflict with Flask!
 app.config(function($interpolateProvider){
   $interpolateProvider.startSymbol('{[{');
@@ -221,6 +238,27 @@ app.controller('MainController', ['$scope', '$http', 'AuthService', '$location',
     $scope.userData.email_ = $localStorage.user_auth.email;
     $scope.userData.profile_photo = $localStorage.user_auth.profile_photo;
   }
+
+    // Wnen the user clicks on submit after entering his email on Invite/Request prompt..
+    $scope.allowUserRequest = function(email) {
+      var data = {
+        email: email,
+      };
+      $http({
+        method: 'POST',
+        url: '', // Change URL Here....
+        data: data
+    })
+      .success(function(response, status){
+	      if (response.status == 'success') {
+	          console.log(response.message);
+	      } else {
+	      }
+      })
+      .error(function(response, status){
+	      console.log("Request Failed");
+      });
+    }
 
   /**
    * Functions for login/logout through email or Facebook..
