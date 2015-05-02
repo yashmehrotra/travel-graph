@@ -1,18 +1,50 @@
 <div ng-include src="'/static/partials/header.html'"></div>
 
-<!-- <div id="bg"> -->
-  <img alt="background-img" src="/static/images/landing-header-2.jpg" style="position:fixed;top:0;bottom:0;left:0;right:0;width:100%;height:100%;z-index:-1;">
-<!-- </div> -->
+<!-- Current behaviour: -->
+<!-- 1. User clicks on the invite/subscribe button. -->
+<!-- 2. Modal pops up prompting the user to enter his email address. -->
+<!-- 3. The user enters his email address and Submits. -->
+<!-- 4. The email address is validated first. -->
+<!-- 5. If the email address is found to be valid, then it another modal is displayed. -->
+<!-- 6. If the email address is found to be invalid, then it jumps to step 2. -->
+
+<script type="text/javascript">
+window.onload = function() {
+
+  document.getElementById('invite-subscribe').addEventListener('click', emailPrompt);
+  
+  function emailPrompt() {
+    UIkit.modal.prompt("Email:", '', function(newvalue){
+      if (validateEmail(newvalue)) {
+        UIkit.modal.alert('Thank you for your request. An email will be sent to you shortly!');
+      } else {
+        emailPrompt();
+      }
+    });
+  }
+  
+  function validateEmail(email) {
+    var re = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i;
+    return re.test(email);
+  }
+
+  // Call this function once the user submits the email address on modal.. 
+  function modalSubmit() {
+    // send ajax request here..
+  }
+
+}
+</script>
+
+<img alt="background-img" src="/static/images/landing-header-2.jpg" style="position:fixed;top:0;bottom:0;left:0;right:0;width:100%;height:100%;z-index:-1;">
 
 <div class="uk-flex uk-flex-center uk-flex-middle uk-text-center" style="margin-top:300px;z-index:100;">
-    <button class="uk-button uk-button-large uk-button-primary uk-width-1-6" ng-confirm-click="allowUserRequest()" data-uk-modal="{target:'#my-id'}">Invite/Request</button>
-    <!-- <button class="uk-button" data-uk-modal="{target:'#my-id'}">...</button> -->
-
-    <!-- This is the modal -->
-    <div id="my-id" class="uk-modal">
-        <div class="uk-modal-dialog">
-            <a class="uk-modal-close uk-close"></a>
-            Dhoom
-        </div>
-    </div>
+  <button class="uk-button uk-button-large uk-button-primary uk-width-1-6" id="invite-subscribe" >Invite/Request</button>
+  <!-- This is the modal -->
+  <!-- <div id="my-id" class="uk-modal"> -->
+  <!--   <div class="uk-modal-dialog"> -->
+  <!--     <a class="uk-modal-close uk-close"></a> -->
+  <!--     Dhoom -->
+  <!--   </div> -->
+  <!-- </div> -->
 </div>

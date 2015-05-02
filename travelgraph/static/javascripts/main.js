@@ -136,26 +136,6 @@ app.directive('ckEditor', [function () {
   };
 }]);
 
-// Directive to prompt for email address for invite/request..
-app.directive('ngConfirmClick', [
-        function(){
-            return {
-                link: function (scope, element, attr) {
-                    var msg = attr.ngConfirmClick;
-                    var clickAction = attr.confirmedClick;
-                    element.bind('click',function (event) {
-                        //
-                        // INSTEAD OF PROMPT, we are taking input on front, use get element by ID stuff here
-                        //
-                        //var email = window.prompt("Enter your email address!")
-                        if ( email.length != 0 ) {
-                            scope.$apply(clickAction(email));
-                        }
-                    });
-                }
-            };
-    }])
-
 // Prevent conflict with Flask!
 app.config(function($interpolateProvider){
   $interpolateProvider.startSymbol('{[{');
