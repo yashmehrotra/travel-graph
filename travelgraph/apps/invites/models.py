@@ -55,7 +55,7 @@ def send_email_admin(email):
             </p>
             """.format(email)
 
-    subject = "Invite Requeseted for Ghoom"
+    subject = "Invite Requested for Ghoom"
     from_email = settings.GHOOM_EMAIL
 
     to = []
