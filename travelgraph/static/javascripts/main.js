@@ -466,7 +466,7 @@ app.controller('QuestionController', function QuestionController($route, $scope,
   $scope.postAnswerData = {};
   $scope.postAnswerData.tags = "";
   $scope.currentUserId = $localStorage.user_auth.user_id;
-  $scope.questionData.questionId = $routeParams.quesId;  // Fetch the question_id details from route
+  $scope.questionData.questionId = parseInt($routeParams.quesId);  // Fetch the question_id details from route
 
   $scope.followsUser = false; // check default values
   $scope.subscribedQuestion = false; // check default values
@@ -478,7 +478,7 @@ app.controller('QuestionController', function QuestionController($route, $scope,
   //
 
   // If the current user has subscribed to this question
-  if($localStorage.questions_subscribed.indexOf(parseInt($scope.questionData.questionId)) != -1) {
+  if($localStorage.questions_subscribed.indexOf(($scope.questionData.questionId)) != -1) {
     $scope.subscribedQuestion = true;
   }
 
@@ -537,8 +537,8 @@ app.controller('QuestionController', function QuestionController($route, $scope,
       data: data
     })
       .success(function(response, status){
-	// Instead of reloading, ng-repeat should automatically update the dom
-	$route.reload();  // Reload once the user posts an answer..
+      // Instead of reloading, ng-repeat should automatically update the dom
+        $route.reload();  // Reload once the user posts an answer..
       })
       .error(function(response, status){
     	console.log("Request Failed");
