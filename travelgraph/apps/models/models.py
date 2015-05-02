@@ -217,21 +217,30 @@ def user_follows_user(user_id, user_id_to_follow):
 
     response = {}
 
-    created_ts = datetime.now()
+    if user_id not in user_id_to_follow:
 
-    query = """ INSERT INTO "user_follows"
-                (user_id, follows_user_id,created_ts) 
-                VALUES ('{0}', '{1}', '{2}') """.format(user_id,
-                                user_id_to_follow, created_ts)
+        created_ts = datetime.now()
 
-    cursor.execute(query)
-    postgre.commit()
+        query = """ INSERT INTO "user_follows"
+                    (user_id, follows_user_id,created_ts) 
+                    VALUES ('{0}', '{1}', '{2}') """.format(user_id,
+                                    user_id_to_follow, created_ts)
 
-    response.update({
-        'status':'success',
-        'message':'User {0} is now following User {1}'.format(user_id,
-                                                        user_id_to_follow)
-    })
+        cursor.execute(query)
+        postgre.commit()
+
+        response.update({
+            'status':'success',
+            'message':'User {0} is now following User {1}'.format(user_id,
+                                                            user_id_to_follow)
+        })
+
+    else:
+
+        response.update({
+            'status': 'failed',
+            'error': 'You cannot follow yourself, the follow button should be hidden from same person',
+        })
 
     return response
 
