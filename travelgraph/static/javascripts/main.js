@@ -144,7 +144,10 @@ app.directive('ngConfirmClick', [
                     var msg = attr.ngConfirmClick;
                     var clickAction = attr.confirmedClick;
                     element.bind('click',function (event) {
-                        var email = window.prompt("Enter your email address!")
+                        //
+                        // INSTEAD OF PROMPT, we are taking input on front, use get element by ID stuff here
+                        //
+                        //var email = window.prompt("Enter your email address!")
                         if ( email.length != 0 ) {
                             scope.$apply(clickAction(email));
                         }

@@ -5,5 +5,14 @@
 <!-- </div> -->
 
 <div class="uk-flex uk-flex-center uk-flex-middle uk-text-center" style="margin-top:300px;z-index:100;">
-    <button class="uk-button uk-button-large uk-button-primary uk-width-1-6" ng-confirm-click="allowUserRequest()">Invite/Request</button>
+    <button class="uk-button uk-button-large uk-button-primary uk-width-1-6" ng-confirm-click="allowUserRequest()" data-uk-modal="{target:'#my-id'}">Invite/Request</button>
+    <!-- <button class="uk-button" data-uk-modal="{target:'#my-id'}">...</button> -->
+
+    <!-- This is the modal -->
+    <div id="my-id" class="uk-modal">
+        <div class="uk-modal-dialog">
+            <a class="uk-modal-close uk-close"></a>
+            Dhoom
+        </div>
+    </div>
 </div>
