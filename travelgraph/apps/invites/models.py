@@ -124,7 +124,31 @@ def send_email_user(email):
     '''
     Send email to user stating he can signup
     '''
-    pass
+
+    html = """
+            <p>
+                Hello fellow explorer, you have been invited to 
+                join Ghoom's community. To signup, please use this 
+                email - '{0} . Here is the <a href="http://www.ghoom.co/login">link</a>.'
+            </p>
+            """.format(email)
+
+    subject = "Invitation for Ghoom"
+    from_email = settings.GHOOM_EMAIL
+
+    to = []
+    
+    to.append({
+        'email': email,
+        'name': 'Explorer',
+        'type': 'to'
+    })
+
+    from_name = 'Babaji'
+
+    email_response = post_email(to,subject,from_email,from_name,html)
+
+    return email_response
 
 
 def check_duplicate(email):
