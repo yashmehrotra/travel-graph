@@ -41,6 +41,8 @@ def get_allowed_emails():
 
     vip_list = models.get_all_emails(allowed=True)
 
+    vip_list = [ vip['email'] for vip in vip_list ]
+
     response = {
         'status': 'success',
         'vip_list': vip_list,

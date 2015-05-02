@@ -270,47 +270,41 @@ app.controller('MainController', ['$scope', '$http', 'AuthService', '$location',
       });
   };
 
-  $scope.fetchInvitedEmails = function() {
-    $http({
-      method: 'GET',
-      url: '/invite/get_emails/'
-    })
-      .success(function(response, status){
-        console.log(response);
-        return response;
-      }).error(function(response, status){
-        console.log("Request Failed");
-      });
-  }
-
   $scope.FbLogin = function() {
     console.log("Inside Fblogin Function");
     $facebook.login().then(function() {
       $facebook.api("/me", {'fields':'picture,id,email,first_name,last_name'}).then(
         function(response) {
-          var invited_emails = $scope.fetchInvitedEmails();
-          if(invited_emails.indexOf(response.email) == -1) {
-            console.log("Not invited");
-            // not invited, do something...
-          } else {
-	          var data = {
-	            email: response.email,
-	            first_name: response.first_name,
-	            last_name: response.last_name,
-	            profile_photo: response.picture.data.url,
-	            method: "facebook"
-	          };
-	          $http({
-	            method: 'POST',
-	            url: '/api/signup',
-	            data: data
-	          })
-	            .success(function(response, status){
-	              $scope.loginAfterFb(data);
-	            }).error(function(response, status){
-	              console.log("Request Failed");
-	            });
-          }
+          $http({
+            method: 'GET',
+            url: '/invite/get_emails/'
+          })
+            .success(function(result, status){
+              console.log(result.vip_list);
+              if(result.vip_list.indexOf(response.email) != -1) {
+                var data = {
+                  email: response.email,
+                  first_name: response.first_name,
+                  last_name: response.last_name,
+                  profile_photo: response.picture.data.url,
+                  method: "facebook"
+                };
+                $http({
+                  method: 'POST',
+                  url: '/api/signup',
+                  data: data
+                })
+                  .success(function(response, status){
+                    $scope.loginAfterFb(data);
+                  }).error(function(response, status){
+                    console.log("Request Failed");
+                  });
+              } else {
+                console.log("Not invited.");
+              }
+            }).error(function(result, status){
+              console.log("Request Failed");
+            });
         }
       );
     });
@@ -355,35 +349,41 @@ app.controller('MainController', ['$scope', '$http', 'AuthService', '$location',
   };
 
   $scope.addUser = function(loginData) {
-    var invited_emails = $scope.fetchInvitedEmails();
-    if(invited_emails.indexOf($scope.newUserDetails.email) == -1) {
-      console.log("Not invited");
-     // not invited, do something..
-    } else {
-      $scope.invalidCredentials = false;
-      var data = {
-        email: $scope.newUserDetails.email,
-        password: $scope.newUserDetails.password,
-        first_name: $scope.newUserDetails.firstName,
-        last_name: $scope.newUserDetails.lastName,
-        profile_photo: DEFAULT_USER_AVATAR,
-        method: "normal"
-      };
       $http({
-        method: 'POST',
-        url: '/api/signup',
-        data: data
+        method: 'GET',
+        url: '/invite/get_emails/'
       })
         .success(function(response, status){
-	        if(response.status == "success") {
-	          $scope.loginUser(data);	// login as soon as a user signs up....
-	        } else {
-	          $scope.invalidCredentials = true;
-	        }
+          console.log(response.vip_list);
+          if (response.vip_list.indexOf($scope.newUserDetails.email) != -1) {
+            var data = {
+              email: $scope.newUserDetails.email,
+              password: $scope.newUserDetails.password,
+              first_name: $scope.newUserDetails.firstName,
+              last_name: $scope.newUserDetails.lastName,
+              profile_photo: DEFAULT_USER_AVATAR,
+              method: "normal"
+            };
+            $http({
+              method: 'POST',
+              url: '/api/signup',
+              data: data
+            })
+              .success(function(response, status){
+                if(response.status == "success") {
+                  $scope.loginUser(data); // login as soon as a user signs up....
+                } else {
+                  $scope.invalidCredentials = true;
+                }
+              }).error(function(response, status){
+                console.log("Request Failed");
+              });
+          } else {
+            console.log("Not Invited");
+          }
         }).error(function(response, status){
-	        console.log("Request Failed");
+          console.log("Request Failed");
         });
-    }
   };
 
   // View a tag
