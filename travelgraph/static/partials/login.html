@@ -7,17 +7,17 @@
     <form name="loginForm" ng-submit="loginForm.$valid && loginUser(loginDetails);" novalidate>
       Email :
       <input
-	 type="email"
-	 name="email"
-	 ng-model="loginDetails.email"
-	 ng-required="true">
+	       type="email"
+	       name="email"
+	       ng-model="loginDetails.email"
+	       ng-required="true">
       <br>
       Password :
       <input
-	 type="password"
-	 name="password"
-	 ng-model="loginDetails.password"
-	 ng-required="true">
+	       type="password"
+	       name="password"
+	       ng-model="loginDetails.password"
+	       ng-required="true">
       <br>
       <button id="login-button">Login</button>
       <div class="uk-alert uk-alert-danger" ng-show="invalidCredentials">Invalid email address or password.</div>

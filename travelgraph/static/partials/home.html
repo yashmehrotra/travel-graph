@@ -11,14 +11,17 @@
 <script type="text/javascript">
 window.onload = function() {
 
-  document.getElementById('invite-subscribe').addEventListener('click', emailPrompt);
+  document.getElementById('invite-subscribe').addEventListener('click', function() {
+    emailPrompt("Please Enter a valid email address:")
+  });
   
-  function emailPrompt() {
-    UIkit.modal.prompt("Email:", '', function(newvalue){
+  function emailPrompt(text) {
+    UIkit.modal.prompt(text, '', function(newvalue){
       if (validateEmail(newvalue)) {
-        UIkit.modal.alert('Thank you for your request. An email will be sent to you shortly!');
+        modalSubmit(newvalue);
+        UIkit.modal.alert('Thank you for your request. You will receive an email from us shortly!');
       } else {
-        emailPrompt();
+        emailPrompt("Invalid Email address, Please try again!");
       }
     });
   }
@@ -29,9 +32,21 @@ window.onload = function() {
   }
 
   // Call this function once the user submits the email address on modal.. 
-  function modalSubmit() {
-    // send ajax request here..
-  }
+  function modalSubmit(data) {
+    // xmlhttp.open("POST", );
+    // xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+    // xmlhttp.send("email=" + email);
+    $.ajax({
+      method: 'POST',
+      url: '/invite/request/',
+      data: {
+        email: data
+      },
+      success: function(response) {
+        console.log(response);
+      }
+    })
+  };
 
 }
 </script>

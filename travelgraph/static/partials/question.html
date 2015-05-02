@@ -1,7 +1,7 @@
 <div ng-include src="'/static/partials/header.html'"></div>
 
 
-<div class="uk-grid">
+<div class="uk-grid" style="padding: 20px 0;">
   
   <div class="uk-width-1-5"></div>
   
@@ -11,21 +11,21 @@
     <div class="uk-form-row">
       <label class="uk-form-label" for="question-text">Title</label>
       <div class="uk-form-controls">
-	<input type="text" id="question-text" name="question-text" placeholder="What is your Question?" ng-model="questionData.title">
+	      <input type="text" id="question-text" name="question-text" placeholder="What is your Question?" ng-model="questionData.title">
       </div>
     </div>
     
     <div class="uk-form-row">
       <label class="uk-form-label" for="question-desc">Description</label>
       <div class="uk-form-controls">
-	<textarea id="question-desc" name="question-desc" placeholder=" Write some description.." class="ck-editor" ng-model="questionData.description"></textarea>
+	      <textarea id="question-desc" name="question-desc" placeholder=" Write some description.." class="ck-editor" ng-model="questionData.description"></textarea>
       </div>
     </div>
 
     <div class="uk-form-row">
       <label class="uk-form-label" for="question-tags">Tags</label>
       <div class="uk-form-controls">
-	<input type="text" id="question-tags" name="question-tags" placeholder="Enter some tags" ng-model="questionData.tags">
+	      <input type="text" id="question-tags" name="question-tags" placeholder="Enter some tags" ng-model="questionData.tags">
       </div>
     </div>
 

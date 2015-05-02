@@ -1,20 +1,20 @@
 <div ng-include src="'/static/partials/header.html'"></div>
-    
+
 <div style="padding: 20px 0;">
   <div class="uk-container uk-container-center">
 
     <div class="uk-grid">
       <div class="uk-width-4-5">
-	<div class="uk-panel uk-panel-box">
-	  <h4 class="uk-text-large">Tag: {[{ tagName }]}</h4>
-	</div>
-	<div class="uk-article" ng-repeat="question in questionsList | reverse">
-	  <div class="uk-article">
-	    <p class="uk-article-lead uk-text-large" ng-click="goToQuestion(question.question_id)" style="cursor:pointer;">{[{ question.question_text }]}</p>
-	    <p class="uk-text-muted" ng-click="goToQuestion(question.question_id)" style="cursor:pointer;" ng-bind-html-unsafe="question.question_desc"></p>
-	    <button class="uk-button uk-button-mini" type="button" ng-repeat="tag in question.question_tags" ng-click="goToTag(tag.tag_value)">{[{ tag.tag_value }]}</button>
-	  </div>
-	</div>
+	      <div class="uk-panel uk-panel-box">
+	        <h4 class="uk-text-large">Tag: {[{ tagName }]}</h4>
+	      </div>
+	      <div class="uk-article" ng-repeat="question in questionsList | reverse">
+	        <div class="uk-article">
+	          <p class="uk-article-lead uk-text-large" ng-click="goToQuestion(question.question_id)" style="cursor:pointer;">{[{ question.question_text }]}</p>
+	          <p class="uk-text-muted" ng-click="goToQuestion(question.question_id)" style="cursor:pointer;" ng-bind-html-unsafe="question.question_desc"></p>
+	          <button class="uk-button uk-button-mini" type="button" ng-repeat="tag in question.question_tags" ng-click="goToTag(tag.tag_value)">{[{ tag.tag_value }]}</button>
+	        </div>
+	      </div>
       </div>
 
     </div>

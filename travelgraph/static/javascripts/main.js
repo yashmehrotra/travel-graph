@@ -50,27 +50,66 @@ app.config( function( $facebookProvider ) {
   $facebookProvider.setAppId('1423273901281785');
 });
 
+// Prevent conflict with Flask!
+app.config(function($interpolateProvider){
+  $interpolateProvider.startSymbol('{[{');
+  $interpolateProvider.endSymbol('}]}');
+});
 
-app.run(['$route', function($route)  {
-  $route.reload();
-}]);
+// Whenever a new route has to be added, add it here as well as in views.py..
+app.config(['$routeProvider', '$locationProvider',
+            function($routeProvider, $locationProvider) {
+              $routeProvider
+                .when('/', {
+	                templateUrl: '/static/partials/home.html',
+                })
+                .when('/login', {
+	                templateUrl: '/static/partials/login.html',
+                })
+                .when('/signup', {
+	                templateUrl: '/static/partials/signup.html',
+                })
+                .when('/ques/:quesId', {
+	                templateUrl: '/static/partials/QnA.html',
+	                controller: 'QuestionController'
+                })
+                .when('/question', {
+	                templateUrl: '/static/partials/question.html',
+	                controller: 'AddQuestionController'
+                })
+                .when('/all_questions', {
+	                templateUrl: '/static/partials/all_questions.html',
+	                controller: 'AllQuestionsController'
+                })
+                .when('/view_tag/:tagName', {
+	                templateUrl: '/static/partials/tag_questions.html',
+	                controller: 'TagQuestionsController'
+                })
+                .otherwise({
+	                redirectTo: '/'
+                });
+              $locationProvider.html5Mode(true);
+            }]);
 
+// app.run(['$route', function($route)  {
+//   $route.reload();
+// }]);
 
 app.run(['$rootScope', '$location', '$localStorage', 'AuthService', function ($rootScope, $location, $localStorage, AuthService) {
   $rootScope.$on('$routeChangeStart', function (event) {
     if ($localStorage.isLoggedIn == true) {
       console.log('ALLOW');
     } else {
-	console.log('DENY');
-	var path = $location.path();
-	if (path == "/login" || path == "/signup" || path == "/") {
-	  // console.log("Allowed for the current location");
-	} else {
-	  event.preventDefault();
-	  $location.path('/login');  // Redirect to login page
-	}
-      }
-    });
+	    console.log('DENY');
+	    var path = $location.path();
+	    if (path == "/login" || path == "/signup" || path == "/") {
+	      // console.log("Allowed for the current location");
+	    } else {
+	      event.preventDefault();
+	      $location.path('/login');  // Redirect to login page
+	    }
+    }
+  });
 }]);
 
 app.run( function( $rootScope ) {
@@ -81,6 +120,19 @@ app.run( function( $rootScope ) {
     js.src = "//connect.facebook.net/en_US/sdk.js";
     fjs.parentNode.insertBefore(js, fjs);
   }(document, 'script', 'facebook-jssdk'));
+});
+
+// Factory service for user login/logout updations..
+app.factory( 'AuthService', function($http, $compile) {
+  var user;
+  return {
+    setUser : function(aUser){
+      user = aUser;
+    },
+    isLoggedIn : function(){
+      return(user)? user : false;
+    }
+  };
 });
 
 // For ckeditor integration in AngularJS
@@ -136,63 +188,10 @@ app.directive('ckEditor', [function () {
   };
 }]);
 
-// Prevent conflict with Flask!
-app.config(function($interpolateProvider){
-  $interpolateProvider.startSymbol('{[{');
-  $interpolateProvider.endSymbol('}]}');
-});
-
-app.config(['$routeProvider', '$locationProvider',
-  function($routeProvider, $locationProvider) {
-    $routeProvider
-      .when('/', {
-	templateUrl: '/static/partials/home.html',
-      })
-      .when('/login', {
-	templateUrl: '/static/partials/login.html',
-      })
-      .when('/signup', {
-	templateUrl: '/static/partials/signup.html',
-      })
-      .when('/ques/:quesId', {
-	templateUrl: '/static/partials/QnA.html',
-	controller: 'QuestionController'
-      })
-      .when('/question', {
-	templateUrl: '/static/partials/question.html',
-	controller: 'AddQuestionController'
-      })
-      .when('/all_questions', {
-	templateUrl: '/static/partials/all_questions.html',
-	controller: 'AllQuestionsController'
-      })
-      .when('/view_tag/:tagName', {
-	templateUrl: '/static/partials/tag_questions.html',
-	controller: 'TagQuestionsController'
-      })
-      .otherwise({
-	redirectTo: '/'
-      });
-    $locationProvider.html5Mode(true);
-  }]);
-
 // Filter for displaying posts in the reverse order (latest first)
 app.filter('reverse', function() {
   return function(items) {
     return items.slice().reverse();
-  };
-});
-
-// Factory service for user login/logout updations..
-app.factory( 'AuthService', function($http, $compile) {
-  var user;
-  return {
-    setUser : function(aUser){
-      user = aUser;
-    },
-    isLoggedIn : function(){
-      return(user)? user : false;
-    }
   };
 });
 
@@ -222,26 +221,26 @@ app.controller('MainController', ['$scope', '$http', 'AuthService', '$location',
     $scope.userData.profile_photo = $localStorage.user_auth.profile_photo;
   }
 
-    // Wnen the user clicks on submit after entering his email on Invite/Request prompt..
-    $scope.allowUserRequest = function(email) {
-      var data = {
-        email: email,
-      };
-      $http({
-        method: 'POST',
-        url: '', // Change URL Here....
-        data: data
+  // Wnen the user clicks on submit after entering his email on Invite/Request prompt..
+  $scope.allowUserRequest = function(email) {
+    var data = {
+      email: email,
+    };
+    $http({
+      method: 'POST',
+      url: '', // Change URL Here....
+      data: data
     })
       .success(function(response, status){
 	      if (response.status == 'success') {
-	          console.log(response.message);
+	        console.log(response.message);
 	      } else {
 	      }
       })
       .error(function(response, status){
 	      console.log("Request Failed");
       });
-    }
+  }
 
   /**
    * Functions for login/logout through email or Facebook..
@@ -259,41 +258,60 @@ app.controller('MainController', ['$scope', '$http', 'AuthService', '$location',
       data: data
     })
       .success(function(response, status){
-	if (response.status == 'success') {
-	  $scope.currentUserData.userName = response.username;
-	  AuthService.setUser(response);
-	} else {
-	  $scope.invalidCredentials = true;
-	}
+	      if (response.status == 'success') {
+	        $scope.currentUserData.userName = response.username;
+	        AuthService.setUser(response);
+	      } else {
+	        $scope.invalidCredentials = true;
+	      }
       })
       .error(function(response, status){
-	console.log("Request Failed");
+	      console.log("Request Failed");
       });
   };
+
+  $scope.fetchInvitedEmails = function() {
+    $http({
+      method: 'GET',
+      url: '/invite/get_emails/'
+    })
+      .success(function(response, status){
+        console.log(response);
+        return response;
+      }).error(function(response, status){
+        console.log("Request Failed");
+      });
+  }
 
   $scope.FbLogin = function() {
     console.log("Inside Fblogin Function");
     $facebook.login().then(function() {
       $facebook.api("/me", {'fields':'picture,id,email,first_name,last_name'}).then(
-	function(response) {
-	  var data = {
-	    email: response.email,
-	    first_name: response.first_name,
-	    last_name: response.last_name,
-	    profile_photo: response.picture.data.url,
-	    method: "facebook"
-	  };
-	  $http({
-	    method: 'POST',
-	    url: '/api/signup',
-	    data: data
-	  })
-	    .success(function(response, status){
-	      $scope.loginAfterFb(data);
-	    }).error(function(response, status){
-	      console.log("Request Failed");
-	    });
-	}
+        function(response) {
+          var invited_emails = $scope.fetchInvitedEmails();
+          if(invited_emails.indexOf(response.email) == -1) {
+            console.log("Not invited");
+            // not invited, do something...
+          } else {
+	          var data = {
+	            email: response.email,
+	            first_name: response.first_name,
+	            last_name: response.last_name,
+	            profile_photo: response.picture.data.url,
+	            method: "facebook"
+	          };
+	          $http({
+	            method: 'POST',
+	            url: '/api/signup',
+	            data: data
+	          })
+	            .success(function(response, status){
+	              $scope.loginAfterFb(data);
+	            }).error(function(response, status){
+	              console.log("Request Failed");
+	            });
+          }
+        }
       );
     });
   };
@@ -309,12 +327,12 @@ app.controller('MainController', ['$scope', '$http', 'AuthService', '$location',
       data: data
     })
       .success(function(response, status){
-	if (response.status == 'success') {
-	  AuthService.setUser(response);
-	}
+	      if (response.status == 'success') {
+	        AuthService.setUser(response);
+	      }
       })
       .error(function(response, status){
-	console.log("Request Failed");
+	      console.log("Request Failed");
       });
   };
 
@@ -324,12 +342,12 @@ app.controller('MainController', ['$scope', '$http', 'AuthService', '$location',
       url: '/api/logout'
     })
       .success(function(data, status){
-	AuthService.setUser(false);
-	$localStorage.$reset({
-	  isLoggedIn: false
-	});
-	$scope.loggedIn = $localStorage.isLoggedIn;
-	$location.path('/'); // Redirect to main page...
+	      AuthService.setUser(false);
+	      $localStorage.$reset({
+	        isLoggedIn: false
+	      });
+	      $scope.loggedIn = $localStorage.isLoggedIn;
+	      $location.path('/'); // Redirect to main page...
       })
       .error(function(data, status){
 	      console.log("Request Failed");
@@ -337,32 +355,35 @@ app.controller('MainController', ['$scope', '$http', 'AuthService', '$location',
   };
 
   $scope.addUser = function(loginData) {
-    $scope.invalidCredentials = false;
-    var data = {
-      email: $scope.newUserDetails.email,
-      password: $scope.newUserDetails.password,
-      first_name: $scope.newUserDetails.firstName,
-      last_name: $scope.newUserDetails.lastName,
-      profile_photo: "",
-      method: "normal"
-    };
-    if (data.method == 'normal') {
-      data.profile_photo = DEFAULT_USER_AVATAR;
+    var invited_emails = $scope.fetchInvitedEmails();
+    if(invited_emails.indexOf($scope.newUserDetails.email) == -1) {
+      console.log("Not invited");
+     // not invited, do something..
+    } else {
+      $scope.invalidCredentials = false;
+      var data = {
+        email: $scope.newUserDetails.email,
+        password: $scope.newUserDetails.password,
+        first_name: $scope.newUserDetails.firstName,
+        last_name: $scope.newUserDetails.lastName,
+        profile_photo: DEFAULT_USER_AVATAR,
+        method: "normal"
+      };
+      $http({
+        method: 'POST',
+        url: '/api/signup',
+        data: data
+      })
+        .success(function(response, status){
+	        if(response.status == "success") {
+	          $scope.loginUser(data);	// login as soon as a user signs up....
+	        } else {
+	          $scope.invalidCredentials = true;
+	        }
+        }).error(function(response, status){
+	        console.log("Request Failed");
+        });
     }
-    $http({
-      method: 'POST',
-      url: '/api/signup',
-      data: data
-    })
-      .success(function(response, status){
-	if(response.status == "success") {
-	  $scope.loginUser(data);	// login as soon as a user signs up....
-	} else {
-	  $scope.invalidCredentials = true;
-	}
-      }).error(function(response, status){
-	console.log("Request Failed");
-      });
   };
 
   // View a tag
@@ -392,15 +413,15 @@ app.controller('MainController', ['$scope', '$http', 'AuthService', '$location',
         url: '/api/user/' + data_user.user_id + '/'
       })
         .success(function(response, status){
-           console.log(response);
-	         var storageData = {
-             'user_id': response.user_id,
-             'username': response.username,
-             'first_name': response.first_name,
-             'last_name': response.last_name,
-             'email': response.email,
-             'profile_photo': response.profile_photo
-           };
+          console.log(response);
+	        var storageData = {
+            'user_id': response.user_id,
+            'username': response.username,
+            'first_name': response.first_name,
+            'last_name': response.last_name,
+            'email': response.email,
+            'profile_photo': response.profile_photo
+          };
           $localStorage.user_auth = storageData; // Store the user auth info in localstorage
           $localStorage.users_followed = response.user_following;
           $localStorage.questions_subscribed = response.followed_questions;
@@ -409,7 +430,7 @@ app.controller('MainController', ['$scope', '$http', 'AuthService', '$location',
         })
         .error(function(response, status){
           console.log("Request Failed");
-      });
+        });
 
       // // Fetch the list of users the user is following
       // $http({
@@ -434,7 +455,7 @@ app.controller('MainController', ['$scope', '$http', 'AuthService', '$location',
       //   })
       //   .error(function(response, status){
       //     console.log("Request Failed");
-        // });
+      // });
 
     }
   }, true);
@@ -455,7 +476,7 @@ app.controller('QuestionController', function QuestionController($route, $scope,
   $scope.subscribedQuestion = false; // check default values
 
   //
-  // IMPORTANT TODO - 
+  // IMPORTANT TODO -
   //  DISCUSS ABOUT WHETHER RETURNING VALUES SHOULD BE STRINGS OR INTS
   // WITH YASH
   //
@@ -483,6 +504,12 @@ app.controller('QuestionController', function QuestionController($route, $scope,
       if($localStorage.users_followed.indexOf($scope.askerDetails.userId) != -1) {
         $scope.followsUser = true;
       }
+
+      if($scope.currentUserId == $scope.askerDetails.userId) {
+        $scope.followsUser = "itself";
+        console.log($scope.followsUser);
+      }
+
     })
     .error(function(response, status){
       console.log("Request Failed");
@@ -520,12 +547,12 @@ app.controller('QuestionController', function QuestionController($route, $scope,
       data: data
     })
       .success(function(response, status){
-      // Instead of reloading, ng-repeat should automatically update the dom
+        // Instead of reloading, ng-repeat should automatically update the dom
         $route.reload();  // Reload once the user posts an answer..
       })
       .error(function(response, status){
-    	console.log("Request Failed");
-    });
+    	  console.log("Request Failed");
+      });
   };
 
   // Get the answers to the current question
@@ -536,12 +563,12 @@ app.controller('QuestionController', function QuestionController($route, $scope,
       url: request_url,
     })
       .success(function(response, status){
-	if (response.answers.length == 0) {
-	  // $scope.answersData = "No answers to display";
-	} else {
-	  $scope.answerData = response.answers;
-	  $scope.answerCount = $scope.answerData.length;
-	}
+	      if (response.answers.length == 0) {
+	        // $scope.answersData = "No answers to display";
+	      } else {
+	        $scope.answerData = response.answers;
+	        $scope.answerCount = $scope.answerData.length;
+	      }
       })
       .error(function(response, status){
 	      console.log("Request Failed");
@@ -562,12 +589,12 @@ app.controller('QuestionController', function QuestionController($route, $scope,
       data: data
     })
       .success(function(response, status){
-        $localStorage.users_followed.push(user_id);
+        $localStorage.users_followed.push(parseInt(user_id));
         $scope.followsUser = true;
       })
       .error(function(response, status){
     	  console.log("Request Failed");
-    });
+      });
   }
 
   // Subscribe to a question..
@@ -588,7 +615,7 @@ app.controller('QuestionController', function QuestionController($route, $scope,
       })
       .error(function(response, status){
     	  console.log("Request Failed");
-    });
+      });
   }
 });
 
@@ -609,10 +636,10 @@ app.controller('AddQuestionController', function AddQuestionController($scope, $
       data: data
     })
       .success(function(response, status){
-	$location.path('/all_questions');
+	      $location.path('/all_questions');
       })
       .error(function(response, status){
-	console.log("Request Failed");
+	      console.log("Request Failed");
       });
   };
 
