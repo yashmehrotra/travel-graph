@@ -81,7 +81,11 @@ app.config(['$routeProvider', '$locationProvider',
 	                templateUrl: '/static/partials/all_questions.html',
 	                controller: 'AllQuestionsController'
                 })
-                .when('/view_tag/:tagName', {
+                .when('/all_tags', {
+	                templateUrl: '/static/partials/all_tags.html',
+	                controller: 'AllTagsController'
+                })
+                .when('/tag/:tagName', {
 	                templateUrl: '/static/partials/tag_questions.html',
 	                controller: 'TagQuestionsController'
                 })
@@ -684,4 +688,23 @@ app.controller('TagQuestionsController', function TagQuestionsController($scope,
     }).error(function(response, status){
       console.log("Request Failed");
     });
+});
+
+// List of all tags
+app.controller('AllTagsController', function AllTagsController($scope, $http, $location){
+  $scope.tagsList = [];
+
+  // Fetch the list of all tags
+  var request_url =  // Change here when backend for the same has been written
+  $http({
+    method: 'GET'
+    url : request_url
+  })
+    .success(function(response, status){
+      // Should return a `list` of all tags
+      console.log(response);
+      $scope.tagsList = response;
+    }).error(function(response, status){
+      console.log("Request Failed");
+  });
 });
