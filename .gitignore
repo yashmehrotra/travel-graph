@@ -52,3 +52,9 @@ docs/_build/
 
 # PyBuilder
 target/
+
+# Node modules
+node_modules
+
+# Bower components
+travelgraph/static/bower_components 

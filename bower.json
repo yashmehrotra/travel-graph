@@ -1,0 +1,27 @@
+{
+  "name": "travel-graph",
+  "version": "0.0.0",
+  "homepage": "https://github.com/yashmehrotra/travel-graph",
+  "authors": [
+    "tg"
+  ],
+  "description": "Primary Destination for travel-addicts",
+  "moduleType": [
+    "globals",
+    "node"
+  ],
+  "keywords": [
+    "travel"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "./travelgraph/static/bower_components",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+  }
+}
