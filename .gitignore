@@ -60,4 +60,6 @@ node_modules
 travelgraph/static/bower_components
 
 # Vagrant machine
-.vagrant/ 
+*.vagrant 
+/.vagrant 
+.vagrant/
