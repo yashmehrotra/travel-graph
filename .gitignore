@@ -57,4 +57,7 @@ target/
 node_modules
 
 # Bower components
-travelgraph/static/bower_components 
+travelgraph/static/bower_components
+
+# Vagrant machine
+.vagrant/ 
