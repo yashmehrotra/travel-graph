@@ -21,9 +21,6 @@ echo "export WORKON_HOME=$HOME/.virtualenvs" >> ~/.bashrc
 echo "source /usr/local/bin/virtualenvwrapper.sh" >> ~/.bashrc
 source ~/.bashrc
 
-echo "Installing postgresql"
-apt-get install postgresql postgresql-contrib > /dev/null
-
 echo "Installing nodejs and npm"
 apt-get install python-software-properties -y > /dev/null
 apt-add-repository ppa:chris-lea/node.js -y > /dev/null
