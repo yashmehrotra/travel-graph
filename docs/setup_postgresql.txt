@@ -1,0 +1,16 @@
+1. Install PostgreSQL on your System
+
+$ sudo apt-get install postgresql postgresql-contrib
+
+2. Create PostgreSQL User (Do remember the password you enter)
+
+$ sudo -u postgres createuser --interactive -P db_admin
+
+3. Create Database
+
+$ createdb -h localhost -p 5432 -U db_admin travelgraph
+
+4. Grant all privileges to your user (Not Necessary)
+
+$ sudo -i -u postgres psql
+postgres=# GRANT ALL PRIVILEGES ON DATABASE "travelgraph" to db_admin;
