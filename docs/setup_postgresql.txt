@@ -4,7 +4,7 @@ $ sudo apt-get install postgresql postgresql-contrib
 
 2. Create PostgreSQL User (Do remember the password you enter)
 
-$ sudo -u postgres createuser --interactive -P db_admin
+$ sudo -u postgres createuser -s -P db_admin
 
 3. Create Database
 
