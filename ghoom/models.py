@@ -104,6 +104,14 @@ class DbAnswer(Base):
 class DbType(Base):
     """
     The db_type table
+    Will be like
+    =================================
+    | id  |  name    | table_name   |
+    ---------------------------------
+    |   1 | question | db_question  |
+    |   2 | answer   | db_answer    |
+    |   3 | blog     | db_blog      |
+    =================================
     """
 
     __tablename__ = "db_type"
@@ -117,4 +125,101 @@ class DbDoobieMapping(Base):
     """
     The db_doobie_mapping
     """
+
+    __tablename__ = "db_doobie_mapping"
+
+    id = Column(BigInteger, autoincrement=True, primary_key=True)
+    type_id = Column(Integer, ForeignKey(DbType.id), primary_key=True)
+    mapping_id = Column(BigInteger)
+
+    type = relationship(DbType)
+
+
+class DbTagType(Base):
+    """
+    The db_tag_type table
+    """
+
+    __tablename__ = "db_tag_type"
+
+    id = Column(Integer, autoincrement=True, primary_key=True)
+    name = Column(Unicode)
+
+
+class DbTag(Base):
+    """
+    The db_tag table
+    """
+
+    # Override init to check for lower unique tag name
+    __tablename__ = "db_tag"
+
+    id = Column(BigInteger, autoincrement=True, primary_key=True)
+    name = Column(Unicode, unique=True)
+    type_id = Column(Integer, ForeignKey(DbTagType.id), primary_key=True)
+    create_ts = Column(DateTime, default=datetime.now())
+    update_ts = Column(DateTime, default=datetime.now())
+    enabled = Column(Boolean, default=True)
+
+
+class DbDoobieTagMapping(Base):
+    """
+    The db_doobie_tag_mapping table
+    """
+
+    __tablename__ = "db_doobie_tag_mapping"
+
+    id = Column(BigInteger, autoincrement=True, primary_key=True)
+    doobie_id = Column(BigInteger, ForeignKey(DbDoobieMapping.id), primary_key=True)
+    tag_id = Column(BigInteger, ForeignKey(DbTag.id), primary_key=True)
+    # Think about below line, how to query, and how to insert
+    tag_name = Column(Unicode, ForeignKey(DbTag.name), primary_key=True)
+    create_ts = Column(DateTime, default=datetime.now())
+    update_ts = Column(DateTime, default=datetime.now())
+    enabled = Column(Boolean, default=True)
+
+
+class Following(object):
+    """
+    The parent following class
+    """
+    # Put Common Stuff Here
     pass
+
+
+class DbUserFollowing(Base, Following):
+    """
+    The db_user_following table
+    """
+
+    __tablename__ = "db_user_following"
+
+    id = Column(BigInteger, autoincrement=True, primary_key=True)
+    follower_id = Column(BigInteger, ForeignKey(DbUser.id), primary_key=True)
+    following_id = Column(BigInteger, ForeignKey(DbUser.id), primary_key=True)
+    create_ts = Column(DateTime, default=datetime.now())
+    update_ts = Column(DateTime, default=datetime.now())
+    enabled = Column(Boolean, default=True)
+
+    follower = relationship('DbUser', foreign_keys='DbUserFollowing.follower_id')
+    following = relationship('DbUser', foreign_keys='DbUserFollowing.following_id')
+
+
+class DbUserTagFollowing(Base, Following):
+    """
+    The db_user_tag_following table
+    """
+
+    __tablename__ = "db_user_tag_following"
+
+    id = Column(BigInteger, autoincrement=True, primary_key=True)
+    user_id = Column(BigInteger, ForeignKey(DbUser.id), primary_key=True)
+    tag_id = Column(BigInteger, ForeignKey(DbTag.id), primary_key=True)
+    # Think about below line, how to query, and how to insert
+    tag_name = Column(Unicode, ForeignKey(DbTag.name), primary_key=True)
+    create_ts = Column(DateTime, default=datetime.now())
+    update_ts = Column(DateTime, default=datetime.now())
+    enabled = Column(Boolean, default=True)
+
+    user = relationship(DbUser)
+    tag = relationship(DbTag)
