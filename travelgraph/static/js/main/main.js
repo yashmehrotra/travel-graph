@@ -697,7 +697,7 @@ app.controller('AllTagsController', function AllTagsController($scope, $http, $l
   // Fetch the list of all tags
   var request_url =  // Change here when backend for the same has been written
   $http({
-    method: 'GET'
+    method: 'GET',
     url : request_url
   })
     .success(function(response, status){

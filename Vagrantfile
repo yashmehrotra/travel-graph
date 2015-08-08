@@ -14,6 +14,12 @@ Vagrant.configure(2) do |config|
   # boxes at https://atlas.hashicorp.com/search.
   config.vm.box = "ubuntu/trusty64"
   config.vm.provision :shell, path: "setup/bootstrap.sh"
+  config.vm.provision "file", source: "./package.json", destination: "package.json"
+  config.vm.provision "file", source: "./bower.json", destination: "bower.json"
+  config.vm.provision "file", source: "./requirements.txt", destination: "requirements.txt"
+
+  # command = "cp #{File.join('/vagrant/', 'package.json')} #{'package.json'}"
+  # config.vm.provision :shell, :inline => command
 
   # Disable automatic box update checking. If you disable this, then
   # boxes will only be checked for updates when the user runs

@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+export DEBIAN_FRONTEND=noninteractive
+
 echo "Updating"
 apt-get update > /dev/null
 
@@ -22,11 +24,12 @@ echo "source /usr/local/bin/virtualenvwrapper.sh" >> ~/.bashrc
 source ~/.bashrc
 
 echo "Installing nodejs and npm"
-apt-get install python-software-properties -y > /dev/null
+apt-get install g++ make python-software-properties -y > /dev/null
 apt-add-repository ppa:chris-lea/node.js -y > /dev/null
+echo "Updating"
 apt-get update > /dev/null
+echo "Installing now.."
 apt-get install nodejs -y > /dev/null
-apt-get install npm -y > /dev/null
 
 echo "Setting up project specifics now...."
 mkvirtualenv tg
@@ -34,7 +37,7 @@ echo "Installing requirements.txt"
 pip install -r requirements.txt > /dev/null
 
 echo "Installing npm dependencies"
-npm install
+npm install --no-bin-link
 
 echo "Installing bower dependencies"
 bower install
