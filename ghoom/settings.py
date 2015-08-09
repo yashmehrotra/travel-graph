@@ -1,0 +1,8 @@
+AUTH_KEY_NAMESPACE = 'db_auth_key'
+ACCESS_TOKEN_NAMESPACE = 'db_access_token'
+
+# Redis Settings
+REDIS_HOST = 'localhost'
+REDIS_PORT = 6379
+REDIS_AUTH_KEY_DB = 0
+REDIS_ACCESS_TOKEN_DB = 0
