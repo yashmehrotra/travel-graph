@@ -1,11 +1,11 @@
 from flask import Blueprint, request
-import random
 
 from ghoom.models import (
     DbUser
 )
 
 api = Blueprint('api', __name__)
+
 
 @api.route('/user/<user_id>', methods=['GET', 'POST', 'PUT'])
 def rest_user(user_id=None):
