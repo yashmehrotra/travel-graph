@@ -70,7 +70,7 @@ class DbQuestion(Base):
     id = Column(BigInteger, autoincrement=True, primary_key=True)
     title = Column(Unicode)
     description = Column(UnicodeText())
-    user_id = Column(BigInteger, ForeignKey(DbUser.id), primary_key=True)
+    user_id = Column(BigInteger, ForeignKey(DbUser.id))
     create_ts = Column(DateTime, default=datetime.now())
     update_ts = Column(DateTime, default=datetime.now())
     enabled = Column(Boolean, default=True)
@@ -88,8 +88,8 @@ class DbAnswer(Base):
 
     id = Column(BigInteger, autoincrement=True, primary_key=True)
     answer = Column(UnicodeText)
-    question_id = Column(BigInteger, ForeignKey(DbQuestion.id), primary_key=True)
-    user_id = Column(BigInteger, ForeignKey(DbUser.id), primary_key=True)
+    question_id = Column(BigInteger, ForeignKey(DbQuestion.id))
+    user_id = Column(BigInteger, ForeignKey(DbUser.id))
     create_ts = Column(DateTime, default=datetime.now())
     update_ts = Column(DateTime, default=datetime.now())
     enabled = Column(Boolean, default=True)
@@ -118,7 +118,7 @@ class DbType(Base):
 
     id = Column(Integer, autoincrement=True, primary_key=True)
     name = Column(Unicode)
-    table_name = Column(Unicode)
+    tablename = Column(Unicode)
 
 
 class DbDoobieMapping(Base):
@@ -129,10 +129,22 @@ class DbDoobieMapping(Base):
     __tablename__ = "db_doobie_mapping"
 
     id = Column(BigInteger, autoincrement=True, primary_key=True)
-    type_id = Column(Integer, ForeignKey(DbType.id), primary_key=True)
+    type_id = Column(Integer, ForeignKey(DbType.id))
     mapping_id = Column(BigInteger)
 
     type = relationship(DbType)
+
+    @property
+    def doobie(self, *args, **kwargs):
+        """
+        Return the doobie object
+        (Question/Answer/Blog)
+        """
+
+        tablename = self.type.tablename
+        doobie_class = get_class_by_tablename(tablename)
+        doobie_object = session.query(doobie_class).get(self.mapping_id)
+        return doobie_object
 
 
 class DbTagType(Base):
@@ -156,10 +168,12 @@ class DbTag(Base):
 
     id = Column(BigInteger, autoincrement=True, primary_key=True)
     name = Column(Unicode, unique=True)
-    type_id = Column(Integer, ForeignKey(DbTagType.id), primary_key=True)
+    type_id = Column(Integer, ForeignKey(DbTagType.id))
     create_ts = Column(DateTime, default=datetime.now())
     update_ts = Column(DateTime, default=datetime.now())
     enabled = Column(Boolean, default=True)
+
+    type = relationship(DbTagType)
 
 
 class DbDoobieTagMapping(Base):
@@ -170,10 +184,10 @@ class DbDoobieTagMapping(Base):
     __tablename__ = "db_doobie_tag_mapping"
 
     id = Column(BigInteger, autoincrement=True, primary_key=True)
-    doobie_id = Column(BigInteger, ForeignKey(DbDoobieMapping.id), primary_key=True)
-    tag_id = Column(BigInteger, ForeignKey(DbTag.id), primary_key=True)
+    doobie_id = Column(BigInteger, ForeignKey(DbDoobieMapping.id))
+    tag_id = Column(BigInteger, ForeignKey(DbTag.id))
     # Think about below line, how to query, and how to insert
-    tag_name = Column(Unicode, ForeignKey(DbTag.name), primary_key=True)
+    tag_name = Column(Unicode, ForeignKey(DbTag.name))
     create_ts = Column(DateTime, default=datetime.now())
     update_ts = Column(DateTime, default=datetime.now())
     enabled = Column(Boolean, default=True)
@@ -195,8 +209,8 @@ class DbUserFollowing(Base, Following):
     __tablename__ = "db_user_following"
 
     id = Column(BigInteger, autoincrement=True, primary_key=True)
-    follower_id = Column(BigInteger, ForeignKey(DbUser.id), primary_key=True)
-    following_id = Column(BigInteger, ForeignKey(DbUser.id), primary_key=True)
+    follower_id = Column(BigInteger, ForeignKey(DbUser.id))
+    following_id = Column(BigInteger, ForeignKey(DbUser.id))
     create_ts = Column(DateTime, default=datetime.now())
     update_ts = Column(DateTime, default=datetime.now())
     enabled = Column(Boolean, default=True)
@@ -213,10 +227,10 @@ class DbUserTagFollowing(Base, Following):
     __tablename__ = "db_user_tag_following"
 
     id = Column(BigInteger, autoincrement=True, primary_key=True)
-    user_id = Column(BigInteger, ForeignKey(DbUser.id), primary_key=True)
-    tag_id = Column(BigInteger, ForeignKey(DbTag.id), primary_key=True)
+    user_id = Column(BigInteger, ForeignKey(DbUser.id))
+    tag_id = Column(BigInteger, ForeignKey(DbTag.id))
     # Think about below line, how to query, and how to insert
-    tag_name = Column(Unicode, ForeignKey(DbTag.name), primary_key=True)
+    tag_name = Column(Unicode, ForeignKey(DbTag.name))
     create_ts = Column(DateTime, default=datetime.now())
     update_ts = Column(DateTime, default=datetime.now())
     enabled = Column(Boolean, default=True)
