@@ -1,3 +1,6 @@
+import sys,os
+sys.path.append(os.path.realpath('.'))
+
 from ghoom.models import (
     engine,
     Base,
@@ -5,7 +8,18 @@ from ghoom.models import (
     DbTagType,
     Session
 )
+from __init__ import app
+from flask.ext.script import Manager
 
+manager = Manager(app)
+
+@manager.command
+def test():
+    print 'stuff'
+
+if __name__ == "__main__":
+    manager.run()
+"""
 Base.metadata.create_all(engine)
 
 session = Session()
@@ -24,3 +38,4 @@ session.add_all(doobie_tag_types)
 session.commit()
 
 session.close()
+"""
