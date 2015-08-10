@@ -113,3 +113,22 @@ def verify_access_token(access_token):
     acc_tok_obj = json.loads(access_token)
 
     return acc_tok_obj
+
+
+def refresh_key(key):
+    """
+    Refreshes auth_key or access_token
+    """
+
+    if AUTH_KEY_NAMESPACE in key:
+        redis_db = REDIS_AUTH_KEY_DB
+    elif ACCESS_TOKEN_NAMESPACE in key:
+        redis_db = REDIS_ACCESS_TOKEN_DB
+    else:
+        return False
+
+    redis_cli = redis_client(db=redis_db)
+    value = redis_cli.get(key)
+    ttl = json.loads(value)['ttl']
+    # Delete key and make a new key
+    redis_cli.setex(key, ttl, value)
