@@ -28,6 +28,7 @@
     "semantic-ui": "~2.0.7",
     "ng-facebook": "~0.1.6",
     "ngstorage": "~0.3.7",
-    "ckeditor-angularjs": "*"
+    "ckeditor-angularjs": "*",
+    "angular-route": "~1.4.3"
   }
 }

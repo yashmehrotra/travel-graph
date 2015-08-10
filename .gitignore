@@ -63,3 +63,7 @@ travelgraph/static/bower_components
 *.vagrant 
 /.vagrant 
 .vagrant/
+
+# Temporary testing
+try_runserver.py
+avijit_tests/

@@ -1,41 +1,25 @@
 <!DOCTYPE html>
 <html lang="en" ng-app="travelGraph">
-  <head>
-
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <title>Ghoom | Take up a Traveller Name for Yourself</title>
-
-    <meta name="description" content=""/>
-    <meta name="keywords" content=""/>
-
-    <base href="/"/>
-    
-    <!-- <link rel="shortcut icon" type="image/x-icon" href="favicon.ico"> -->
-
-    <link href="/static/stylesheets/uikit.min.css" rel="stylesheet"/>
-    <link href="/static/stylesheets/uikit.docs.min.css" rel="stylesheet"/>
-    <!-- <link rel="stylesheet" href="/static/stylesheets/prism.css"> -->
-    <!-- <link rel="stylesheet" href="/static/stylesheets/chosen.css"> -->
-
-    <link rel="stylesheet" href="/static/stylesheets/styles.css">
-    
-    <!-- <script src="/static/javascripts/chosen.jquery.js"></script> -->
-    <!-- <script src="/static/javascripts/prism.js" charset="utf-8"></script> -->
-    <script type="text/javascript" src="/static/javascripts/jquery-2.1.3.min.js"></script>
-    <script type="text/javascript" src="/static/javascripts/uikit.min.js"></script>
-    <script type="text/javascript" src="/static/plugins/ckeditor/ckeditor.js"></script>
-    <script type="text/javascript" src="/static/javascripts/angular.min.js"></script>
-    <script type="text/javascript" src="/static/javascripts/ngFacebook.js"></script>
-    <script type="text/javascript" src="/static/javascripts/ngStorage.min.js"></script>
-    <script type="text/javascript" src="/static/javascripts/main.js"></script>
-    
-
-  </head>
-  <body ng-controller="MainController">
-    <!-- header now included throuh ng-include (inside ng-view) -->
-    <ng-view></ng-view>    
-    <!-- footer should be included here.. -->
-  </body>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Ghoom | Take up a Traveller Name for Yourself</title>
+        <meta name="description" content=""/>
+        <meta name="keywords" content=""/>
+        <base href="/"/>
+        <!-- <link rel="shortcut icon" type="image/x-icon" href="favicon.ico"> -->
+        <link rel="stylesheet" type="text/css" href="/static/bower_components/semantic-ui/dist/semantic.min.css">
+    </head>
+    <body ng-controller="MainCtrl">
+        <!-- header now included throuh ng-include (inside ng-view) -->
+        <ng-view></ng-view>
+        <script type="text/javascript" src="/static/bower_components/angular/angular.min.js"></script>
+        <script type="text/javascript" src="/static/bower_components/angular-route/angular-route.min.js"></script>
+        <!-- <script type="text/javascript" src="/static/bower_components/ckeditor/ckeditor.js"></script> -->
+        <script type="text/javascript" src="/static/bower_components/ng-facebook/ngFacebook.js"></script>
+        <script type="text/javascript" src="/static/bower_components/ngstorage/ngStorage.min.js"></script>
+        <script type="text/javascript" src="/static/bower_components/jquery/jquery.min.js"></script>
+        <script type="text/javascript" src="/static/bower_components/semantic-ui/dist/semantic.min.js"></script>
+        <script type="text/javascript" src="/static/build/js/main.min.js"></script>
+    </body>
 </html>
