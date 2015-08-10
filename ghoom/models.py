@@ -18,10 +18,11 @@ from sqlalchemy import (
     String
 )
 
-Base = declarative_base()
-Session = sessionmaker(bind=engine)
+from ghoom.settings import SQLALCHEMY_ENGINE
 
-session = Session()
+Base = declarative_base()
+engine = create_engine(SQLALCHEMY_ENGINE)
+Session = sessionmaker(bind=engine)
 
 
 def get_class_by_tablename(tablename):
@@ -118,8 +119,8 @@ class DbType(Base):
     __tablename__ = "db_type"
 
     id = Column(Integer, autoincrement=True, primary_key=True)
-    name = Column(Unicode)
-    tablename = Column(Unicode)
+    name = Column(String)
+    tablename = Column(String)
 
 
 class DbDoobieMapping(Base):
