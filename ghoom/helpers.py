@@ -2,6 +2,7 @@ from flask import jsonify
 import redis
 import hashlib
 import random
+import json
 
 from settings import (
     AUTH_KEY_NAMESPACE,

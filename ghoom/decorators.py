@@ -1,9 +1,8 @@
-from flask import request, jsonify
-
 from ghoom.helpers import (
-    response_json
+    response_json,
     verify_auth_key
 )
+
 
 def auth_required(f):
     """
@@ -29,9 +28,10 @@ def auth_required(f):
             resp.update({
                 'status': 'failed',
                 'error': 'auth_key verification failed'
+            })
 
             return response_json(data=resp,
                                  status=405)
-        
+
     wrap.__doc__ = f.__doc__
     wrap.__name__ = f.__name__
