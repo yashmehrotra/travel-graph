@@ -96,7 +96,7 @@ def generate_access_token(user_id, auth_key):
     key = ACCESS_TOKEN_NAMESPACE + access_token
 
     redis_cli.setex(key, ttl, value)
-    return key
+    return access_token
 
 
 def verify_access_token(access_token):
