@@ -1,5 +1,6 @@
-from ghoom.helpers import (
-    response_json,
+from ghoom.helpers import response_unauthorised
+
+from ghoom.user.utils import (
     verify_auth_key,
     verify_access_token
 )
@@ -11,17 +12,10 @@ def auth_required(f):
     """
     def wrap(request, *args, **kwargs):
 
-        resp = {}
         auth_key = request.headers.get('auth_key')
 
         if not auth_key:
-            resp.update({
-                'status': 'failed',
-                'error': 'Not Authorised'
-            })
-
-            return response_json(data=resp,
-                                 status=401)
+            return response_unauthorised
 
         verify_auth_key(auth_key)
 
@@ -37,17 +31,10 @@ def login_required(f):
 
     def wrap(request, *args, **kwargs):
 
-        resp = {}
         access_token = request.headers.get('access_token')
 
         if not access_token:
-            resp.update({
-                'status': 'failed',
-                'error': 'Not Authorised'
-            })
-
-            return response_json(data=resp,
-                                 status=401)
+            return response_unauthorised
 
         acc_tok_obj = verify_access_token(access_token)
 
