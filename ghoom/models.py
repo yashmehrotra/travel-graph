@@ -7,6 +7,7 @@ from sqlalchemy.orm import (
 )
 
 from sqlalchemy import (
+    create_engine,
     Boolean,
     Column,
     DateTime,
@@ -157,7 +158,7 @@ class DbTagType(Base):
     __tablename__ = "db_tag_type"
 
     id = Column(Integer, autoincrement=True, primary_key=True)
-    name = Column(Unicode)
+    name = Column(String)
 
 
 class DbTag(Base):
@@ -238,7 +239,7 @@ class DbUserTagFollowing(Base, Following):
     enabled = Column(Boolean, default=True)
 
     user = relationship(DbUser)
-    tag = relationship(DbTag)
+    tag = relationship('DbTag', foreign_keys='DbUserTagFollowing.tag_id')
 
 
 class DbRequestKey(Base):

@@ -13,7 +13,7 @@ PGSQL_USER = 'test_user_1'
 PGSQL_PASSWORD = 'test'
 PGSQL_HOST = 'localhost'
 PGSQL_PORT = 5432
-PGSQL_DATABASE = 'DB_TEST_1'
+PGSQL_DATABASE = 'db_test_1'
 
 SQLALCHEMY_ENGINE = 'postgresql://{0}:{1}@{2}:{3}/{4}'.format(PGSQL_USER,
                                                               PGSQL_PASSWORD,
