@@ -17,22 +17,13 @@ def auth_required(f):
         if not auth_key:
             resp.update({
                 'status': 'failed',
-                'error': 'not authorised'
-            })
-
-            return response_json(data=resp,
-                                 status=405)
-
-        verified = verify_auth_key(auth_key)
-
-        if not verified:
-            resp.update({
-                'status': 'failed',
-                'error': 'auth_key verification failed'
+                'error': 'Not Authorised'
             })
 
             return response_json(data=resp,
                                  status=401)
+
+        verify_auth_key(auth_key)
 
     wrap.__doc__ = f.__doc__
     wrap.__name__ = f.__name__
@@ -52,23 +43,15 @@ def login_required(f):
         if not access_token:
             resp.update({
                 'status': 'failed',
-                'error': 'not authorised'
+                'error': 'Not Authorised'
             })
 
             return response_json(data=resp,
                                  status=401)
 
-        verified, user_id = verify_access_token(access_token)
+        acc_tok_obj = verify_access_token(access_token)
 
-        if not (verified or user_id):
-            resp.update({
-                'status': 'failed',
-                'error': 'access_token verification failed'
-            })
-
-            return response_json(data=resp,
-                                 status=401)
-
+        user_id = acc_tok_obj['user_id']
         request.user_id = user_id
 
     wrap.__doc__ = f.__doc__

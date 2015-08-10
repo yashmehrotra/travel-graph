@@ -15,6 +15,7 @@ from sqlalchemy import (
     Unicode,
     UnicodeText,
     ForeignKey,
+    String
 )
 
 Base = declarative_base()
@@ -237,3 +238,15 @@ class DbUserTagFollowing(Base, Following):
 
     user = relationship(DbUser)
     tag = relationship(DbTag)
+
+
+class DbRequestKey(Base):
+    """
+    The db_request_key table
+    """
+
+    __tablename__ = "db_request_key"
+
+    id = Column(BigInteger, autoincrement=True, primary_key=True)
+    request_key = Column(String)
+    ttl = Column(BigInteger)

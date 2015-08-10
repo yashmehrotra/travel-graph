@@ -4,6 +4,7 @@ import hashlib
 import random
 import json
 
+from ghoom.models import DbRequestKey
 from settings import (
     AUTH_KEY_NAMESPACE,
     ACCESS_TOKEN_NAMESPACE,
@@ -26,6 +27,19 @@ def response_json(data={}, status=200):
     return response
 
 
+def response_unauthorised():
+    """
+    Returns a not authorised response
+    """
+
+    response = {
+        'status': 'failed',
+        'error': 'Not Authorised'
+    }
+
+    return response_json(data=response, status=401)
+
+
 def redis_client(db=0):
 
     redis_cli = redis.StrictRedis(host=REDIS_HOST,
@@ -42,7 +56,7 @@ def generate_key():
     return key
 
 
-def generate_auth_key(ttl):
+def generate_auth_key(request_key):
     """
     Sets auth_key in redis
     """
@@ -50,6 +64,19 @@ def generate_auth_key(ttl):
     redis_cli = redis_client(db=REDIS_AUTH_KEY_DB)
     auth_key = generate_key()
 
+    request_key_obj = session.query(DbRequestKey).\
+                        filter(DbRequestKey.request_key == request_key).\
+                        first()
+
+    if not request_key_obj:
+        resp = {
+            'status': 'failed',
+            'error': 'request_key not found'
+        }
+        return response_json(data=resp,
+                             status=404)
+
+    ttl = request_key_obj.ttl
     value = json.dumps({'ttl': ttl})
     key = AUTH_KEY_NAMESPACE + auth_key
 
@@ -67,17 +94,27 @@ def verify_auth_key(auth_key):
     auth_key = redis_cli.get(AUTH_KEY_NAMESPACE + auth_key)
 
     if not auth_key:
-        return False
+        response = {
+            'status': 'failed',
+            'error': 'Not Authorised'
+        }
 
-    return True
+        return response_json(data=response,
+                             status=401)
+
+    return auth_key
 
 
-def generate_access_token(user_id, ttl):
+def generate_access_token(user_id, auth_key):
     """
     Sets access_token in redis
     """
 
     redis_cli = redis_client(db=REDIS_ACCESS_TOKEN_DB)
+
+    auth_key_verified = verify_auth_key(auth_key)
+    ttl = json.loads(auth_key_verified)['ttl']
+
     access_token = generate_key()
 
     value = {
@@ -86,10 +123,10 @@ def generate_access_token(user_id, ttl):
     }
 
     value = json.dumps(value)
-
     key = ACCESS_TOKEN_NAMESPACE + access_token
 
     redis_cli.setex(key, ttl, value)
+    return key
 
 
 def verify_access_token(access_token):
@@ -97,16 +134,12 @@ def verify_access_token(access_token):
     Verify user's access_token and also return user_id
     """
 
-    verified = False
-    user_id = None
-
     redis_cli = redis_client(db=REDIS_ACCESS_TOKEN_DB)
     access_token = redis_cli.get(ACCESS_TOKEN_NAMESPACE + access_token)
 
     if not access_token:
-        return verified, user_id
+        return response_unauthorised()
 
-    user_id = json.loads(access_token)['user_id']
-    verified = True
+    acc_tok_obj = json.loads(access_token)
 
-    return verified, user_id
+    return acc_tok_obj
