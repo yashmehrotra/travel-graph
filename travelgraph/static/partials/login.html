@@ -1,1 +1,47 @@
-<div ng-include src="'/static/partials/header.html'"></div>
+<!-- <div data-ng-include src="'/static//'"></div> -->
+
+<div class="ui middle aligned centered grid login-pg">
+    <div class="seven wide column segment very padded raised">
+        <h3 class="ui top attached block header">Login/Signup</h3>
+        <div class="ui attached segment center aligned fix-width">
+            <p>This is some content</p>
+            <button class="ui large facebook button login-btn"
+                    data-ng-class="{ 'loading': fbLoginLoader }"
+                    type="button"
+                    data-ng-disabled="fbLoginLoader"
+                    data-ng-click="fbLogin()">
+                <i class="facebook icon"></i>
+                Continue with Facebook
+            </button>
+            <div class="ui horizontal divider">
+                Or
+            </div>
+            <button class="ui large google plus button login-btn"
+                    data-ng-class="{ 'loading': gPlusLoginLoader }"
+                    type="button"
+                    data-ng-click="gPlusLogin()">
+
+                <i class="google plus icon"></i>
+                Continue with Google
+            </button>
+        </div>
+        <div class="ui message fadeOut"
+             data-ng-show="loginMsg"
+             data-ng-class="(successLogin) ? 'success': 'error'">
+            <close-msg></close-msg>
+            {{loginMsg}}
+        </div>
+    </div>
+</div>
+<div class="ui celled centered horizontal list">
+    <div class="item">
+        <a href="">About Us</a>
+    </div>
+    <div class="item">
+        <a href="">Contact</a>
+    </div>
+    <div class="item">
+        <a href="">Support</a>
+    </div>
+</div>
+

@@ -17,7 +17,6 @@ var minifyCss = require('gulp-minify-css');
 // File Paths
 var paths = {
     build: {
-        // all: './travelgraph/static/build/',
         js: './travelgraph/static/build/js/',
         css: './travelgraph/static/build/css/',
         html: './travelgraph/static/build/html/'
@@ -48,10 +47,8 @@ gulp.task('js', function() {
 gulp.task('css', function () {
     return gulp.src(paths.less)
         .pipe(plumber())
-        .pipe(changed(paths.build.css))
-        .pipe(less({
-            // paths: [ paths.less.join(__dirname, 'less', 'includes') ]
-        }))
+        .pipe(changed(paths.less))
+        .pipe(less())
         .pipe(concat('style.css'))
         .pipe(gulp.dest(paths.build.css))
         .pipe(minifyCss())

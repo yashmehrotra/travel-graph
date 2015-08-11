@@ -8,7 +8,8 @@ angular.module('travelGraph', ['ngRoute', 'ngStorage', 'ngFacebook',
 
     // Whenever a new route has to be added, add it here as well as in views.py
     .config(['$routeProvider', '$locationProvider',
-             function($routeProvider, $locationProvider) {
+             function($routeProvider, $locationProvider)
+             {
                  $routeProvider
                      .when('/', {
 	                       templateUrl: '/static/build/html/home.html',
@@ -64,6 +65,74 @@ angular.module('travelGraph', ['ngRoute', 'ngStorage', 'ngFacebook',
     }])
 
     // To handle Login and Signup
-    .controller('LoginCtrl', ['$scope', '$http', function ($scope, $http) {
-        // Login/Logout logic.
-    }]);
+    .controller('LoginCtrl',
+                ['$scope', '$http', '$facebook',
+                 function ($scope, $http, $facebook)
+                 {
+                     $scope.loginMsg = "";
+                     $scope.fbLoginLoader = false;
+                     $scope.successLogin = false;
+
+                     $scope.fbLogin = function() {
+                         $scope.fbLoginLoader = true;
+                         $scope.successLogin = false;
+                         $facebook.login().then(
+                             function(res) {
+                                 console.log(res);
+                                 $scope.fbLoginLoader = false;
+                                 if (typeof res.status !== 'undefined') {
+                                     $scope.successLogin = true;
+                                     $scope.loginMsg = 'Login Successful.';
+                                 }
+                                 else {
+                                     $scope.successLogin = false;
+                                     $scope.loginMsg = 'Some error occured. Please try again later';
+                                 }
+                             },
+                             function() {
+                                 $scope.fbLoginLoader = false;
+                                 $scope.successLogin = false;
+                                 $scope.loginMsg = 'Some error occured. Please try again later';
+                             }
+                         );
+                     };
+
+                     $scope.gPlusLogin = function() {
+                         // Login through Google+
+                     };
+                 }])
+
+    .directive('closeMsg', function() {
+        return {
+            restrict: 'E',
+            template: '<i class="close icon" ng-click="remove()"></i>',
+            replace: true,
+            link: function(scope, elm, attrs) {
+                scope.remove = function() {
+                    var el = elm.parent();
+                    $(el).fadeOut();
+                };
+            }
+        }
+    })
+
+    .directive('ckEditor', function() {
+        return {
+            require: '?ngModel',
+            link: function(scope, elm, attr, ngModel) {
+                var ck = CKEDITOR.replace(elm[0]);
+
+                if (!ngModel) return;
+
+                ck.on('pasteState', function() {
+                    scope.$apply(function() {
+                        ngModel.$setViewValue(ck.getData());
+                    });
+                });
+
+                ngModel.$render = function(value) {
+                    ck.setData(ngModel.$viewValue);
+                };
+            }
+        };
+    });
