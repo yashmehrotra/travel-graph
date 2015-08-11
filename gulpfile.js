@@ -12,13 +12,14 @@ var watch = require('gulp-watch');
 var plumber = require('gulp-plumber');
 var ngAnnotate = require('gulp-ng-annotate');
 var minifyHtml = require('gulp-minify-html');
+var minifyCss = require('gulp-minify-css');
 
 // File Paths
 var paths = {
     build: {
         // all: './travelgraph/static/build/',
         js: './travelgraph/static/build/js/',
-        less: './travelgraph/static/build/less/',
+        css: './travelgraph/static/build/css/',
         html: './travelgraph/static/build/html/'
     },
     js: './travelgraph/static/js/**/*.js',
@@ -47,26 +48,15 @@ gulp.task('js', function() {
 gulp.task('css', function () {
     return gulp.src(paths.less)
         .pipe(plumber())
-        .pipe(changed(paths.build.less))
+        .pipe(changed(paths.build.css))
         .pipe(less({
-            paths: [ path.join(__dirname, 'less', 'includes') ]
+            // paths: [ paths.less.join(__dirname, 'less', 'includes') ]
         }))
-        .pipe(gulp.dest(paths.build.less));
-});
-
-gulp.task('css:watch', function () {
-    watch({
-        glob: paths.less,
-        emit: 'one',
-        emitOnGlob: false
-    }, function(files) {
-        return files
-            .pipe(plumber())
-            .pipe(less({
-                paths: [ path.join(__dirname, 'less', 'includes') ]
-            }))
-            .pipe(gulp.dest(paths.build.less));
-    });
+        .pipe(concat('style.css'))
+        .pipe(gulp.dest(paths.build.css))
+        .pipe(minifyCss())
+        .pipe(rename('style.min.css'))
+        .pipe(gulp.dest(paths.build.css));
 });
 
 gulp.task('html', function() {
@@ -80,8 +70,9 @@ gulp.task('html', function() {
 gulp.task('watch', function() {
     gulp.watch(paths.js, ['js']);
     gulp.watch(paths.html, ['html']);
+    gulp.watch(paths.less, ['css']);
 });
 
 gulp.task('default', ['clean'], function () {
-    gulp.start('js', 'html', 'watch');
+    gulp.start('js', 'css', 'html', 'watch');
 });

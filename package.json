@@ -35,5 +35,8 @@
     "gulp-rename": "",
     "gulp-uglify": "^1.2.0",
     "gulp-watch": "^4.3.4"
+  },
+  "dependencies": {
+    "gulp-minify-css": "^1.2.0"
   }
 }
