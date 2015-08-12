@@ -59,6 +59,22 @@ class DbUser(Base):
     facebook_token = Column(UnicodeText())
     google_token = Column(UnicodeText())
 
+    @property
+    def serialize(self):
+        """
+        Basic User Serializer
+        """
+
+        user_dict = {
+            'id': self.id,
+            'username': self.username,
+            'email': self.email,
+            'first_name': self.first_name,
+            'last_name': self.last_name,
+        }
+
+        return user_dict
+
 
 class DbQuestion(Base):
     """

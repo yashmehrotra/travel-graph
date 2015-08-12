@@ -20,10 +20,10 @@ from ghoom.user.utils import (
     generate_username
 )
 
-api = Blueprint('api', __name__)
+api_user = Blueprint('api', __name__)
 
 
-@api.route('/user/<user_id>', methods=['GET', 'PUT'])
+@api_user.route('/<user_id>', methods=['GET', 'PUT'])
 @auth_required
 @login_required
 def user_view(user_id=None):
@@ -32,7 +32,7 @@ def user_view(user_id=None):
             # Check if user is himself, serialize based on that
             # Serialize user, add params for all data,meta data etc.
             user = session.query(DbUser).get(user_id)
-            return 'user'
+            return response_json(user.serialize)
         else:
             return None
     elif request.method == 'PUT':
@@ -40,7 +40,7 @@ def user_view(user_id=None):
         return None
 
 
-@api.route('/user/', methods=['POST'])
+@api_user.route('/', methods=['POST'])
 @auth_required
 def user_post_view():
     """
@@ -99,7 +99,22 @@ def user_post_view():
     return response_json(response)
 
 
-@api.route('/user/auth_key/', methods=['GET'])
+@api_user.route('/request_key/', methods=['GET'])
+def request_key_view():
+    """
+    Return request key to client
+    """
+    req_key = session.query(DbRequestKey).first().request_key
+
+    response = {
+        'status': 'success',
+        'req_key': req_key
+    }
+
+    return response_json(response)
+
+
+@api_user.route('/auth_key/', methods=['GET'])
 def auth_key_view():
     """
     Generate auth key for a user
@@ -123,22 +138,7 @@ def auth_key_view():
     return response_json(response)
 
 
-@api.route('/user/request_key/', methods=['GET'])
-def request_key_view():
-    """
-    Return request key to client
-    """
-    req_key = session.query(DbRequestKey).first().request_key
-
-    response = {
-        'status': 'success',
-        'req_key': req_key
-    }
-
-    return response_json(response)
-
-
-@api.route('/user/access_token/', methods=['GET'])
+@api_user.route('/access_token/', methods=['GET'])
 @auth_required
 def access_token_view():
     """
@@ -165,7 +165,7 @@ def access_token_view():
     return response_json(response)
 
 
-@api.route('/user/invite/email', methods=['GET', 'POST'])
+@api_user.route('/invite/email', methods=['GET', 'POST'])
 def invite_email_view():
     """
     Methods related to invitation system
