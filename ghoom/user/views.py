@@ -23,9 +23,9 @@ from ghoom.user.utils import (
 api = Blueprint('api', __name__)
 
 
+@api.route('/user/<user_id>', methods=['GET', 'PUT'])
 @auth_required
 @login_required
-@api.route('/user/<user_id>', methods=['GET', 'PUT'])
 def user_view(user_id=None):
     if request.method == 'GET':
         if user_id:
@@ -126,8 +126,8 @@ def request_key_view():
     return response_json(response)
 
 
-@auth_required
 @api.route('/user/access_token/', methods=['GET'])
+@auth_required
 def access_token_view():
     """
     Generates access_token for user
