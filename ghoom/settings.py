@@ -1,3 +1,8 @@
+# Global Website Settings
+WEBSITE_NAME = 'Ghoom'
+WEBSITE_URL = 'http://www.ghoom.co'
+
+# Authentication Settings
 AUTH_KEY_NAMESPACE = 'db_auth_key'
 ACCESS_TOKEN_NAMESPACE = 'db_access_token'
 
@@ -20,3 +25,6 @@ SQLALCHEMY_ENGINE = 'postgresql://{0}:{1}@{2}:{3}/{4}'.format(PGSQL_USER,
                                                               PGSQL_HOST,
                                                               PGSQL_PORT,
                                                               PGSQL_DATABASE)
+
+# Mandrill Email Client Settings
+MANDRILL_API_KEY = ''

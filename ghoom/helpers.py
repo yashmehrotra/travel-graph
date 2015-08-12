@@ -1,9 +1,12 @@
 from flask import jsonify
 import redis
+import mandrill
 
 from settings import (
+    MANDRILL_API_KEY,
     REDIS_HOST,
-    REDIS_PORT
+    REDIS_PORT,
+    WEBSITE_URL
 )
 
 
@@ -38,3 +41,22 @@ def redis_client(db=0):
                                   port=REDIS_PORT,
                                   db=db)
     return redis_cli
+
+
+def send_mail(from_email=None, to_email=None, subject=None, body=None):
+    """
+    Generic Function for sending emails
+    """
+
+    mandrill_cli = mandrill.Mandrill(MANDRILL_API_KEY)
+
+    message = {
+        'from_email': from_email,
+        'headers': {'Reply-To': from_email},
+        'html': body,
+        'metadata': {'website': WEBSITE_URL},
+        'subject': subject,
+        'to': to_email
+    }
+
+    mandrill_cli.messages.send(message=message, async=True)
