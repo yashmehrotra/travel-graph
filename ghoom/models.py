@@ -266,3 +266,30 @@ class DbEmailInvite(Base):
     id = Column(BigInteger, autoincrement=True, primary_key=True)
     email = Column(Unicode)
     invited = Column(Boolean, default=False)
+
+
+class DbRole(Base):
+    """
+    The db_role table
+    """
+
+    __tablename__ = "db_role"
+
+    id = Column(BigInteger, autoincrement=True, primary_key=True)
+    role = Column(String)
+
+
+class DbRoleUserMapping(Base):
+    """
+    The db_role_user_mapping table
+    """
+
+    __tablename__ = "db_role_user_mapping"
+
+    id = Column(BigInteger, autoincrement=True, primary_key=True)
+    role_id = Column(BigInteger, ForeignKey(DbRole.id))
+    user_id = Column(BigInteger, ForeignKey(DbUser.id))
+    create_ts = Column(DateTime, default=datetime.now())
+
+    role = relationship(DbRole)
+    user = relationship(DbUser)
