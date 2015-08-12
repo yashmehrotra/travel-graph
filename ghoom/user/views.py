@@ -61,6 +61,18 @@ def user_post_view():
 
         return response_json(response, status=400)
 
+    # Check whether email is unique
+    email_count = session.query(DbUser.email).\
+                    filter(DbUser.email == email).\
+                    count()
+
+    if email_count > 0:
+        response = {
+            'status': 'failed',
+            'error': 'email already exists'
+        }
+        return response_json(response, status=400)
+
     profile_photo = request.form.get('profile_photo')
     facebook_token = request.form.get('facebook_token')
     google_token = request.form.get('google_token')
