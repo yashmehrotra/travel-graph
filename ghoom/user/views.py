@@ -15,7 +15,8 @@ from ghoom.decorators import (
 
 from ghoom.user.utils import (
     generate_auth_key,
-    generate_access_token
+    generate_access_token,
+    generate_username
 )
 
 api = Blueprint('api', __name__)
