@@ -32,7 +32,7 @@ def user_view(user_id=None):
             # Check if user is himself, serialize based on that
             # Serialize user, add params for all data,meta data etc.
             user = session.query(DbUser).get(user_id)
-            return user
+            return 'user'
         else:
             return None
     elif request.method == 'PUT':
@@ -76,7 +76,7 @@ def user_post_view():
                   google_token=google_token)
 
     session.add(user)
-    session.commit(user)
+    session.commit()
 
     response = {
         'status': 'success',

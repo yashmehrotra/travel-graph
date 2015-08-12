@@ -17,6 +17,8 @@ def auth_required(f):
 
         verify_auth_key(auth_key)
 
+        return f(*args, **kwargs)
+
     wrap.__doc__ = f.__doc__
     wrap.__name__ = f.__name__
     return wrap
@@ -27,7 +29,7 @@ def login_required(f):
     Check whether the access token exists
     """
 
-    def wrap(request, *args, **kwargs):
+    def wrap(*args, **kwargs):
 
         access_token = request.headers.get('access_token')
 
@@ -37,7 +39,9 @@ def login_required(f):
         acc_tok_obj = verify_access_token(access_token)
 
         user_id = acc_tok_obj['user_id']
-        request.user_id = user_id
+        request.user_id = int(user_id)
+
+        return f(*args, **kwargs)
 
     wrap.__doc__ = f.__doc__
     wrap.__name__ = f.__name__
