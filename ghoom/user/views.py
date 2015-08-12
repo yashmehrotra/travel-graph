@@ -89,18 +89,59 @@ def access_token_view():
     return response_json(response)
 
 
-@api.route('/user/allowed_emails', methods=['GET'])
-def allowed_emails_view():
+@api.route('/user/invite/email', methods=['GET', 'POST'])
+def invite_email_view():
     """
-    Returns a list of allowed emails for signup
+    Methods related to invitation system
     """
+    if request.method == 'GET':
+        """
+        Returns a list of allowed emails for signup
+        """
+        emails = session.query(DbEmailInvite.email).\
+                    filter(DbEmailInvite.invited == True)
 
-    emails = session.query(DbEmailInvite.email).\
-                filter(DbEmailInvite.invited == True)
+        response = {
+            'status': 'success',
+            'emails': emails
+        }
 
-    response = {
-        'status': 'success',
-        'emails': emails
-    }
+        return response_json(response)
 
-    return response_json(response)
+    elif request.method == 'POST':
+        """
+        Add the email to invitation pending emails
+        """
+
+        email = request.form.get('email')
+        if not email:
+            response = {
+                'status': 'failed',
+                'error': 'email not provided'
+            }
+            return response_json(response, status=400)
+
+        email = email.strip().lower()
+
+        email_count = session.query(DbEmailInvite.email).\
+                        filter(DbEmailInvite.email == email).\
+                        count()
+
+        if email_count > 0:
+            response = {
+                'status': 'failed',
+                'error': 'email already exists'
+            }
+            return response_json(response, status=400)
+
+        new_invite = DbEmailInvite(email=email)
+
+        session.add(new_invite)
+        session.commit()
+
+        response = {
+            'status': 'success',
+            'message': 'invitation pending'
+        }
+
+        return response_json(response)
