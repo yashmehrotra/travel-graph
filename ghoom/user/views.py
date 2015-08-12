@@ -2,6 +2,7 @@ from flask import Blueprint, request
 
 from ghoom.models import (
     DbEmailInvite,
+    DbRequestKey,
     DbUser,
     session
 )
@@ -105,6 +106,21 @@ def auth_key_view():
     response = {
         'status': 'success',
         'auth_key': auth_key
+    }
+
+    return response_json(response)
+
+
+@api.route('/user/request_key/', methods=['GET'])
+def request_key_view():
+    """
+    Return request key to client
+    """
+    req_key = session.query(DbRequestKey).first().request_key
+
+    response = {
+        'status': 'success',
+        'req_key': req_key
     }
 
     return response_json(response)
