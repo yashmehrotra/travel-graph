@@ -3,7 +3,8 @@ from datetime import datetime
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import (
     relationship,
-    sessionmaker
+    sessionmaker,
+    scoped_session
 )
 
 from sqlalchemy import (
@@ -23,7 +24,7 @@ from ghoom.settings import SQLALCHEMY_ENGINE
 
 Base = declarative_base()
 engine = create_engine(SQLALCHEMY_ENGINE)
-Session = sessionmaker(bind=engine)
+session = scoped_session(sessionmaker(bind=engine))
 
 
 def get_class_by_tablename(tablename):
@@ -251,4 +252,5 @@ class DbRequestKey(Base):
 
     id = Column(BigInteger, autoincrement=True, primary_key=True)
     request_key = Column(String)
+    type = Column(String)
     ttl = Column(BigInteger)

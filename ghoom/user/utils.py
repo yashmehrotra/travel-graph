@@ -2,7 +2,10 @@ import hashlib
 import json
 import random
 
-from ghoom.models import DbRequestKey
+from ghoom.models import (
+    DbRequestKey,
+    session
+)
 
 from ghoom.helpers import (
     redis_client,
@@ -47,7 +50,8 @@ def generate_auth_key(request_key):
                              status=404)
 
     ttl = request_key_obj.ttl
-    value = json.dumps({'ttl': ttl})
+    type = request_key_obj.type
+    value = json.dumps({'ttl': ttl, 'type': type})
     key = AUTH_KEY_NAMESPACE + auth_key
 
     redis_cli.setex(key, ttl, value)

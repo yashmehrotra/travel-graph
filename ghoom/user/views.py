@@ -1,7 +1,8 @@
 from flask import Blueprint, request
 
 from ghoom.models import (
-    DbUser
+    DbUser,
+    session
 )
 
 from ghoom.helpers import response_json
