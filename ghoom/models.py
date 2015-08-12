@@ -254,3 +254,15 @@ class DbRequestKey(Base):
     request_key = Column(String)
     type = Column(String)
     ttl = Column(BigInteger)
+
+
+class DbEmailInvite(Base):
+    """
+    The db_email_invite table
+    """
+
+    __tablename__ = "db_email_invite"
+
+    id = Column(BigInteger, autoincrement=True, primary_key=True)
+    email = Column(Unicode)
+    invited = Column(Boolean, default=False)

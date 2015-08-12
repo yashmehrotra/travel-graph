@@ -10,7 +10,7 @@ from settings import (
 )
 
 
-def response_json(data={}, status=200):
+def response_json(data, status=200):
     """
     Helper function to return
     json responses
@@ -32,7 +32,7 @@ def response_unauthorised():
         'error': 'Not Authorised'
     }
 
-    return response_json(data=response, status=401)
+    return response_json(response, status=401)
 
 
 def redis_client(db=0):

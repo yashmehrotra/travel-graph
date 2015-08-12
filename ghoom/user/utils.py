@@ -46,8 +46,7 @@ def generate_auth_key(request_key):
             'status': 'failed',
             'error': 'request_key not found'
         }
-        return response_json(data=resp,
-                             status=404)
+        return response_json(resp, status=404)
 
     ttl = request_key_obj.ttl
     type = request_key_obj.type

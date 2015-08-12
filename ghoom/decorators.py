@@ -15,7 +15,7 @@ def auth_required(f):
         auth_key = request.headers.get('auth_key')
 
         if not auth_key:
-            return response_unauthorised
+            return response_unauthorised()
 
         verify_auth_key(auth_key)
 
@@ -34,7 +34,7 @@ def login_required(f):
         access_token = request.headers.get('access_token')
 
         if not access_token:
-            return response_unauthorised
+            return response_unauthorised()
 
         acc_tok_obj = verify_access_token(access_token)
 

@@ -1,6 +1,7 @@
 from flask import Blueprint, request
 
 from ghoom.models import (
+    DbEmailInvite,
     DbUser,
     session
 )
@@ -49,8 +50,7 @@ def auth_key_view():
             'status': 'failed',
             'error': 'Request Key not Provided',
         }
-        return response_json(data=response,
-                             status=400)
+        return response_json(response, status=400)
 
     auth_key = generate_auth_key(req_key)
 
@@ -59,7 +59,7 @@ def auth_key_view():
         'auth_key': auth_key
     }
 
-    return response_json(data=response)
+    return response_json(response)
 
 
 @auth_required
@@ -77,8 +77,7 @@ def access_token_view():
             'status': 'failed',
             'error': 'user_id not provided'
         }
-        return response_json(data=response,
-                             status=400)
+        return response_json(response, status=400)
 
     access_token = generate_access_token(user_id, auth_key)
 
@@ -87,4 +86,21 @@ def access_token_view():
         'access_token': access_token
     }
 
-    return response_json(data=response)
+    return response_json(response)
+
+
+@api.route('/user/allowed_emails', methods=['GET'])
+def allowed_emails_view():
+    """
+    Returns a list of allowed emails for signup
+    """
+
+    emails = session.query(DbEmailInvite.email).\
+                filter(DbEmailInvite.invited == True)
+
+    response = {
+        'status': 'success',
+        'emails': emails
+    }
+
+    return response_json(response)
