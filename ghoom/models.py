@@ -45,10 +45,6 @@ class DbUser(Base):
 
     __tablename__ = "db_user"
 
-    def __init__(self, *args, **kwargs):
-        # Overide to generate username
-        pass
-
     id = Column(BigInteger, autoincrement=True, primary_key=True)
     username = Column(Unicode)
     email = Column(Unicode)

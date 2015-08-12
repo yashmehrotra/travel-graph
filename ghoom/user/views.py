@@ -6,6 +6,7 @@ from ghoom.models import (
     session
 )
 
+from ghoom.redirects import URL_HOME
 from ghoom.helpers import response_json
 from ghoom.decorators import (
     auth_required,
@@ -21,21 +22,67 @@ api = Blueprint('api', __name__)
 
 
 @auth_required
-@api.route('/user/<user_id>', methods=['GET', 'POST', 'PUT'])
+@login_required
+@api.route('/user/<user_id>', methods=['GET', 'PUT'])
 def user_view(user_id=None):
     if request.method == 'GET':
         if user_id:
+            # Check if user is himself, serialize based on that
             # Serialize user, add params for all data,meta data etc.
             user = session.query(DbUser).get(user_id)
             return user
         else:
             return None
-    elif request.method == 'POST':
-        # Take all the params and add a new user
-        return None
     elif request.method == 'PUT':
         # Edit the user
         return None
+
+
+@auth_required
+@api.route('/user/', methods=['POST'])
+def user_post_view():
+    """
+    To create a new user
+    """
+
+    try:
+
+        first_name = request.form['first_name']
+        last_name = request.form['last_name']
+        email = request.form['email']
+
+    except KeyError:
+        response = {
+            'status': 'failed',
+            'error': 'please provide first_name, last_name and email'
+        }
+
+        return response_json(response, status=400)
+
+    profile_photo = request.form.get('profile_photo')
+    facebook_token = request.form.get('facebook_token')
+    google_token = request.form.get('google_token')
+
+    username = generate_username(first_name, last_name)
+
+    user = DbUser(username=username,
+                  email=email,
+                  first_name=first_name,
+                  last_name=last_name,
+                  profile_photo=profile_photo,
+                  facebook_token=facebook_token,
+                  google_token=google_token)
+
+    session.add(user)
+    session.commit(user)
+
+    response = {
+        'status': 'success',
+        'user_id': user.id,
+        'redirect_url': URL_HOME
+    }
+
+    return response_json(response)
 
 
 @api.route('/user/auth_key/', methods=['GET'])

@@ -4,6 +4,7 @@ import random
 
 from ghoom.models import (
     DbRequestKey,
+    DbUser,
     session
 )
 
@@ -135,3 +136,20 @@ def refresh_key(key):
     ttl = json.loads(value)['ttl']
     # Delete key and make a new key
     redis_cli.setex(key, ttl, value)
+
+
+def generate_username(first_name, last_name):
+    """
+    Generating unique usernames
+    """
+
+    username = u'{0}-{1}-'.format(first_name.lower(), last_name.lower())
+
+    count_uname = session.query(DbUser).\
+                    filter(DbUser.username.startswith(username)).\
+                    count()
+
+    user_nth = count_uname + 1
+    username += unicode(user_nth)
+
+    return username
