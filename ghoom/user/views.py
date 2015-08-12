@@ -40,8 +40,8 @@ def user_view(user_id=None):
         return None
 
 
-@auth_required
 @api.route('/user/', methods=['POST'])
+@auth_required
 def user_post_view():
     """
     To create a new user

@@ -1,5 +1,5 @@
 from ghoom.helpers import response_unauthorised
-
+from flask import request
 from ghoom.user.utils import (
     verify_auth_key,
     verify_access_token
@@ -10,10 +10,8 @@ def auth_required(f):
     """
     Checks user's auth_key
     """
-    def wrap(request, *args, **kwargs):
-
+    def wrap(*args, **kwargs):
         auth_key = request.headers.get('auth_key')
-
         if not auth_key:
             return response_unauthorised()
 
