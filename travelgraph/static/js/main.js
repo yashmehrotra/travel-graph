@@ -79,7 +79,6 @@ angular.module('travelGraph', ['ngRoute', 'ngStorage', 'ngFacebook',
         $rootScope.$on("$routeChangeStart",
                        function(event, nextRoute)
                        {
-                           console.log(nextRoute);
                            var LOGIN_TMPL = "/static/build/html/login.html";
                            $timeout(function() {
                                if ($rootScope.loggedUser == null) {
@@ -110,6 +109,7 @@ angular.module('travelGraph', ['ngRoute', 'ngStorage', 'ngFacebook',
                 ['$scope', '$http', '$facebook',
                  function ($scope, $http, $facebook)
                  {
+                     $scope.requestInvite = false;
                      $scope.loginMsg = "";
                      $scope.fbLoginLoader = false;
                      $scope.successLogin = false;
@@ -153,10 +153,9 @@ angular.module('travelGraph', ['ngRoute', 'ngStorage', 'ngFacebook',
                          // Login through Google+
                      };
 
-                     $scope.requestInvite = function(ev) {
-                         console.log(ev);
-                         // Request Invite
-                     };
+                     $scope.invite = function(ev) {
+                         // Invite(POST request with 'email' parameter)
+                     }
                  }])
 
     .directive('closeMsg', function() {
