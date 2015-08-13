@@ -35,6 +35,19 @@ def response_unauthorised():
     return response_json(response, status=401)
 
 
+def response_error(error, status=400):
+    """
+    Returns an error message in JSON
+    """
+
+    response = {
+        'status': 'failed',
+        'error': error
+    }
+
+    return response_json(response, status=400)
+
+
 def redis_client(db=0):
 
     redis_cli = redis.StrictRedis(host=REDIS_HOST,

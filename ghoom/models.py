@@ -94,6 +94,21 @@ class DbQuestion(Base):
     # user = relationship('DbUser', foreign_keys='DbQuestion.user_id')
     user = relationship(DbUser)
 
+    @property
+    def serialize(self):
+        """
+        The basic serializer
+        """
+
+        question_dict = {
+            'id': self.id,
+            'title': self.title,
+            'description': self.description,
+            'user': self.user.serialize
+        }
+
+        return question_dict
+
 
 class DbAnswer(Base):
     """
