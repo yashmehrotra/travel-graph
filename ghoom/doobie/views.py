@@ -6,7 +6,8 @@ from ghoom.models import (
     DbDoobieTagMapping,
     DbQuestion,
     DbTag,
-    DbUser
+    DbUser,
+    session
 )
 from ghoom.decorators import (
     auth_required,
