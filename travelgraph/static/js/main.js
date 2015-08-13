@@ -12,15 +12,33 @@ angular.module('travelGraph', ['ngRoute', 'ngStorage', 'ngFacebook',
              {
                  $routeProvider
                      .when('/', {
-	                       templateUrl: '/static/build/html/home.html',
-                         controller: "LoginCtrl"
+	                       templateUrl: '/static/build/html/login.html',
+                         controller: "LoginCtrl",
+                         // resolve : {
+                         //     requestToken : function($http, $q) {
+                         //         var reqUrl = "/api/user/request_key";
+                         //         var deferred = $q.defer();
+                         //         $http.get(reqUrl)
+                         //             .then(
+                         //                 function(res) {
+                         //                     console.log(res);
+                         //                     deferred.resolve(res);
+                         //                 },
+                         //                 function() {
+                         //                     deferred.reject();
+                         //                     // Request fails
+                         //                 }
+                         //                 return deferred.promise;
+                         //             );
+                         //     }
+                         // }
                      })
                      .when('/login', {
 	                       templateUrl: '/static/build/html/login.html',
                          controller: "LoginCtrl"
                      })
                      .when('/signup', {
-	                       templateUrl: '/static/build/html/signup.html',
+	                       templateUrl: '/static/build/html/login.html',
                          controller: "LoginCtrl"
                      })
                      .when('/ques/:quesId', {
@@ -49,7 +67,7 @@ angular.module('travelGraph', ['ngRoute', 'ngStorage', 'ngFacebook',
                  $locationProvider.html5Mode(true);
              }])
 
-    .run(function($rootScope) {
+    .run(function($rootScope, $location, $timeout) {
         (function(d, s, id) {
             var js, fjs = d.getElementsByTagName(s)[0];
             if (d.getElementById(id)) return;
@@ -57,12 +75,35 @@ angular.module('travelGraph', ['ngRoute', 'ngStorage', 'ngFacebook',
             js.src = "//connect.facebook.net/en_US/sdk.js";
             fjs.parentNode.insertBefore(js, fjs);
         }(document, 'script', 'facebook-jssdk'));
+
+        $rootScope.$on("$routeChangeStart",
+                       function(event, nextRoute)
+                       {
+                           console.log(nextRoute);
+                           var LOGIN_TMPL = "/static/build/html/login.html";
+                           $timeout(function() {
+                               if ($rootScope.loggedUser == null) {
+                                   if (typeof nextRoute.loadedTemplateUrl ===
+                                       'undefined' ||
+                                       nextRoute.loadedTemplateUrl ===
+                                       LOGIN_TMPL)
+                                   {
+                                       console.log("No redirect for this route");
+                                   } else {
+                                       $location.path("/");
+                                       console.log("Not logged in.. redirected");
+                                   }
+                               }
+                           });
+                       }
+                      );
     })
 
     // App-wide controller
-    .controller('MainCtrl', ['$scope', function ($scope) {
-        // Globally used variables here.
-    }])
+    .controller('MainCtrl',
+                ['$scope', '$location',
+                 function ($scope, $location)
+                 { }])
 
     // To handle Login and Signup
     .controller('LoginCtrl',
@@ -73,7 +114,7 @@ angular.module('travelGraph', ['ngRoute', 'ngStorage', 'ngFacebook',
                      $scope.fbLoginLoader = false;
                      $scope.successLogin = false;
 
-                     $scope.fbLogin = function() {
+                     $scope.fbLogin = function(ev) {
                          $scope.fbLoginLoader = true;
                          $scope.successLogin = false;
                          $facebook.login().then(
@@ -83,6 +124,17 @@ angular.module('travelGraph', ['ngRoute', 'ngStorage', 'ngFacebook',
                                  if (typeof res.status !== 'undefined') {
                                      $scope.successLogin = true;
                                      $scope.loginMsg = 'Login Successful.';
+                                     $facebook.api('/me').then(
+                                         function(res) {
+                                             console.log(res);
+                                             $scope.loginMsg = 'Redirecting....';
+                                         },
+                                         function() {
+                                             $scope.successLogin = false;
+                                             console.log('Error');
+                                             // Error
+                                         }
+                                     );
                                  }
                                  else {
                                      $scope.successLogin = false;
@@ -97,8 +149,13 @@ angular.module('travelGraph', ['ngRoute', 'ngStorage', 'ngFacebook',
                          );
                      };
 
-                     $scope.gPlusLogin = function() {
+                     $scope.gPlusLogin = function(ev) {
                          // Login through Google+
+                     };
+
+                     $scope.requestInvite = function(ev) {
+                         console.log(ev);
+                         // Request Invite
                      };
                  }])
 

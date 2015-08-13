@@ -4,12 +4,16 @@
     <div class="seven wide column segment very padded raised">
         <h3 class="ui top attached block header">Login/Signup</h3>
         <div class="ui attached segment center aligned fix-width">
-            <p>This is some content</p>
+            <p>You may not be able to login if you are not invited.
+                <br>
+                To request an inivite,
+                <a href="" ng-click="requestInvite($event)"> click here</a>
+            </p>
             <button class="ui large facebook button login-btn"
                     data-ng-class="{ 'loading': fbLoginLoader }"
                     type="button"
                     data-ng-disabled="fbLoginLoader"
-                    data-ng-click="fbLogin()">
+                    data-ng-click="fbLogin($event)">
                 <i class="facebook icon"></i>
                 Continue with Facebook
             </button>
@@ -19,7 +23,7 @@
             <button class="ui large google plus button login-btn"
                     data-ng-class="{ 'loading': gPlusLoginLoader }"
                     type="button"
-                    data-ng-click="gPlusLogin()">
+                    data-ng-click="gPlusLogin($event)">
 
                 <i class="google plus icon"></i>
                 Continue with Google
@@ -33,7 +37,7 @@
         </div>
     </div>
 </div>
-<div class="ui celled centered horizontal list">
+<div class="ui celled horizontal list">
     <div class="item">
         <a href="">About Us</a>
     </div>
@@ -44,4 +48,3 @@
         <a href="">Support</a>
     </div>
 </div>
-
