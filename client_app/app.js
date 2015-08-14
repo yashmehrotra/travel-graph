@@ -9,7 +9,7 @@ if (process.argv[2] != 'production') {
 var app = express();
 
 
-app.use(express.static('templates'));
+app.use(express.static('client_app/templates'));
 
 app.get('/', function (req, res) {
   console.log('Home Page Ping');
