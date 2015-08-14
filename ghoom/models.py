@@ -131,6 +131,22 @@ class DbAnswer(Base):
     question = relationship(DbQuestion)
     user = relationship(DbUser)
 
+    @property
+    def serialize(self):
+        """
+        The basic answer serializer
+        """
+
+        answer_dict = {
+            'id': self.id,
+            'answer': self.answer,
+            'question': self.question.serialize,
+            'user': self.user.serialize,
+            'create_ts': str(self.create_ts)
+        }
+
+        return answer_dict
+
 
 class DbType(Base):
     """
