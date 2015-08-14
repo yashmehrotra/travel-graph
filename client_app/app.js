@@ -1,6 +1,6 @@
 var express = require('express');
 var config = require('./config.js');
-
+var path = require('path');
 if (process.argv[2] != 'production') {
   var host = config.development.CLIENT_HOST;
   var port = config.development.CLIENT_PORT;
@@ -11,9 +11,9 @@ var app = express();
 
 app.use(express.static('client_app/templates'));
 
-app.get('/', function (req, res) {
+app.get('/*', function (req, res) {
   console.log('Home Page Ping');
-  res.redirect('/test.html');
+  res.sendFile(path.join(__dirname+'/templates/test.html'));
 });
 
 
