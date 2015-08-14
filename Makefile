@@ -10,3 +10,6 @@ lint:
 
 grun:
 	@gunicorn runserver:app -b 0.0.0.0:5000
+
+client:
+	@nodejs client_app/app.js
