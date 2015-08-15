@@ -2,11 +2,8 @@ from flask import Blueprint, request
 
 from ghoom.models import (
     DbAnswer,
-    DbDoobieMapping,
-    DbDoobieTagMapping,
     DbQuestion,
     DbTag,
-    DbUser,
     session
 )
 from ghoom.decorators import (
@@ -38,6 +35,9 @@ def question_view(question_id=None):
 
         question = session.query(DbQuestion).\
                     get(question_id)
+
+        answers = session.query(DbAnswer).\
+                    filter(DbAnswer.question_id == question_id)
         # Below is temp
         return response_json(question.serialize)
 
@@ -48,7 +48,7 @@ def question_view(question_id=None):
             description = request.form.get('description')
             tags = request.form.get('tags')
         except KeyError:
-            response_error("missing parameters")
+            response_error("Missing parameters")
 
         question = DbQuestion(title=title,
                               description=description,
@@ -57,6 +57,9 @@ def question_view(question_id=None):
         session.add(question)
         session.commit()
         # Below is temp
+        if tags:
+            tags = tags.split(',')
+
         return response_json(question.serialize)
 
 
@@ -74,7 +77,7 @@ def answer_view(question_id=None, user_id=None):
 
         answer_text = request.form.get('answer')
 
-        if not answer:
+        if not answer_text:
             return response_error('answer should be provided')
 
         user_id = request.user_id

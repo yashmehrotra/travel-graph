@@ -20,6 +20,8 @@ from sqlalchemy import (
     String
 )
 
+from sqlalchemy.event import listen
+
 from ghoom.settings import SQLALCHEMY_ENGINE
 
 Base = declarative_base()
@@ -153,7 +155,7 @@ class DbType(Base):
     The db_type table
     Will be like
     =================================
-    | id  |  name    | table_name   |
+    | id  |  name    | tablename    |
     ---------------------------------
     |   1 | question | db_question  |
     |   2 | answer   | db_answer    |
@@ -336,3 +338,31 @@ class DbRoleUserMapping(Base):
 
     role = relationship(DbRole)
     user = relationship(DbUser)
+
+
+# Define all event listensers and related stuff in the end
+def map_doobie(mapper, connection, target):
+    """
+    This function maps all doobies in the
+    db_doobie_mapping table
+    """
+
+    # Declare a temp session
+    temp_sess = scoped_session(sessionmaker(bind=engine))
+
+    tablename = target.__tablename__
+    db_type = temp_sess.query(DbType).\
+                filter(DbType.tablename == tablename).\
+                first()
+
+    doobie_mapping = DbDoobieMapping(type_id=db_type.id,
+                                     mapping_id=target.id)
+
+    temp_sess.add(doobie_mapping)
+    temp_sess.commit()
+
+    temp_sess.close()
+
+# Event Listeners
+listen(DbQuestion, 'after_insert', map_doobie)
+listen(DbAnswer, 'after_insert', map_doobie)
