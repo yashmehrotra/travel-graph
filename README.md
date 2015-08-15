@@ -1,7 +1,7 @@
 travel-graph
 ============
 
-The next big thing
+The next big thing!
 
 ##To Set Up  
 ```shell
