@@ -388,14 +388,6 @@ def map_doobie(mapper, connection, target):
     temp_sess.close()
 
 
-def map_doobie_foreign_key(mapper, connection, target):
-    """
-    This
-    """
-    pass
-
-
 # Event Listeners
 listen(DbQuestion, 'after_insert', map_doobie)
 listen(DbAnswer, 'after_insert', map_doobie)
-#listen(DbDoobieMapping, 'after_insert', map_doobie_foreign_key)
