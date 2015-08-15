@@ -26,6 +26,7 @@ from ghoom.settings import SQLALCHEMY_ENGINE
 
 Base = declarative_base()
 engine = create_engine(SQLALCHEMY_ENGINE)
+scoper = sessionmaker(bind=engine)
 session = scoped_session(sessionmaker(bind=engine))
 
 
@@ -135,7 +136,7 @@ class DbQuestion(Base):
     title = Column(Unicode)
     description = Column(UnicodeText())
     user_id = Column(BigInteger, ForeignKey(DbUser.id))
-    doobie_id = Column(BigInteger, ForeignKey(DbDoobieMapping.id, nullable=True))
+    doobie_id = Column(BigInteger, ForeignKey(DbDoobieMapping.id), nullable=True)
     create_ts = Column(DateTime, default=datetime.now())
     update_ts = Column(DateTime, default=datetime.now())
     enabled = Column(Boolean, default=True)
@@ -192,7 +193,7 @@ class DbAnswer(Base):
     answer = Column(UnicodeText)
     question_id = Column(BigInteger, ForeignKey(DbQuestion.id))
     user_id = Column(BigInteger, ForeignKey(DbUser.id))
-    doobie_id = Column(BigInteger, ForeignKey(DbDoobieMapping.id, nullable=True))
+    doobie_id = Column(BigInteger, ForeignKey(DbDoobieMapping.id), nullable=True)
     create_ts = Column(DateTime, default=datetime.now())
     update_ts = Column(DateTime, default=datetime.now())
     enabled = Column(Boolean, default=True)
@@ -370,7 +371,6 @@ def map_doobie(mapper, connection, target):
     This function maps all doobies in the
     db_doobie_mapping table
     """
-
     # Declare a temp session
     temp_sess = scoped_session(sessionmaker(bind=engine))
 
@@ -383,12 +383,19 @@ def map_doobie(mapper, connection, target):
                                      mapping_id=target.id)
 
     temp_sess.add(doobie_mapping)
-    target.doobie_id = doobie_mapping.id
-    temp_sess.add(target)
     temp_sess.commit()
 
     temp_sess.close()
 
+
+def map_doobie_foreign_key(mapper, connection, target):
+    """
+    This
+    """
+    pass
+
+
 # Event Listeners
 listen(DbQuestion, 'after_insert', map_doobie)
 listen(DbAnswer, 'after_insert', map_doobie)
+#listen(DbDoobieMapping, 'after_insert', map_doobie_foreign_key)

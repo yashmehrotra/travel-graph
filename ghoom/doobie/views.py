@@ -49,13 +49,16 @@ def question_view(question_id=None):
             tags = request.form.get('tags')
         except KeyError:
             response_error("Missing parameters")
-
         question = DbQuestion(title=title,
                               description=description,
                               user_id=request.user_id)
 
-        session.add(question)
-        session.commit()
+        try:
+            session.add(question)
+            session.commit()
+        except:
+            session.rollback()
+            print 'Error - flushed for now'
         # Below is temp
         if tags:
             tags = tags.split(',')
