@@ -20,10 +20,13 @@ from sqlalchemy import (
     String
 )
 
+from sqlalchemy.event import listen
+
 from ghoom.settings import SQLALCHEMY_ENGINE
 
 Base = declarative_base()
 engine = create_engine(SQLALCHEMY_ENGINE)
+scoper = sessionmaker(bind=engine)
 session = scoped_session(sessionmaker(bind=engine))
 
 
@@ -76,84 +79,12 @@ class DbUser(Base):
         return user_dict
 
 
-class DbQuestion(Base):
-    """
-    The db_question table
-    """
-
-    __tablename__ = "db_question"
-
-    id = Column(BigInteger, autoincrement=True, primary_key=True)
-    title = Column(Unicode)
-    description = Column(UnicodeText())
-    user_id = Column(BigInteger, ForeignKey(DbUser.id))
-    create_ts = Column(DateTime, default=datetime.now())
-    update_ts = Column(DateTime, default=datetime.now())
-    enabled = Column(Boolean, default=True)
-
-    # user = relationship('DbUser', foreign_keys='DbQuestion.user_id')
-    user = relationship(DbUser)
-
-    @property
-    def serialize(self):
-        """
-        The basic serializer
-        """
-
-        question_dict = {
-            'id': self.id,
-            'title': self.title,
-            'description': self.description,
-            'user': self.user.serialize
-        }
-
-        return question_dict
-
-
-class DbAnswer(Base):
-    """
-    The db_answer table
-    """
-
-    __tablename__ = "db_answer"
-
-    id = Column(BigInteger, autoincrement=True, primary_key=True)
-    answer = Column(UnicodeText)
-    question_id = Column(BigInteger, ForeignKey(DbQuestion.id))
-    user_id = Column(BigInteger, ForeignKey(DbUser.id))
-    create_ts = Column(DateTime, default=datetime.now())
-    update_ts = Column(DateTime, default=datetime.now())
-    enabled = Column(Boolean, default=True)
-
-    # question = relationship('DbQuestion', foreign_keys='DbAnswer.question_id')
-    # user = relationship('DbUser', foreign_keys='DbAnswer.user_id')
-
-    question = relationship(DbQuestion)
-    user = relationship(DbUser)
-
-    @property
-    def serialize(self):
-        """
-        The basic answer serializer
-        """
-
-        answer_dict = {
-            'id': self.id,
-            'answer': self.answer,
-            'question': self.question.serialize,
-            'user': self.user.serialize,
-            'create_ts': str(self.create_ts)
-        }
-
-        return answer_dict
-
-
 class DbType(Base):
     """
     The db_type table
     Will be like
     =================================
-    | id  |  name    | table_name   |
+    | id  |  name    | tablename    |
     ---------------------------------
     |   1 | question | db_question  |
     |   2 | answer   | db_answer    |
@@ -192,6 +123,102 @@ class DbDoobieMapping(Base):
         doobie_class = get_class_by_tablename(tablename)
         doobie_object = session.query(doobie_class).get(self.mapping_id)
         return doobie_object
+
+
+class DbQuestion(Base):
+    """
+    The db_question table
+    """
+
+    __tablename__ = "db_question"
+
+    id = Column(BigInteger, autoincrement=True, primary_key=True)
+    title = Column(Unicode)
+    description = Column(UnicodeText())
+    user_id = Column(BigInteger, ForeignKey(DbUser.id))
+    doobie_id = Column(BigInteger, ForeignKey(DbDoobieMapping.id), nullable=True)
+    create_ts = Column(DateTime, default=datetime.now())
+    update_ts = Column(DateTime, default=datetime.now())
+    enabled = Column(Boolean, default=True)
+
+    # user = relationship('DbUser', foreign_keys='DbQuestion.user_id')
+    user = relationship(DbUser)
+
+    @property
+    def serialize(self):
+        """
+        The basic serializer
+        """
+
+        question_dict = {
+            'id': self.id,
+            'title': self.title,
+            'description': self.description,
+            'user': self.user.serialize
+        }
+
+        return question_dict
+
+    @property
+    def type(self):
+        """
+        Returns the corresponding
+        DbType Object
+        """
+
+        db_type_obj = session.query(DbType).\
+                        filter(DbType.tablename == self.__tablename__).\
+                        first()
+
+        return db_type_obj
+
+    @property
+    def doobie(self):
+        doobie_obj = session.query(DbDoobieMapping).\
+                        filter(DbDoobieMapping.type.tablename == self.__tablename__,
+                               DbDoobieMapping.mapping_id == self.id).\
+                        first()
+
+        return doobie_obj
+
+
+class DbAnswer(Base):
+    """
+    The db_answer table
+    """
+
+    __tablename__ = "db_answer"
+
+    id = Column(BigInteger, autoincrement=True, primary_key=True)
+    answer = Column(UnicodeText)
+    question_id = Column(BigInteger, ForeignKey(DbQuestion.id))
+    user_id = Column(BigInteger, ForeignKey(DbUser.id))
+    doobie_id = Column(BigInteger, ForeignKey(DbDoobieMapping.id), nullable=True)
+    create_ts = Column(DateTime, default=datetime.now())
+    update_ts = Column(DateTime, default=datetime.now())
+    enabled = Column(Boolean, default=True)
+
+    # question = relationship('DbQuestion', foreign_keys='DbAnswer.question_id')
+    # user = relationship('DbUser', foreign_keys='DbAnswer.user_id')
+
+    question = relationship(DbQuestion)
+    user = relationship(DbUser)
+
+    @property
+    def serialize(self):
+        """
+        The basic answer serializer
+        """
+
+        answer_dict = {
+            'id': self.id,
+            'answer': self.answer,
+            'question': self.question.serialize,
+            'user': self.user.serialize,
+            'create_ts': str(self.create_ts)
+        }
+
+        return answer_dict
 
 
 class DbTagType(Base):
@@ -336,3 +363,31 @@ class DbRoleUserMapping(Base):
 
     role = relationship(DbRole)
     user = relationship(DbUser)
+
+
+# Define all event listensers and related stuff in the end
+def map_doobie(mapper, connection, target):
+    """
+    This function maps all doobies in the
+    db_doobie_mapping table
+    """
+    # Declare a temp session
+    temp_sess = scoped_session(sessionmaker(bind=engine))
+
+    tablename = target.__tablename__
+    db_type = temp_sess.query(DbType).\
+                filter(DbType.tablename == tablename).\
+                first()
+
+    doobie_mapping = DbDoobieMapping(type_id=db_type.id,
+                                     mapping_id=target.id)
+
+    temp_sess.add(doobie_mapping)
+    temp_sess.commit()
+
+    temp_sess.close()
+
+
+# Event Listeners
+listen(DbQuestion, 'after_insert', map_doobie)
+listen(DbAnswer, 'after_insert', map_doobie)

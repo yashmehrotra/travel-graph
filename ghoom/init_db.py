@@ -7,7 +7,7 @@ from ghoom.models import (
     Base,
     DbType,
     DbTagType,
-    Session
+    session
 )
 
 from ghoom import app
@@ -22,7 +22,6 @@ def create_db():
     Base.metadata.create_all(engine)
     print "All Tables Created Successfully"
 
-    session = Session()
     # Adding Doobie Types
     doobie_types = [DbType(name='question', tablename='db_question'),
                     DbType(name='answer', tablename='db_answer')]
