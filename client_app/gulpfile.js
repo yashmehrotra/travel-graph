@@ -22,7 +22,7 @@ var paths = {
         html: 'dist/html/'
     },
     js: 'public/js/**/*.js',
-    less: 'public/css/*.less',
+    css: 'public/css/*.less',
     html: 'public/views/*.html'
 };
 
@@ -45,9 +45,9 @@ gulp.task('js', function() {
 });
 
 gulp.task('css', function () {
-    return gulp.src(paths.less)
+    return gulp.src(paths.css)
         .pipe(plumber())
-        .pipe(changed(paths.less))
+        .pipe(changed(paths.css))
         .pipe(less())
         .pipe(concat('style.css'))
         .pipe(gulp.dest(paths.build.css))
@@ -67,7 +67,7 @@ gulp.task('html', function() {
 gulp.task('watch', function() {
     gulp.watch(paths.js, ['js']);
     gulp.watch(paths.html, ['html']);
-    gulp.watch(paths.less, ['css']);
+    gulp.watch(paths.css, ['css']);
 });
 
 gulp.task('default', ['clean'], function () {

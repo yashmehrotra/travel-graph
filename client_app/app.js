@@ -9,7 +9,8 @@ if (process.argv[2] != 'production') {
 var app = express();
 
 
-app.use(express.static('client_app/templates'));
+app.use('/public', express.static(__dirname + '/public'));
+app.use('/dist', express.static(__dirname + '/dist'));
 
 app.get('/*', function (req, res) {
   res.sendFile(path.join(__dirname+'/public/index.html'));
