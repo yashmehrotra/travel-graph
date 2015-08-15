@@ -58,6 +58,7 @@ node_modules
 
 # Bower components
 travelgraph/static/bower_components
+client_app/public/libs
 
 # Vagrant machine
 *.vagrant 
