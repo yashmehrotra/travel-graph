@@ -1,6 +1,6 @@
-from ghoom.helpers import response_unauthorised
+from verak.helpers import response_unauthorised
 from flask import request
-from ghoom.user.utils import (
+from verak.user.utils import (
     verify_auth_key,
     verify_access_token
 )

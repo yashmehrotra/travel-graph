@@ -1,10 +1,10 @@
-from ghoom.models import (
+from verak.models import (
     DbTag,
     DbDoobieTagMapping,
     session
 )
 
-from ghoom.tag.utils import (
+from verak.tag.utils import (
     get_tag_id
 )
 

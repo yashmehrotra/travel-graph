@@ -1,22 +1,22 @@
 from flask import Blueprint, request
 from datetime import datetime
 
-from ghoom.models import (
+from verak.models import (
     DbAnswer,
     DbQuestion,
     session
 )
-from ghoom.decorators import (
+from verak.decorators import (
     auth_required,
     login_required
 )
 
-from ghoom.helpers import (
+from verak.helpers import (
     response_json,
     response_error
 )
 
-from ghoom.tag.tasks import map_tags_to_doobie
+from verak.tag.tasks import map_tags_to_doobie
 
 api_question = Blueprint('api_question', __name__)
 api_answer = Blueprint('api_answer', __name__)

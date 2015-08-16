@@ -1,4 +1,4 @@
-from ghoom.models import (
+from verak.models import (
     DbTag,
     session
 )

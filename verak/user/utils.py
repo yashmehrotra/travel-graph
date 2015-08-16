@@ -2,19 +2,19 @@ import hashlib
 import json
 import random
 
-from ghoom.models import (
+from verak.models import (
     DbRequestKey,
     DbUser,
     session
 )
 
-from ghoom.helpers import (
+from verak.helpers import (
     redis_client,
     response_json,
     response_unauthorised
 )
 
-from ghoom.settings import (
+from verak.settings import (
     AUTH_KEY_NAMESPACE,
     ACCESS_TOKEN_NAMESPACE,
     REDIS_AUTH_KEY_DB,

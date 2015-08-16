@@ -1,8 +1,8 @@
 from flask import Flask
 # from werkzeug.contrib.fixers import ProxyFix
-from ghoom.user.views import api_user
-from ghoom.development.views import developer
-from ghoom.doobie.views import api_question
+from verak.user.views import api_user
+from verak.development.views import developer
+from verak.doobie.views import api_question
 
 app = Flask(__name__)
 

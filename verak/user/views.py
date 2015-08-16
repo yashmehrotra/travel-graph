@@ -1,20 +1,20 @@
 from flask import Blueprint, request
 
-from ghoom.models import (
+from verak.models import (
     DbEmailInvite,
     DbRequestKey,
     DbUser,
     session
 )
 
-from ghoom.redirects import URL_HOME
-from ghoom.helpers import response_json
-from ghoom.decorators import (
+from verak.redirects import URL_HOME
+from verak.helpers import response_json
+from verak.decorators import (
     auth_required,
     login_required
 )
 
-from ghoom.user.utils import (
+from verak.user.utils import (
     generate_auth_key,
     generate_access_token,
     generate_username

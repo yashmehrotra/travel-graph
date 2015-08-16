@@ -2,7 +2,7 @@ import sys
 import os
 sys.path.append(os.path.realpath('.'))
 
-from ghoom.models import (
+from verak.models import (
     engine,
     Base,
     DbType,
@@ -10,7 +10,7 @@ from ghoom.models import (
     session
 )
 
-from ghoom import app
+from verak import app
 from flask.ext.script import Manager
 
 manager = Manager(app)

@@ -22,7 +22,7 @@ from sqlalchemy import (
 
 from sqlalchemy.event import listen
 
-from ghoom.settings import SQLALCHEMY_ENGINE
+from verak.settings import SQLALCHEMY_ENGINE
 
 Base = declarative_base()
 engine = create_engine(SQLALCHEMY_ENGINE)

@@ -1,18 +1,18 @@
 from flask import Blueprint, request
 
-from ghoom.user.utils import (
+from verak.user.utils import (
     generate_auth_key,
     generate_access_token,
     generate_username
 )
 
-from ghoom.models import (
+from verak.models import (
     DbRequestKey,
     DbUser,
     session
 )
 
-from ghoom.helpers import response_json
+from verak.helpers import response_json
 
 developer = Blueprint('developer', __name__)
 
