@@ -32,9 +32,6 @@ def question_view(question_id=None):
 
     if request.method == 'GET' and question_id:
 
-        if not question_id:
-            return response_error("question_id not provided")
-
         question = session.query(DbQuestion).\
                     get(question_id)
 
@@ -114,6 +111,7 @@ def question_view(question_id=None):
         return response_json(question.serialize)
 
 
+@api_question.route('/<question_id>/answer')
 @api_question.route('/<question_id>/answer/<user_id>')
 @auth_required
 @login_required

@@ -143,6 +143,7 @@ class DbQuestion(Base):
 
     # user = relationship('DbUser', foreign_keys='DbQuestion.user_id')
     user = relationship(DbUser)
+    doobie_rel = relationship(DbDoobieMapping)
 
     @property
     def serialize(self):
@@ -174,10 +175,23 @@ class DbQuestion(Base):
 
     @property
     def doobie(self):
+        """
+        Returns the Doobie Mapping object
+        """
+
+        if self.doobie_id:
+            return self.doobie_rel
+
         doobie_obj = session.query(DbDoobieMapping).\
-                        filter(DbDoobieMapping.type.tablename == self.__tablename__,
+                        join(DbType).\
+                        filter(DbType.tablename == self.__tablename__,
                                DbDoobieMapping.mapping_id == self.id).\
                         first()
+
+        self.doobie_id = doobie_obj.id
+
+        session.add(self)
+        session.commit()
 
         return doobie_obj
 
