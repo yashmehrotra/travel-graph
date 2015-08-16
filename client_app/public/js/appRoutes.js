@@ -5,7 +5,7 @@ angular.module('travelGraph')
              {
                  $routeProvider
                      .when('/', {
-	                       templateUrl: '/static/build/html/login.html',
+	                       templateUrl: '/dist/html/login.html',
                          controller: "LoginCtrl",
                          // resolve : {
                          //     requestToken : function($http, $q) {
@@ -27,31 +27,31 @@ angular.module('travelGraph')
                          // }
                      })
                      .when('/login', {
-	                       templateUrl: '/static/build/html/login.html',
+	                       templateUrl: '/dist/html/login.html',
                          controller: "LoginCtrl"
                      })
                      .when('/signup', {
-	                       templateUrl: '/static/build/html/login.html',
+	                       templateUrl: '/dist/html/login.html',
                          controller: "LoginCtrl"
                      })
                      .when('/ques/:quesId', {
-	                       templateUrl: '/static/build/html/QnA.html',
+	                       templateUrl: '/dist/html/QnA.html',
 	                       controller: 'ViewQuestionCtrl'
                      })
                      .when('/question', {
-	                       templateUrl: '/static/build/html/question.html',
+	                       templateUrl: '/dist/html/question.html',
 	                       controller: 'AddQuestionCtrl'
                      })
                      .when('/all_questions', {
-	                       templateUrl: '/static/build/html/all_questions.html',
+	                       templateUrl: '/dist/html/all_questions.html',
 	                       controller: 'AllQuestionsCtrl'
                      })
                      .when('/all_tags', {
-	                       templateUrl: '/static/build/html/all_tags.html',
+	                       templateUrl: '/dist/html/all_tags.html',
 	                       controller: 'AllTagsCtrl'
                      })
                      .when('/tag/:tagName', {
-	                       templateUrl: '/static/build/html/tag_questions.html',
+	                       templateUrl: '/dist/html/tag_questions.html',
 	                       controller: 'ViewTagCtrl'
                      })
                      .otherwise({
