@@ -156,7 +156,8 @@ class DbQuestion(Base):
             'id': self.id,
             'title': self.title,
             'description': self.description,
-            'user': self.user.serialize
+            'user': self.user.serialize,
+            'doobie_id': self.doobie_id,
         }
 
         return question_dict
@@ -418,9 +419,19 @@ def map_doobie(mapper, connection, target):
                                      mapping_id=target.id)
 
     temp_sess.add(doobie_mapping)
+
     temp_sess.commit()
 
+    doobie_id = doobie_mapping.id
     temp_sess.close()
+
+    doobie_table = get_class_by_tablename(tablename).__table__
+
+    connection.execute(
+            doobie_table.update().
+            where(doobie_table.c.id == target.id).
+            values(doobie_id = doobie_id)
+    )
 
 
 # Event Listeners
