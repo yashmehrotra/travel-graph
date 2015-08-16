@@ -22,4 +22,4 @@ def get_tag_id(tag):
         session.commit()
         return new_tag.id
 
-    return tag.id
+    return tag_obj.id

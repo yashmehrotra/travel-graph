@@ -9,7 +9,7 @@ lint:
 	@sh bin/lint.sh
 
 grun:
-	@gunicorn runserver:app -b 0.0.0.0:5000
+	@gunicorn -c gunicorn.conf yashrun:app
 
 client:
 	@nodejs client_app/app.js
