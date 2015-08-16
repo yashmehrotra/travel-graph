@@ -4,15 +4,22 @@ from ghoom.models import (
 )
 
 
-# How about bulk
-# reading of the tags
 def get_tag_id(tag):
     """
     Get tag_id by tag name
+    If tag doesn't exist, create a new one
     """
 
-    tag = session.query(DbTag).\
-            filter(DbTag.name == tag).\
-            first()
+    tag = tag.lower()
 
-    return tag.id
+    tag_obj = session.query(DbTag).\
+                filter(DbTag.name == tag).\
+                first()
+
+    if not tag_obj:
+        new_tag = DbTag(name=tag)
+        session.add(new_tag)
+        session.commit()
+        return new_tag.id
+
+    return tag_obj.id

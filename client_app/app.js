@@ -4,6 +4,9 @@ var path = require('path');
 if (process.argv[2] != 'production') {
   var host = config.development.CLIENT_HOST;
   var port = config.development.CLIENT_PORT;
+} else {
+  var host = config.production.CLIENT_HOST;
+  var port = config.production.CLIENT_PORT;
 }
 
 var app = express();

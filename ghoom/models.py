@@ -17,7 +17,7 @@ from sqlalchemy import (
     Unicode,
     UnicodeText,
     ForeignKey,
-    String
+    String,
 )
 
 from sqlalchemy.event import listen
@@ -143,6 +143,7 @@ class DbQuestion(Base):
 
     # user = relationship('DbUser', foreign_keys='DbQuestion.user_id')
     user = relationship(DbUser)
+    doobie = relationship(DbDoobieMapping)
 
     @property
     def serialize(self):
@@ -154,7 +155,8 @@ class DbQuestion(Base):
             'id': self.id,
             'title': self.title,
             'description': self.description,
-            'user': self.user.serialize
+            'user': self.user.serialize,
+            'doobie_id': self.doobie_id,
         }
 
         return question_dict
@@ -171,15 +173,6 @@ class DbQuestion(Base):
                         first()
 
         return db_type_obj
-
-    @property
-    def doobie(self):
-        doobie_obj = session.query(DbDoobieMapping).\
-                        filter(DbDoobieMapping.type.tablename == self.__tablename__,
-                               DbDoobieMapping.mapping_id == self.id).\
-                        first()
-
-        return doobie_obj
 
 
 class DbAnswer(Base):
@@ -203,6 +196,7 @@ class DbAnswer(Base):
 
     question = relationship(DbQuestion)
     user = relationship(DbUser)
+    doobie = relationship(DbDoobieMapping)
 
     @property
     def serialize(self):
@@ -215,7 +209,8 @@ class DbAnswer(Base):
             'answer': self.answer,
             'question': self.question.serialize,
             'user': self.user.serialize,
-            'create_ts': str(self.create_ts)
+            'create_ts': str(self.create_ts),
+            'doobie_id': self.doobie_id
         }
 
         return answer_dict
@@ -261,7 +256,7 @@ class DbDoobieTagMapping(Base):
     doobie_id = Column(BigInteger, ForeignKey(DbDoobieMapping.id))
     tag_id = Column(BigInteger, ForeignKey(DbTag.id))
     # Think about below line, how to query, and how to insert
-    tag_name = Column(Unicode, ForeignKey(DbTag.name))
+    tag_name = Column(Unicode)
     create_ts = Column(DateTime, default=datetime.now())
     update_ts = Column(DateTime, default=datetime.now())
     enabled = Column(Boolean, default=True)
@@ -383,9 +378,19 @@ def map_doobie(mapper, connection, target):
                                      mapping_id=target.id)
 
     temp_sess.add(doobie_mapping)
+
     temp_sess.commit()
 
+    doobie_id = doobie_mapping.id
     temp_sess.close()
+
+    doobie_table = get_class_by_tablename(tablename).__table__
+
+    connection.execute(
+            doobie_table.update().
+            where(doobie_table.c.id == target.id).
+            values(doobie_id=doobie_id)
+    )
 
 
 # Event Listeners
