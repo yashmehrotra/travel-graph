@@ -17,6 +17,8 @@ from ghoom.helpers import (
     response_error
 )
 
+from ghoom.tag.tasks import map_tags_to_doobie
+
 api_question = Blueprint('api_question', __name__)
 api_answer = Blueprint('api_answer', __name__)
 
@@ -79,6 +81,7 @@ def question_view(question_id=None):
         # Below is temp
         if tags:
             tags = tags.split(',')
+            map_tags_to_doobie(tags, question.doobie_id)
 
         return response_json(question.serialize)
 

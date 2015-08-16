@@ -254,7 +254,7 @@ class DbDoobieTagMapping(Base):
     doobie_id = Column(BigInteger, ForeignKey(DbDoobieMapping.id))
     tag_id = Column(BigInteger, ForeignKey(DbTag.id))
     # Think about below line, how to query, and how to insert
-    tag_name = Column(Unicode, ForeignKey(DbTag.name))
+    tag_name = Column(Unicode)
     create_ts = Column(DateTime, default=datetime.now())
     update_ts = Column(DateTime, default=datetime.now())
     enabled = Column(Boolean, default=True)

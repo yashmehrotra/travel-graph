@@ -9,7 +9,7 @@ from ghoom.tag.utils import (
 )
 
 
-def add_tags_to_doobie(tags, doobie):
+def map_tags_to_doobie(tags, doobie_id):
     """
     Maps tags to doobies
     """
@@ -20,8 +20,7 @@ def add_tags_to_doobie(tags, doobie):
     tag_mapping = []
     for tag in tags:
 
-        tag_id = get_tag_id(tags)
-        doobie_id = doobie.doobie.id
+        tag_id = get_tag_id(tag)
 
         tag_mapping.append(
             DbDoobieTagMapping(doobie_id=doobie_id,
@@ -29,7 +28,7 @@ def add_tags_to_doobie(tags, doobie):
                                tag_name=tag)
         )
 
-    session.add(tag_mapping)
+    session.add_all(tag_mapping)
     session.commit()
 
-    return None
+    return True
