@@ -1,8 +1,7 @@
-travel-graph
+verak
 ============
 
-The next big thing!
-`import awesomeness`
+The Super API
 ##To Set Up  
 ```shell
 make install  
