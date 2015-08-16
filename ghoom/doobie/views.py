@@ -4,7 +4,6 @@ from datetime import datetime
 from ghoom.models import (
     DbAnswer,
     DbQuestion,
-    DbTag,
     session
 )
 from ghoom.decorators import (
@@ -37,10 +36,19 @@ def question_view(question_id=None):
         question = session.query(DbQuestion).\
                     get(question_id)
 
+        # Make it efficient
         answers = session.query(DbAnswer).\
-                    filter(DbAnswer.question_id == question_id)
+                    filter(DbAnswer.question_id == question_id).\
+                    all()
         # Below is temp
-        return response_json(question.serialize)
+        ans = []
+        for answer in answers:
+            ans.append(answer.answer)
+        resp = {
+            'answers': ans,
+            'question': question.serialize
+        }
+        return response_json(resp)
 
     elif request.method == 'GET' and not question_id:
         """
@@ -114,8 +122,8 @@ def question_view(question_id=None):
         return response_json(question.serialize)
 
 
-@api_question.route('/<question_id>/answer')
-@api_question.route('/<question_id>/answer/<user_id>')
+@api_question.route('/<question_id>/answer', methods=['GET', 'POST'])
+@api_question.route('/<question_id>/answer/<user_id>', methods=['GET', 'POST'])
 @auth_required
 @login_required
 def answer_view(question_id=None, user_id=None):
@@ -147,7 +155,7 @@ def answer_view(question_id=None, user_id=None):
                           question_id=question_id,
                           user_id=user_id)
 
-        session.add(user_id)
+        session.add(answer)
         session.commit()
 
         response = {

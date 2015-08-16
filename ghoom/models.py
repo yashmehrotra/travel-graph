@@ -196,6 +196,7 @@ class DbAnswer(Base):
 
     question = relationship(DbQuestion)
     user = relationship(DbUser)
+    doobie = relationship(DbDoobieMapping)
 
     @property
     def serialize(self):
@@ -208,7 +209,8 @@ class DbAnswer(Base):
             'answer': self.answer,
             'question': self.question.serialize,
             'user': self.user.serialize,
-            'create_ts': str(self.create_ts)
+            'create_ts': str(self.create_ts),
+            'doobie_id': self.doobie_id
         }
 
         return answer_dict
