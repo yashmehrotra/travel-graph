@@ -17,7 +17,8 @@ from sqlalchemy import (
     Unicode,
     UnicodeText,
     ForeignKey,
-    String
+    String,
+    and_,
 )
 
 from sqlalchemy.event import listen
@@ -174,6 +175,26 @@ class DbQuestion(Base):
         return db_type_obj
 
     @property
+    def d_id(self):
+        """
+        Returns just the doobie_id
+        """
+        if self.doobie_id:
+            return self.doobie_id
+
+        doobie_obj = session.query(DbQuestion).\
+                        join(DbDoobieMapping).\
+                        join(DbType).\
+                        filter(and_(DbType.tablename == self.__tablename__,
+                                    DbDoobieMapping.mapping_id == self.id,
+                                    DbQuestion.id == self.id)).\
+                        update({DbQuestion.doobie_id: DbDoobieMapping.id},
+                               synchronize_session=False)
+
+        session.commit()
+        return self.doobie_id
+
+    @property
     def doobie(self):
         """
         Returns the Doobie Mapping object
@@ -182,15 +203,15 @@ class DbQuestion(Base):
         if self.doobie_id:
             return self.doobie_rel
 
-        doobie_obj = session.query(DbDoobieMapping).\
+        doobie_obj = session.query(DbQuestion).\
+                        join(DbDoobieMapping).\
                         join(DbType).\
-                        filter(DbType.tablename == self.__tablename__,
-                               DbDoobieMapping.mapping_id == self.id).\
-                        first()
+                        filter(and_(DbType.tablename == self.__tablename__,
+                                    DbDoobieMapping.mapping_id == self.id,
+                                    DbQuestion.id == self.id)).\
+                        update({DbQuestion.doobie_id: DbDoobieMapping.id},
+                               synchronize_session=False)
 
-        self.doobie_id = doobie_obj.id
-
-        session.add(self)
         session.commit()
 
         return doobie_obj
