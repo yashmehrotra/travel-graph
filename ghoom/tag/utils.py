@@ -12,13 +12,12 @@ def get_tag_id(tag):
 
     tag = tag.lower()
 
-    tag = session.query(DbTag).\
-            filter(DbTag.name == tag).\
-            first()
+    tag_obj = session.query(DbTag).\
+                filter(DbTag.name == tag).\
+                first()
 
-    if not tag:
+    if not tag_obj:
         new_tag = DbTag(name=tag)
-
         session.add(new_tag)
         session.commit()
         return new_tag.id
