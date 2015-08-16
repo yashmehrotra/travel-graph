@@ -1,4 +1,4 @@
-from ghoom import app
+from verak import app
 from werkzeug.contrib.fixers import ProxyFix
 app.wsgi_app = ProxyFix(app.wsgi_app)
 if __name__ == '__main__':
