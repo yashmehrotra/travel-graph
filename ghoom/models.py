@@ -18,7 +18,6 @@ from sqlalchemy import (
     UnicodeText,
     ForeignKey,
     String,
-    and_,
 )
 
 from sqlalchemy.event import listen
@@ -144,7 +143,7 @@ class DbQuestion(Base):
 
     # user = relationship('DbUser', foreign_keys='DbQuestion.user_id')
     user = relationship(DbUser)
-    doobie_rel = relationship(DbDoobieMapping)
+    doobie = relationship(DbDoobieMapping)
 
     @property
     def serialize(self):
@@ -174,48 +173,6 @@ class DbQuestion(Base):
                         first()
 
         return db_type_obj
-
-    @property
-    def d_id(self):
-        """
-        Returns just the doobie_id
-        """
-        if self.doobie_id:
-            return self.doobie_id
-
-        doobie_obj = session.query(DbQuestion).\
-                        join(DbDoobieMapping).\
-                        join(DbType).\
-                        filter(and_(DbType.tablename == self.__tablename__,
-                                    DbDoobieMapping.mapping_id == self.id,
-                                    DbQuestion.id == self.id)).\
-                        update({DbQuestion.doobie_id: DbDoobieMapping.id},
-                               synchronize_session=False)
-
-        session.commit()
-        return self.doobie_id
-
-    @property
-    def doobie(self):
-        """
-        Returns the Doobie Mapping object
-        """
-
-        if self.doobie_id:
-            return self.doobie_rel
-
-        doobie_obj = session.query(DbQuestion).\
-                        join(DbDoobieMapping).\
-                        join(DbType).\
-                        filter(and_(DbType.tablename == self.__tablename__,
-                                    DbDoobieMapping.mapping_id == self.id,
-                                    DbQuestion.id == self.id)).\
-                        update({DbQuestion.doobie_id: DbDoobieMapping.id},
-                               synchronize_session=False)
-
-        session.commit()
-
-        return doobie_obj
 
 
 class DbAnswer(Base):
@@ -430,7 +387,7 @@ def map_doobie(mapper, connection, target):
     connection.execute(
             doobie_table.update().
             where(doobie_table.c.id == target.id).
-            values(doobie_id = doobie_id)
+            values(doobie_id=doobie_id)
     )
 
 
