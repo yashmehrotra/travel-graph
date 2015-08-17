@@ -66,7 +66,7 @@ def user_post_view():
                         filter(DbUser.email == email).\
                         first()
 
-    if existiing_user:
+    if existing_user:
         response = {
             'status': 'failed',
             'error': 'email already exists',
