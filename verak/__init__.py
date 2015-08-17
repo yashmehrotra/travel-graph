@@ -9,7 +9,7 @@ app = Flask(__name__)
 # For allowing Cross-Origin-Resource Sharing
 # Should not go into production
 # Research about it
-CORS(app)
+# CORS(app)
 app.secret_key = 'A0Zr98j/asd R~XHH!jmN]LWX/,?RT'
 # app.wsgi_app = ProxyFix(app.wsgi_app)
 
@@ -21,11 +21,10 @@ app.register_blueprint(api_question, url_prefix='/api/question')
 def add_cors(resp):
     """ Ensure all responses have the CORS headers. This ensures any failures are also accessible
         by the client. """
-    resp.headers['Access-Control-Allow-Origin'] = flask.request.headers.get('Origin','*')
+    resp.headers['Access-Control-Allow-Origin'] = "http://localhost:4000"
     resp.headers['Access-Control-Allow-Credentials'] = 'true'
     resp.headers['Access-Control-Allow-Methods'] = 'POST, OPTIONS, GET'
-    resp.headers['Access-Control-Allow-Headers'] = flask.request.headers.get( 
-        'Access-Control-Request-Headers', 'Authorization' )
+    resp.headers['Access-Control-Allow-Headers'] = 'Content-Type'
     # set low for debugging
     if app.debug:
         resp.headers['Access-Control-Max-Age'] = '1'
