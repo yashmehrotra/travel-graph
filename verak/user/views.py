@@ -62,14 +62,17 @@ def user_post_view():
         return response_json(response, status=400)
 
     # Check whether email is unique
-    email_count = session.query(DbUser.email).\
-                    filter(DbUser.email == email).\
-                    count()
+    existing_user = session.query(DbUser).\
+                        filter(DbUser.email == email).\
+                        first()
 
-    if email_count > 0:
+    if existiing_user:
         response = {
             'status': 'failed',
-            'error': 'email already exists'
+            'error': 'email already exists',
+            'payload': {
+                'user_id': existing_user.id
+            }
         }
         return response_json(response, status=400)
 
@@ -221,3 +224,11 @@ def invite_email_view():
         }
 
         return response_json(response)
+
+
+@api_user.route('/follow/', methods=['GET', 'POST', 'PUT'])
+@api_user.route('/follow/<user_id>', methods=['GET', 'PUT'])
+@auth_required
+@login_required
+def user_follow_view(user_id=None):
+    pass
