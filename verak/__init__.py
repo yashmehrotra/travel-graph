@@ -23,7 +23,7 @@ def add_cors(resp):
         by the client. """
     resp.headers['Access-Control-Allow-Origin'] = "http://localhost:4000"
     resp.headers['Access-Control-Allow-Credentials'] = 'true'
-    resp.headers['Access-Control-Allow-Methods'] = 'POST, OPTIONS, GET'
+    resp.headers['Access-Control-Allow-Methods'] = 'POST, OPTIONS, GET, PUT'
     resp.headers['Access-Control-Allow-Headers'] = 'Content-Type'
     # set low for debugging
     if app.debug:
