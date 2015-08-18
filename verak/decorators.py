@@ -1,5 +1,8 @@
-from verak.helpers import response_unauthorised
 from flask import request
+import urllib
+import base64
+
+from verak.helpers import response_unauthorised
 from verak.user.utils import (
     verify_auth_key,
     verify_access_token
@@ -15,6 +18,10 @@ def auth_required(f):
         if not auth_key:
             return response_unauthorised()
 
+        print 'Recieved Auth Key - {0}'.format(auth_key)
+        if len(auth_key) != 64:
+            auth_key_dec = base64.b64decode(urllib.unquote(auth_key))
+            print 'Decoded Auth Key - {1}'.format(auth_key)
         verify_auth_key(auth_key)
 
         return f(*args, **kwargs)
