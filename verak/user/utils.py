@@ -1,6 +1,7 @@
 import hashlib
 import json
 import random
+import requests
 
 from verak.models import (
     DbRequestKey,
@@ -10,6 +11,7 @@ from verak.models import (
 
 from verak.helpers import (
     redis_client,
+    response_error,
     response_json,
     response_unauthorised
 )
@@ -18,7 +20,8 @@ from verak.settings import (
     AUTH_KEY_NAMESPACE,
     ACCESS_TOKEN_NAMESPACE,
     REDIS_AUTH_KEY_DB,
-    REDIS_ACCESS_TOKEN_DB
+    REDIS_ACCESS_TOKEN_DB,
+    FACEBOOK_GRAPH_URL
 )
 
 
@@ -153,3 +156,18 @@ def generate_username(first_name, last_name):
     username += unicode(user_nth)
 
     return username
+
+
+def verify_facebook_auth(fb_acc_token, fb_user_id, email):
+    """
+    Checks whether the email provided matches the
+    user's actual email
+    """
+
+    url = FACEBOOK_GRAPH_URL + fb_user_id + '?access_token=' + fb_acc_token
+    fb_resp = requests.get(url).json()
+
+    if email != fb_resp['email']:
+        return response_error("Unauthenticated Request")
+
+    return True

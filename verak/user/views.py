@@ -17,7 +17,8 @@ from verak.decorators import (
 from verak.user.utils import (
     generate_auth_key,
     generate_access_token,
-    generate_username
+    generate_username,
+    verify_facebook_auth
 )
 
 api_user = Blueprint('api', __name__)
@@ -52,6 +53,8 @@ def user_post_view():
         first_name = request.form['first_name']
         last_name = request.form['last_name']
         email = request.form['email']
+        fb_acc_tok = request.form['fb_acc_tok']
+        fb_user_id = request.form['fb_user_id']
         auth_key = request.headers['auth_key']
 
     except KeyError:
@@ -61,6 +64,8 @@ def user_post_view():
         }
 
         return response_json(response, status=400)
+
+    verify_facebook_auth(fb_acc_tok, fb_user_id, email)
 
     # Check whether email is unique
     existing_user = session.query(DbUser).\
