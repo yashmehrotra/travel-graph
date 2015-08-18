@@ -74,14 +74,16 @@ def user_post_view():
 
     if existing_user:
         # Log that asshole in
+        access_token = generate_access_token(existing_user.id, auth_key)
+
         response = {
-            'status': 'failed',
-            'error': 'email already exists',
-            'payload': {
-                'user_id': existing_user.id
-            }
+            'status': 'success',
+            'user_id': existing_user.id,
+            'access_token': access_token,
+            'redirect_url': URL_HOME
         }
-        return response_json(response, status=400)
+
+        return response_json(response)
 
     profile_photo = request.form.get('profile_photo')
     facebook_token = request.form.get('facebook_token')
@@ -99,8 +101,6 @@ def user_post_view():
 
     session.add(user)
     session.commit()
-
-    access_token = generate_access_token(user.id, auth_key)
 
     response = {
         'status': 'success',
