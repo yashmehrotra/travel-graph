@@ -52,6 +52,7 @@ def user_post_view():
         first_name = request.form['first_name']
         last_name = request.form['last_name']
         email = request.form['email']
+        auth_key = request.headers['auth_key']
 
     except KeyError:
         response = {
@@ -67,6 +68,7 @@ def user_post_view():
                         first()
 
     if existing_user:
+        # Log that asshole in
         response = {
             'status': 'failed',
             'error': 'email already exists',
@@ -93,9 +95,12 @@ def user_post_view():
     session.add(user)
     session.commit()
 
+    access_token = generate_access_token(user.id, auth_key)
+
     response = {
         'status': 'success',
         'user_id': user.id,
+        'access_token': access_token,
         'redirect_url': URL_HOME
     }
 
