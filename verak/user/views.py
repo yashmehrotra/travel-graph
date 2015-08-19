@@ -102,6 +102,8 @@ def user_post_view():
     session.add(user)
     session.commit()
 
+    access_token = generate_access_token(user.id, auth_key)
+
     response = {
         'status': 'success',
         'user_id': user.id,
