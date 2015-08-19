@@ -158,6 +158,17 @@ def generate_username(first_name, last_name):
     return username
 
 
+def destroy_access_token(access_token):
+    """
+    Destroys the given access token
+    """
+
+    redis_cli = redis_client(db=REDIS_ACCESS_TOKEN_DB)
+    keys_deleted = redis_cli.delete(access_token)
+
+    return keys_deleted
+
+
 def verify_facebook_auth(fb_acc_token, fb_user_id, email):
     """
     Checks whether the email provided matches the

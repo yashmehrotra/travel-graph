@@ -15,6 +15,7 @@ from verak.decorators import (
 )
 
 from verak.user.utils import (
+    destroy_access_token,
     generate_auth_key,
     generate_access_token,
     generate_username,
@@ -153,33 +154,6 @@ def auth_key_view():
     return response_json(response)
 
 
-@api_user.route('/access_token/', methods=['GET'])
-@auth_required
-def access_token_view():
-    """
-    Generates access_token for user
-    """
-
-    user_id = request.args.get('user_id')
-    auth_key = request.headers['auth_key']
-
-    if not user_id:
-        response = {
-            'status': 'failed',
-            'error': 'user_id not provided'
-        }
-        return response_json(response, status=400)
-
-    access_token = generate_access_token(user_id, auth_key)
-
-    response = {
-        'status': 'success',
-        'access_token': access_token
-    }
-
-    return response_json(response)
-
-
 @api_user.route('/invite/email', methods=['GET', 'POST'])
 def invite_email_view():
     """
@@ -236,6 +210,24 @@ def invite_email_view():
         }
 
         return response_json(response)
+
+
+@api_user.route('/logout/', methods=['GET'])
+@auth_required
+@login_required
+def user_logout_view():
+    """
+    Logs user out, destorys his access token
+    """
+
+    destroy_access_token(request.headers['access_token'])
+
+    response = {
+        'status': 'success',
+        'message': 'Log out Successful'
+    }
+
+    return response_json(response)
 
 
 @api_user.route('/follow/', methods=['GET', 'POST', 'PUT'])
