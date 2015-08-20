@@ -23,8 +23,8 @@ def add_cors(resp):
     This ensures any failures are also accessible by the client.
     """
 
-    resp.headers['Access-Control-Allow-Origin'] = "http://localhost:4000"
-    resp.headers['Access-Control-Allow-Credentials'] = 'true'
+    resp.headers['Access-Control-Allow-Origin'] = '*'
+    resp.headers['Access-Control-Allow-Credentials'] = 'false'
     resp.headers['Access-Control-Allow-Methods'] = 'POST, OPTIONS, GET, PUT'
     resp.headers['Access-Control-Allow-Headers'] = ALLOWED_CORS_HEADERS
     # set low for debugging

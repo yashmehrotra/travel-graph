@@ -4,11 +4,16 @@ from verak.models import (
     DbEmailInvite,
     DbRequestKey,
     DbUser,
+    DbUserFollowing,
     session
 )
 
 from verak.redirects import URL_HOME
-from verak.helpers import response_json
+from verak.helpers import (
+    response_json,
+    response_error
+)
+
 from verak.decorators import (
     auth_required,
     login_required
@@ -230,9 +235,65 @@ def user_logout_view():
     return response_json(response)
 
 
-@api_user.route('/follow/', methods=['GET', 'POST', 'PUT'])
-@api_user.route('/follow/<user_id>', methods=['GET', 'PUT'])
+@api_user.route('/follow/', methods=['POST'])
 @auth_required
 @login_required
 def user_follow_view(user_id=None):
-    pass
+    """
+    To follow a user id
+    """
+
+    following_id = request.form['following_id']
+    follower_id = request.user_id
+
+    relation_exists = session.query(DbUserFollowing).\
+                        filter(DbUserFollowing.follower_id == follower_id,
+                               DbUserFollowing.following_id == following_id).\
+                        first()
+
+    if relation_exists:
+        """
+        The given user_ids have
+        an existing relationship
+        """
+        if relation_exists.enabled:
+            """
+            Follower is already following
+            """
+
+            return response_error("User already follows the given user")
+
+        else:
+            """
+            Changing enabled flag to False
+            """
+
+            relation_exists.enabled = True
+            session.add(relation_exists)
+            session.commit()
+
+            response = {
+                'status': 'success',
+                'message': 'User {0} is now following User {1}'.\
+                                format(follower_id, following_id)
+            }
+
+            return response_json(response)
+
+    else:
+        """
+        Create a new relation
+        """
+
+        new_relation = DbUserFollowing(follower_id=follower_id,
+                                        following_id=following_id)
+        session.add(new_relation)
+        session.commit()
+
+        response = {
+            'status': 'success',
+            'message': 'User {0} is now following User {1}'.\
+                            format(follower_id, following_id)
+        }
+
+        return response_json(response)
