@@ -23,7 +23,9 @@ def auth_required(f):
             auth_key = base64.b64decode(urllib.unquote(auth_key))
             request.headers['auth_key'] = auth_key
 
-        request.form = json.loads(request.data)
+        if not request.form:
+            request.form = json.loads(request.data)
+
         verify_auth_key(auth_key)
 
         return f(*args, **kwargs)

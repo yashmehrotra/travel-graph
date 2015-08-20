@@ -5,6 +5,7 @@ sys.path.append(os.path.realpath('.'))
 from verak.models import (
     engine,
     Base,
+    DbRequestKey,
     DbType,
     DbTagType,
     session
@@ -34,6 +35,13 @@ def create_db():
                         DbTagType(name='activity')]
 
     session.add_all(doobie_tag_types)
+    session.commit()
+
+    req_key = DbRequestKey(request_key='SUPERADMIN',
+                           type='test',
+                           ttl=2592000)
+
+    session.add(req_key)
     session.commit()
 
     session.close()
