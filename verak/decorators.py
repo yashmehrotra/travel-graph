@@ -19,9 +19,10 @@ def auth_required(f):
         if not auth_key:
             return response_unauthorised()
 
-        if len(auth_key) != 64:
-            auth_key = base64.b64decode(urllib.unquote(auth_key))
-            request.headers['auth_key'] = auth_key
+        # For encoded keys
+        # if len(auth_key) != 64:
+        #    auth_key = base64.b64decode(urllib.unquote(auth_key))
+        #    request.headers['auth_key'] = auth_key
 
         if not request.form and request.data:
             request.form = json.loads(request.data)

@@ -12,7 +12,6 @@ from verak.models import (
 from verak.helpers import (
     redis_client,
     response_error,
-    response_json,
     response_unauthorised
 )
 
@@ -46,11 +45,7 @@ def generate_auth_key(request_key):
                         first()
 
     if not request_key_obj:
-        resp = {
-            'status': 'failed',
-            'error': 'request_key not found'
-        }
-        return response_json(resp, status=404)
+        return None
 
     ttl = request_key_obj.ttl
     type = request_key_obj.type
@@ -71,13 +66,7 @@ def verify_auth_key(auth_key):
     auth_key = redis_cli.get(AUTH_KEY_NAMESPACE + auth_key)
 
     if not auth_key:
-        response = {
-            'status': 'failed',
-            'error': 'Not Authorised'
-        }
-
-        return response_json(data=response,
-                             status=401)
+        return response_unauthorised()
 
     return auth_key
 

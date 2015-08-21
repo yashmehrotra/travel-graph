@@ -151,6 +151,9 @@ def auth_key_view():
 
     auth_key = generate_auth_key(req_key)
 
+    if not auth_key:
+        return response_error('Invalid request key')
+
     response = {
         'status': 'success',
         'auth_key': auth_key
