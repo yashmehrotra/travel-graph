@@ -321,8 +321,8 @@ def unfollow_user_view():
         return response_error('Missing Parameters')
 
     relation = session.query(DbUserFollowing).\
-                filter(DbUserFollowing.follower_id=follower_id,
-                       DbUserFollowing.following_id=following_id).\
+                filter(DbUserFollowing.follower_id == follower_id,
+                       DbUserFollowing.following_id == following_id).\
                 first()
 
     if not relation:
