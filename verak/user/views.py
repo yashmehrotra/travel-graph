@@ -246,7 +246,11 @@ def user_follow_view(user_id=None):
     To follow a user id
     """
 
-    following_id = request.form['following_id']
+    following_id = request.form.get('following_id')
+
+    if not following_id:
+        return response_error('Missing Parameters')
+
     follower_id = request.user_id
 
     relation_exists = session.query(DbUserFollowing).\
@@ -289,7 +293,7 @@ def user_follow_view(user_id=None):
         """
 
         new_relation = DbUserFollowing(follower_id=follower_id,
-                                        following_id=following_id)
+                                       following_id=following_id)
         session.add(new_relation)
         session.commit()
 
@@ -300,3 +304,43 @@ def user_follow_view(user_id=None):
         }
 
         return response_json(response)
+
+
+@api_user.route('/unfollow/', methods=['POST'])
+@auth_required
+@login_required
+def unfollow_user_view():
+    """
+    To unfollow a user
+    """
+
+    follower_id = request.user_id
+    following_id = request.form.get('following_id')
+
+    if not following_id:
+        return response_error('Missing Parameters')
+
+    relation = session.query(DbUserFollowing).\
+                filter(DbUserFollowing.follower_id=follower_id,
+                       DbUserFollowing.following_id=following_id).\
+                first()
+
+    if not relation:
+        return response_error('No relationship exists')
+
+    if not relation.enabled:
+        return response_error('Already unfollowed')
+
+    # Set the enabled flag to false
+    relation.enabled = False
+
+    session.add(relation)
+    session.commit()
+
+    response = {
+        'status': 'success',
+        'message': 'User {0} unfollowed User {1}'.\
+                        format(follower_id, following_id)
+    }
+
+    return response_json(response)
