@@ -344,3 +344,32 @@ def unfollow_user_view():
     }
 
     return response_json(response)
+
+
+@api_user.route('/<int:user_id>/followers/', methods=['GET'])
+@auth_required
+@login_required
+def get_user_followers_view(user_id):
+    """
+    Returns a list of all the followers of a user
+    """
+
+    followers = session.query(DbUserFollowing).\
+                    filter(DbUserFollowing.following_id == user_id,
+                           DbUserFollowing.enabled == True)
+
+    followers_list = []
+
+    for f in followers:
+        followers_list.append({
+            'follower_id': f.follower_id,
+            'following_id': f.following_id,
+            'create_ts': str(f.create_ts)
+        })
+
+    response = {
+        'status': 'success',
+        'followers': followers_list
+    }
+
+    return response_json(response)
