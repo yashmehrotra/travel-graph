@@ -373,3 +373,32 @@ def get_user_followers_view(user_id):
     }
 
     return response_json(response)
+
+
+@api_user.route('/<int:user_id>/following/', methods=['GET'])
+@auth_required
+@login_required
+def get_user_following_view(user_id):
+    """
+    Returns a list of all the people the user follows
+    """
+
+    following = session.query(DbUserFollowing).\
+                    filter(DbUserFollowing.follower_id == user_id,
+                           DbUserFollowing.enabled == True)
+
+    following_list = []
+
+    for f in following:
+        following_list.append({
+            'follower_id': f.follower_id,
+            'following_id': f.following_id,
+            'create_ts': str(f.create_ts)
+        })
+
+    response = {
+        'status': 'success',
+        'following': following_list
+    }
+
+    return response_json(response)
