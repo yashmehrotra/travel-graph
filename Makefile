@@ -10,6 +10,3 @@ lint:
 
 grun:
 	@gunicorn -c gunicorn.conf yashrun:app
-
-client:
-	@nodejs client_app/app.js
