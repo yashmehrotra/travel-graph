@@ -253,6 +253,9 @@ def user_follow_view(user_id=None):
 
     follower_id = request.user_id
 
+    if following_id == follower_id:
+        return response_error('You cannot follow yourself')
+
     relation_exists = session.query(DbUserFollowing).\
                         filter(DbUserFollowing.follower_id == follower_id,
                                DbUserFollowing.following_id == following_id).\
