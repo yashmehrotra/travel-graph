@@ -5,8 +5,13 @@ from verak.models import (
     DbDoobieTagMapping,
     session
 )
+from verak.decorators import (
+    auth_required,
+    login_required
+)
 
 from verak.tag.utils import get_tag_id
+from verak.helpers import response_json
 
 api_tag = Blueprint('api_tag', __name__)
 

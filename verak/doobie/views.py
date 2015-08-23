@@ -136,6 +136,7 @@ def answer_view(question_id=None, user_id=None):
             return response_error('user_id should not be provided')
 
         answer_text = request.form.get('answer')
+        tags = request.form.get('tags')
 
         if not answer_text:
             return response_error('answer should be provided')
@@ -157,6 +158,10 @@ def answer_view(question_id=None, user_id=None):
 
         session.add(answer)
         session.commit()
+
+        if tags:
+            tags = tags.split(',')
+            map_tags_to_doobie(tags, answer.doobie_id)
 
         response = {
             'status': 'success',
