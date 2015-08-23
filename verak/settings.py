@@ -27,7 +27,7 @@ SQLALCHEMY_ENGINE = 'postgresql://{0}:{1}@{2}:{3}/{4}'.format(PGSQL_USER,
                                                               PGSQL_DATABASE)
 
 # Mandrill Email Client Settings
-MANDRILL_API_KEY = ''
+MANDRILL_API_KEY = 'Dp007bLY1BZ6UnR7W4uIhA'
 
 # Facebook Authentication
 FACEBOOK_GRAPH_URL = 'https://graph.facebook.com/'
