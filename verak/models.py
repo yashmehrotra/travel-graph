@@ -74,6 +74,9 @@ class DbUser(Base):
             'email': self.email,
             'first_name': self.first_name,
             'last_name': self.last_name,
+            'profile_photo': self.profile_photo,
+            'bio': self.bio,
+            'create_ts': str(self.create_ts)
         }
 
         return user_dict
