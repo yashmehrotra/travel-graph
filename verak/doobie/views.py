@@ -88,7 +88,7 @@ def question_view(question_id=None):
 
         # Below is temp
         if tags:
-            tags = tags.split(',')
+            tags = tags.split(',') if type(tags) != list else tags
             map_tags_to_doobie(tags, question.doobie_id)
 
         return response_json(question.serialize)
@@ -117,7 +117,7 @@ def question_view(question_id=None):
         # Below is temp
         # Mappings enabled flag will be turned to false for deleted tags
         if tags:
-            tags = tags.split(',')
+            tags = tags.split(',') if type(tags) != list else tags
 
         return response_json(question.serialize)
 
@@ -160,7 +160,7 @@ def answer_view(question_id=None, user_id=None):
         session.commit()
 
         if tags:
-            tags = tags.split(',')
+            tags = tags.split(',') if type(tags) != list else tags
             map_tags_to_doobie(tags, answer.doobie_id)
 
         response = {
