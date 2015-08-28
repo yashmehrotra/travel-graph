@@ -13,7 +13,6 @@ REDIS_AUTH_KEY_DB = 0
 REDIS_ACCESS_TOKEN_DB = 0
 
 # PostgreSQL Settings
-
 PGSQL_USER = 'test_user_1'
 PGSQL_PASSWORD = 'test'
 PGSQL_HOST = 'localhost'
@@ -31,3 +30,8 @@ MANDRILL_API_KEY = 'Dp007bLY1BZ6UnR7W4uIhA'
 
 # Facebook Authentication
 FACEBOOK_GRAPH_URL = 'https://graph.facebook.com/'
+
+# Gearman Settings
+GEARMAN_SWITCH = True
+GEARMAN_HOST = ''
+GEARMAN_PORT = 4730

@@ -9,4 +9,4 @@ lint:
 	@sh bin/lint.sh
 
 grun:
-	@gunicorn -c gunicorn.conf yashrun:app
+	@gunicorn -c gunicorn.conf runserver:app
