@@ -10,3 +10,9 @@ lint:
 
 grun:
 	@gunicorn -c gunicorn.conf runserver:app
+
+loc:
+	@git ls-files | xargs cat | wc -l
+
+loc-desc:
+	@git ls-files | xargs wc -l
