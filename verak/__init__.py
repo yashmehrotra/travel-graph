@@ -1,4 +1,5 @@
-from flask import Flask
+from flask import Flask, request
+import json
 # from werkzeug.contrib.fixers import ProxyFix
 from verak.user.views import api_user
 from verak.development.views import developer
@@ -14,6 +15,21 @@ app.register_blueprint(api_question, url_prefix='/api/question')
 
 # CORS Settings
 ALLOWED_CORS_HEADERS = 'Content-Type, auth_key, access_token'
+
+
+@app.before_request
+def change_json_to_form():
+    """
+    Converts the incoming data from
+    JSON format to form format
+    """
+
+    # We only do it when we cannot get form data
+    if not request.form and request.data:
+        try:
+            request.form = json.loads(request.data)
+        except ValueError:
+            pass
 
 
 @app.after_request

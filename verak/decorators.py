@@ -1,7 +1,6 @@
 from flask import request
 import urllib
 import base64
-import json
 
 from verak.helpers import response_unauthorised
 from verak.user.utils import (
@@ -23,9 +22,6 @@ def auth_required(f):
         # if len(auth_key) != 64:
         #    auth_key = base64.b64decode(urllib.unquote(auth_key))
         #    request.headers['auth_key'] = auth_key
-
-        if not request.form and request.data:
-            request.form = json.loads(request.data)
 
         verify_auth_key(auth_key)
 
