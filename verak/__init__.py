@@ -1,4 +1,5 @@
 from flask import Flask, request
+from flask_restful import Resource
 import json
 
 from verak.user.views import api_user
@@ -11,6 +12,12 @@ app.secret_key = 'A0Zr98j/asd R~XHH!jmN]LWX/,?RT'
 app.register_blueprint(api_user, url_prefix='/api/user')
 app.register_blueprint(developer_blueprint, url_prefix='/developer')
 app.register_blueprint(api_question, url_prefix='/api/question')
+
+# Add resources
+for cls in Resource.__subclasses__():
+    # Add resource
+    pass
+
 
 # CORS Settings
 ALLOWED_CORS_HEADERS = 'Content-Type, auth_key, access_token'

@@ -32,10 +32,7 @@ def tag_view(tag):
                 filter(DbDoobieTagMapping.tag_id == tag_id).\
                 all()
 
-    doobie_ids = []
-
-    for d in doobies:
-        doobie_ids.append(d.doobie_id)
+    doobie_ids = [ d.doobie_id for d in doobies]
 
     response = {
         'status': 'success',
