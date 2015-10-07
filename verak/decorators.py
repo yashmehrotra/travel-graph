@@ -46,6 +46,9 @@ def login_required(f):
 
         acc_tok_obj = verify_access_token(access_token)
 
+        if not acc_tok_obj:
+            return response_unauthorised()
+
         user_id = acc_tok_obj['user_id']
         request.user_id = int(user_id)
 

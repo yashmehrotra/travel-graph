@@ -104,7 +104,7 @@ def verify_access_token(access_token):
     access_token = redis_cli.get(ACCESS_TOKEN_NAMESPACE + access_token)
 
     if not access_token:
-        return response_unauthorised()
+        return False
 
     acc_tok_obj = json.loads(access_token)
 
