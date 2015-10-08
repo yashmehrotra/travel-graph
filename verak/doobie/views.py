@@ -43,7 +43,7 @@ def question_view(question_id=None):
         # Below is temp
         ans = []
         for answer in answers:
-            ans.append(answer.answer)
+            ans.append(answer.serialize)
         resp = {
             'answers': ans,
             'question': question.serialize
