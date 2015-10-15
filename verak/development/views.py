@@ -24,7 +24,11 @@ class DeveloperInitFRFTest(Resource):
     Made for instantly making an account
     """
 
-    def post(self):
+    url_endpoint = '/init/'
+    api_blueprint = api_developer
+
+
+def post(self):
         first_name = request.form['first_name']
         last_name = request.form['last_name']
         email = request.form['email']
@@ -62,5 +66,3 @@ class DeveloperInitFRFTest(Resource):
         }
 
         return response_json(response)
-
-api_developer.add_resource(DeveloperInitFRFTest, '/init/')

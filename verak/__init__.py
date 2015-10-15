@@ -13,11 +13,11 @@ app.register_blueprint(api_user, url_prefix='/api/user')
 app.register_blueprint(developer_blueprint, url_prefix='/developer')
 app.register_blueprint(api_question, url_prefix='/api/question')
 
-# Add resources
+# Adding Flask Restful endpoints
 for cls in Resource.__subclasses__():
-    # Add resource
-    pass
-
+    # Iterating through all the FRF Subclasses
+    api_bp = cls.api_blueprint
+    api_bp.add_resource(cls, cls.url_endpoint)
 
 # CORS Settings
 ALLOWED_CORS_HEADERS = 'Content-Type, auth_key, access_token'
