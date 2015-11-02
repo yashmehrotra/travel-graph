@@ -28,7 +28,7 @@ class DeveloperInitFRFTest(Resource):
     api_blueprint = api_developer
 
 
-def post(self):
+    def post(self):
         first_name = request.form['first_name']
         last_name = request.form['last_name']
         email = request.form['email']

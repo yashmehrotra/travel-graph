@@ -8,7 +8,7 @@ sudo cp src/redis-server /usr/local/bin/
 sudo cp src/redis-cli /usr/local/bin/
 
 Option B
-make install
+sudo make install
 
 Then,
 
