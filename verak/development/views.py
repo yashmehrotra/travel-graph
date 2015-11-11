@@ -27,7 +27,6 @@ class DeveloperInitFRFTest(Resource):
     url_endpoint = '/init/'
     api_blueprint = api_developer
 
-
     def post(self):
         first_name = request.form['first_name']
         last_name = request.form['last_name']
