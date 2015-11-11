@@ -45,6 +45,7 @@ def question_view(question_id=None):
         for answer in answers:
             ans.append(answer.serialize)
         resp = {
+            'status': 'success',
             'answers': ans,
             'question': question.serialize
         }
