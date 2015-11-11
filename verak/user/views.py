@@ -135,7 +135,7 @@ def request_key_view():
     return response_json(response)
 
 
-@api_user.route('/auth_key/', methods=['GET'])
+@api_user.route('/auth_key/', methods=['GET'], strict_slashes=False)
 def auth_key_view():
     """
     Generate auth key for a user
