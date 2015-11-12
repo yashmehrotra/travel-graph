@@ -45,9 +45,7 @@ def tag_view(tag=None):
     else:
         tags = session.query(DbTag).all()
 
-        tags = [{'tag_id': t.id,
-                  'tag': t.name}
-                for t in tags]
+        tags = [t.serialize for t in tags]
 
         response = {
             'status': 'success',
