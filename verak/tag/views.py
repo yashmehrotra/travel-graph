@@ -16,27 +16,42 @@ from verak.helpers import response_json
 api_tag = Blueprint('api_tag', __name__)
 
 
+@api_tag.route('/', methods=['GET'])
 @api_tag.route('/<tag>/', methods=['GET'])
 @auth_required
 @login_required
-def tag_view(tag):
+def tag_view(tag=None):
     """
     Returns doobies corresponding to tag
     """
+    if tag:
+        tag = tag.lower()
 
-    tag = tag.lower()
+        tag_id = get_tag_id(tag)
 
-    tag_id = get_tag_id(tag)
+        doobies = session.query(DbDoobieTagMapping).\
+                    filter(DbDoobieTagMapping.tag_id == tag_id).\
+                    all()
 
-    doobies = session.query(DbDoobieTagMapping).\
-                filter(DbDoobieTagMapping.tag_id == tag_id).\
-                all()
+        doobie_ids = [d.doobie_id for d in doobies]
 
-    doobie_ids = [d.doobie_id for d in doobies]
+        response = {
+            'status': 'success',
+            'doobies': doobie_ids
+        }
 
-    response = {
-        'status': 'success',
-        'doobies': doobie_ids
-    }
+        return response_json(response)
 
-    return response_json(response)
+    else:
+        tags = session.query(DbTag).all()
+
+        tags = [{'tag_id': t.id,
+                  'tag': t.name}
+                for t in tags]
+
+        response = {
+            'status': 'success',
+            'tags': tags,
+        }
+
+        return response_json(response)
