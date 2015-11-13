@@ -94,7 +94,7 @@ def question_view(question_id=None):
 
         return response_json(question.serialize)
 
-    elif request.method == 'PUT':
+    elif request.method == 'PUT' and question_id:
         """
         To Edit the given question
         """
@@ -118,13 +118,15 @@ def question_view(question_id=None):
         # Below is temp
         # Mappings enabled flag will be turned to false for deleted tags
         if tags:
+            # TODO: Handle edit question, add new tags, disable old mapping
             tags = tags.split(',') if type(tags) != list else tags
+            map_tags_to_doobie(tags, question.doobie_id)
 
         return response_json(question.serialize)
 
 
 @api_question.route('/<question_id>/answer', methods=['GET', 'POST'])
-@api_question.route('/<question_id>/answer/<user_id>', methods=['GET', 'POST'])
+@api_question.route('/<question_id>/answer/<user_id>', methods=['GET', 'POST', 'PUT'])
 @auth_required
 @login_required
 def answer_view(question_id=None, user_id=None):
@@ -183,6 +185,41 @@ def answer_view(question_id=None, user_id=None):
 
         response = {
             'status': 'success',
+            'answer': answer.serialize
+        }
+
+        return response_json(response)
+
+    elif request.method == 'PUT':
+        if not user_id:
+            return response_error('user_id not provided')
+
+        answer = session.query(DbAnswer).\
+                    filter(DbAnswer.question_id == question_id,
+                           DbAnswer.user_id == user_id).\
+                    first()
+
+        if not answer:
+            return response_error('User has not yet answered the question')
+
+        answer_text = request.form.get('answer')
+        tags = request.form.get('tags')
+
+        if not answer_text:
+            return response_error('Answer should be provided')
+
+        answer.answer = answer_text
+
+        session.add(answer)
+        session.commit()
+
+        if tags:
+            tags = tags.split(',') if type(tags) != list else tags
+            map_tags_to_doobie(tags, answer.doobie_id)
+
+        response = {
+            'status': 'success',
+            'message': 'Answer succesfully edited',
             'answer': answer.serialize
         }
 

@@ -33,7 +33,7 @@ def tag_view(tag=None):
                     filter(DbDoobieTagMapping.tag_id == tag_id).\
                     all()
 
-        doobies = [d.doobie.doobie.serialize for d in doobies]
+        doobies = [d.doobie.serialize for d in doobies]
 
         response = {
             'status': 'success',
