@@ -110,9 +110,8 @@ def question_view(question_id=None):
 
         question.title = title
         question.description = description
-        question.update_ts = datetime.now
+        question.update_ts = datetime.now()
 
-        session.add(question)
         session.commit()
 
         # Below is temp
@@ -209,8 +208,8 @@ def answer_view(question_id=None, user_id=None):
             return response_error('Answer should be provided')
 
         answer.answer = answer_text
+        answer.update_ts = datetime.now()
 
-        session.add(answer)
         session.commit()
 
         if tags:

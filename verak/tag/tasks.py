@@ -48,10 +48,12 @@ def map_tags_to_doobie(tags, doobie_id):
     ids_to_disable = list(set(existing_tags) - set(current_tags))
 
     disable_query = session.query(DbDoobieTagMapping).\
-                        filter(DbDoobieTagMapping.tag_id.in_(ids_to_disable)).\
-                        update({DbDoobieTagMapping.enabled: False})
+                        filter(DbDoobieTagMapping.tag_id.in_(ids_to_disable),
+                               DbDoobieTagMapping.doobie_id == doobie_id).\
+                        update({DbDoobieTagMapping.enabled: False},
+                               synchronize_session=False)
 
-    session.add(disable_query)
-    session.commit()
+    if disable_query > 0:
+        session.commit()
 
     return True
