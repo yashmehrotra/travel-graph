@@ -30,10 +30,11 @@ def tag_view(tag=None):
         tag_id = get_tag_id(tag)
 
         doobies = session.query(DbDoobieTagMapping).\
-                    filter(DbDoobieTagMapping.tag_id == tag_id).\
+                    filter(DbDoobieTagMapping.tag_id == tag_id,
+                           DbDoobieTagMapping.enabled == True).\
                     all()
 
-        doobies = [d.doobie.doobie.serialize for d in doobies]
+        doobies = [d.doobie.serialize for d in doobies]
 
         response = {
             'status': 'success',

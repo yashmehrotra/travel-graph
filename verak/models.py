@@ -187,7 +187,8 @@ class DbQuestion(Base):
         """
 
         tag_mapping = session.query(DbDoobieTagMapping).\
-                        filter(DbDoobieTagMapping.doobie_id == self.doobie_id)
+                        filter(DbDoobieTagMapping.doobie_id == self.doobie_id,
+                               DbDoobieTagMapping.enabled == True)
 
         tag_list = []
 
@@ -248,7 +249,8 @@ class DbAnswer(Base):
         """
 
         tag_mapping = session.query(DbDoobieTagMapping).\
-                        filter(DbDoobieTagMapping.doobie_id == self.doobie_id)
+                        filter(DbDoobieTagMapping.doobie_id == self.doobie_id,
+                               DbDoobieTagMapping.enabled == True)
 
         tag_list = []
 
@@ -317,8 +319,17 @@ class DbDoobieTagMapping(Base):
     update_ts = Column(DateTime, default=datetime.now())
     enabled = Column(Boolean, default=True)
 
-    doobie = relationship(DbDoobieMapping)
+    doobie_mapping = relationship(DbDoobieMapping)
     tag = relationship(DbTag)
+
+    @property
+    def doobie(self):
+        """
+        Returns the corresponding
+        doobie object
+        """
+
+        return self.doobie_mapping.doobie
 
 
 class Following(object):
