@@ -160,7 +160,8 @@ class DbQuestion(Base):
             'description': self.description,
             'user': self.user.serialize,
             'doobie_id': self.doobie_id,
-            'tags': self.tags
+            'tags': self.tags,
+            'type': 'question'
         }
 
         return question_dict
@@ -233,7 +234,8 @@ class DbAnswer(Base):
             'user': self.user.serialize,
             'create_ts': str(self.create_ts),
             'doobie_id': self.doobie_id,
-            'tags': self.tags
+            'tags': self.tags,
+            'type': 'answer'
         }
 
         return answer_dict
@@ -315,6 +317,7 @@ class DbDoobieTagMapping(Base):
     update_ts = Column(DateTime, default=datetime.now())
     enabled = Column(Boolean, default=True)
 
+    doobie = relationship(DbDoobieMapping)
     tag = relationship(DbTag)
 
 
