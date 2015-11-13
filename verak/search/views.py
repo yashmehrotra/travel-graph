@@ -1,12 +1,23 @@
 from flask import Blueprint, request
+from flask_restful import Api, Resource
 
-api_search = Blueprint('api_search', __name__)
+search_blueprint = Blueprint('api_search', __name__)
+api_search = Api(search_blueprint)
 
 
-@api_search.route('/<query>', methods=['GET'])
-def search_view(query):
+class ApiSearchView(Resource):
     """
     Used for basic searching of questions
     and answers through elasticsearch
     """
-    pass
+
+    url_endpoint = '/'
+    api_blueprint = api_search
+
+    def get(self):
+        """
+        Get Handler
+        """
+
+        query = request.args.get('q')
+        return query
