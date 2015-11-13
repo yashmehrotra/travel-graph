@@ -191,9 +191,8 @@ class DbQuestion(Base):
         tag_list = []
 
         if tag_mapping.count() > 0:
-            tag_list = [{'tag_id': mapping.tag.id,
-                         'tag': mapping.tag.name}
-                         for mapping in tag_mapping]
+            tag_list = [mapping.tag.serialize
+                        for mapping in tag_mapping]
 
         return tag_list
 
@@ -252,9 +251,8 @@ class DbAnswer(Base):
         tag_list = []
 
         if tag_mapping.count() > 0:
-            tag_list = [{'tag_id': mapping.tag.id,
-                         'tag': mapping.tag.name}
-                         for mapping in tag_mapping]
+            tag_list = [mapping.tag.serialize
+                        for mapping in tag_mapping]
 
         return tag_list
 
@@ -286,6 +284,19 @@ class DbTag(Base):
     enabled = Column(Boolean, default=True)
 
     type = relationship(DbTagType)
+
+    @property
+    def serialize(self):
+        """
+        Returns basic serializer
+        """
+
+        tag_dict = {
+            'id': self.id,
+            'tag': self.name
+        }
+
+        return tag_dict
 
 
 class DbDoobieTagMapping(Base):

@@ -5,6 +5,7 @@ import json
 from verak.user.views import api_user
 from verak.development.views import developer_blueprint
 from verak.doobie.views import api_question
+from verak.tag.views import api_tag
 
 app = Flask(__name__)
 app.secret_key = 'A0Zr98j/asd R~XHH!jmN]LWX/,?RT'
@@ -12,6 +13,7 @@ app.secret_key = 'A0Zr98j/asd R~XHH!jmN]LWX/,?RT'
 app.register_blueprint(api_user, url_prefix='/api/user')
 app.register_blueprint(developer_blueprint, url_prefix='/developer')
 app.register_blueprint(api_question, url_prefix='/api/question')
+app.register_blueprint(api_tag, url_prefix='/api/tag')
 
 # Adding Flask Restful endpoints
 for cls in Resource.__subclasses__():
