@@ -52,11 +52,11 @@ def map_tags_to_doobie(tags, doobie_id):
 
     disable_query = session.query(DbDoobieTagMapping).\
                         filter(DbDoobieTagMapping.tag_id.in_(ids_to_disable),
-                               DbDoobieTagMapping.doobie_id == doobie_id).\
-                        update({DbDoobieTagMapping.enabled: False},
-                               synchronize_session=False)
+                               DbDoobieTagMapping.doobie_id == doobie_id)
+    if disable_query:
+        disable_query = disable_query.update({DbDoobieTagMapping.enabled: False},
+                                             synchronize_session=False)
 
-    if disable_query > 0:
         session.commit()
 
     return True
