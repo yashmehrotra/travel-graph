@@ -16,6 +16,9 @@ def map_tags_to_doobie(tags, doobie_id):
     :param doobie_id: int
     """
 
+    # TODO: Add this function as a method
+    #       in DbQuestion and DbAnswer
+
     if type(tags) != list:
         tags = [tags]
 
