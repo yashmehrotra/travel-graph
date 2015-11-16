@@ -50,13 +50,15 @@ def map_tags_to_doobie(tags, doobie_id):
     # To disable old tags
     ids_to_disable = list(set(existing_tags) - set(current_tags))
 
-    disable_query = session.query(DbDoobieTagMapping).\
-                        filter(DbDoobieTagMapping.tag_id.in_(ids_to_disable),
-                               DbDoobieTagMapping.doobie_id == doobie_id)
-    if disable_query:
-        disable_query = disable_query.update({DbDoobieTagMapping.enabled: False},
-                                             synchronize_session=False)
+    if ids_to_disable:
+        disable_query = session.query(DbDoobieTagMapping).\
+                            filter(DbDoobieTagMapping.tag_id.in_(ids_to_disable),
+                                   DbDoobieTagMapping.doobie_id == doobie_id)
 
-        session.commit()
+        if disable_query:
+            disable_query = disable_query.update({DbDoobieTagMapping.enabled: False},
+                                                  synchronize_session=False)
+
+            session.commit()
 
     return True
