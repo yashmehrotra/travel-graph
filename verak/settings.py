@@ -35,3 +35,7 @@ FACEBOOK_GRAPH_URL = 'https://graph.facebook.com/'
 GEARMAN_SWITCH = True
 GEARMAN_HOST = ''
 GEARMAN_PORT = 4730
+
+# Elasticsearch settings
+ES_HOST = 'localhost'
+ES_PORT = 9200
