@@ -19,6 +19,7 @@ pyflakes==0.8.1
 requests==2.6.2
 wsgiref==0.1.2
 redis==2.10.3
+elasticsearch==2.1.0
 
 # Was removed by mandrill, in case things go bonkers
 # distribute==0.6.24
