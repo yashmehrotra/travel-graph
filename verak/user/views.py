@@ -34,14 +34,20 @@ api_user = Blueprint('api', __name__)
 @auth_required
 @login_required
 def user_view(user_id=None):
+    """
+    Get/Edit user data
+    """
+
     if request.method == 'GET':
-        if user_id:
-            # Check if user is himself, serialize based on that
-            # Serialize user, add params for all data,meta data etc.
-            user = session.query(DbUser).get(user_id)
-            return response_json(user.serialize)
-        else:
-            return None
+        # Check if user is himself, serialize based on that
+        # Serialize user, add params for all data,meta data etc.
+        user = session.query(DbUser).get(user_id)
+        response = {
+            'status': 'success',
+            'user': user.serialize
+        }
+        return response_json(response)
+
     elif request.method == 'PUT':
         # Edit the user
         return None
