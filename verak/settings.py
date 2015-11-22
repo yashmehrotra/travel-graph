@@ -37,5 +37,6 @@ GEARMAN_HOST = ''
 GEARMAN_PORT = 4730
 
 # Elasticsearch settings
-ES_HOST = 'localhost'
-ES_PORT = 9200
+ES_ADDRESS = [{'host': 'localhost', 'port': 9200}]
+ES_INDEX = 'verak'
+ES_DOC_TYPE_DOOBIE = 'doobie'
