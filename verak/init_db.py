@@ -19,7 +19,7 @@ from verak.settings import (
 )
 
 from flask.ext.script import Manager
-from elasicsearch import Elasticsearch
+from elasticsearch import Elasticsearch
 
 manager = Manager(app)
 
