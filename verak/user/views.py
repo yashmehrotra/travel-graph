@@ -90,7 +90,7 @@ def user_post_view():
 
         response = {
             'status': 'success',
-            'user_id': existing_user.id,
+            'user': existing_user.serialize,
             'access_token': access_token,
             'redirect_url': URL_HOME
         }
@@ -98,8 +98,9 @@ def user_post_view():
         return response_json(response)
 
     profile_photo = request.form.get('profile_photo')
-    facebook_token = request.form.get('facebook_token')
+    bio = request.form.get('bio')
     google_token = request.form.get('google_token')
+    facebook_token = request.form.get('facebook_token')
 
     username = generate_username(first_name, last_name)
 
@@ -108,6 +109,7 @@ def user_post_view():
                   first_name=first_name,
                   last_name=last_name,
                   profile_photo=profile_photo,
+                  bio=bio,
                   facebook_token=facebook_token,
                   google_token=google_token)
 
@@ -118,7 +120,7 @@ def user_post_view():
 
     response = {
         'status': 'success',
-        'user_id': user.id,
+        'user': user.serialize,
         'access_token': access_token,
         'redirect_url': URL_HOME
     }
