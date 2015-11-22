@@ -12,7 +12,14 @@ from verak.models import (
 )
 
 from verak import app
+
+from verak.settings import (
+    ES_ADDRESS,
+    ES_INDEX
+)
+
 from flask.ext.script import Manager
+from elasicsearch import Elasticsearch
 
 manager = Manager(app)
 
@@ -46,6 +53,17 @@ def create_db():
 
     session.close()
     print 'Types and tag types added in DB'
+
+
+@manager.command
+def init_es():
+    """
+    Init elasticsearch
+    """
+
+    es = Elasticsearch(ES_ADDRESS)
+    resp = es.indices.create(index=ES_INDEX, ignore=400)
+    print 'Created index ' + resp
 
 
 @manager.command
