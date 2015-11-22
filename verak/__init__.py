@@ -8,6 +8,10 @@ from verak.doobie.views import api_question
 from verak.tag.views import api_tag
 from verak.search.views import search_blueprint
 
+from verak.decorators import (
+    auth_required,
+    login_required
+)
 app = Flask(__name__)
 app.secret_key = 'A0Zr98j/asd R~XHH!jmN]LWX/,?RT'
 
@@ -21,6 +25,11 @@ app.register_blueprint(search_blueprint, url_prefix='/api/search')
 for cls in Resource.__subclasses__():
     # Iterating through all the FRF Subclasses
     api_bp = cls.api_blueprint
+
+    # Automatic authentication decorators
+    if getattr(cls, 'auth', False):
+        setattr(cls, 'method_decorators', [auth_required, login_required])
+
     api_bp.add_resource(cls, cls.url_endpoint)
 
 # CORS Settings

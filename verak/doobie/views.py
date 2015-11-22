@@ -16,6 +16,7 @@ from verak.helpers import (
     response_error
 )
 
+from verak.search.tasks import index_es
 from verak.tag.tasks import map_tags_to_doobie
 
 api_question = Blueprint('api_question', __name__)
@@ -92,6 +93,7 @@ def question_view(question_id=None):
             tags = tags.split(',') if type(tags) != list else tags
             map_tags_to_doobie(tags, question.doobie_id)
 
+        index_es(question)
         return response_json(question.serialize)
 
     elif request.method == 'PUT' and question_id:
@@ -121,6 +123,7 @@ def question_view(question_id=None):
             tags = tags.split(',') if type(tags) != list else tags
             map_tags_to_doobie(tags, question.doobie_id)
 
+        index_es(question)
         return response_json(question.serialize)
 
 
@@ -164,6 +167,8 @@ def answer_view(question_id=None, user_id=None):
         if tags:
             tags = tags.split(',') if type(tags) != list else tags
             map_tags_to_doobie(tags, answer.doobie_id)
+
+        index_es(answer)
 
         response = {
             'status': 'success',
@@ -215,6 +220,8 @@ def answer_view(question_id=None, user_id=None):
         if tags:
             tags = tags.split(',') if type(tags) != list else tags
             map_tags_to_doobie(tags, answer.doobie_id)
+
+        index_es(answer)
 
         response = {
             'status': 'success',

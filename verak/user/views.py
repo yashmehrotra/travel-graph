@@ -24,7 +24,8 @@ from verak.user.utils import (
     generate_auth_key,
     generate_access_token,
     generate_username,
-    verify_facebook_auth
+    verify_facebook_auth,
+    get_facebook_picture
 )
 
 api_user = Blueprint('api', __name__)
@@ -78,7 +79,6 @@ def user_post_view():
         return response_json(response, status=400)
 
     verify_facebook_auth(fb_acc_tok, fb_user_id, email)
-
     # Check whether email is unique
     existing_user = session.query(DbUser).\
                         filter(DbUser.email == email).\
@@ -97,7 +97,7 @@ def user_post_view():
 
         return response_json(response)
 
-    profile_photo = request.form.get('profile_photo')
+    profile_photo = get_facebook_picture(fb_acc_tok, fb_user_id)
     bio = request.form.get('bio')
     google_token = request.form.get('google_token')
     facebook_token = request.form.get('facebook_token')

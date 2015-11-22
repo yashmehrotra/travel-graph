@@ -171,3 +171,23 @@ def verify_facebook_auth(fb_acc_token, fb_user_id, email):
         return response_error("Unauthenticated Request")
 
     return True
+
+
+def get_facebook_picture(fb_acc_token, fb_user_id, height='256', width='256'):
+    """
+    Gets user's facebook profile picture
+    """
+
+    url = "{0}{1}/picture?redirect=false"\
+          "&access_token={2}&height={3}&width={4}".format(FACEBOOK_GRAPH_URL,
+                                                          fb_user_id,
+                                                          fb_acc_token,
+                                                          height,
+                                                          width)
+
+    fb_resp = requests.get(url).json()
+
+    if fb_resp['data']['is_silhouette']:
+        return None
+
+    return fb_resp['data']['url']
