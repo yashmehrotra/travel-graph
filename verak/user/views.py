@@ -88,6 +88,13 @@ def user_post_view():
         # Log that asshole in
         access_token = generate_access_token(existing_user.id, auth_key)
 
+        # Check whether the user has a picture or not
+        if not existing_user.profile_photo:
+            existing_user.profile_photo = get_facebook_picture(fb_acc_tok, fb_user_id)
+
+            session.add(existing_user)
+            session.commit()
+
         response = {
             'status': 'success',
             'user': existing_user.serialize,
