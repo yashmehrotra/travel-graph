@@ -68,7 +68,7 @@ def user_post_view():
         email = request.form['email']
         fb_acc_tok = request.form['fb_acc_tok']
         fb_user_id = request.form['fb_user_id']
-        auth_key = request.headers['auth_key']
+        auth_key = request.headers['Auth-Key']
 
     except KeyError:
         response = {
@@ -243,7 +243,7 @@ def user_logout_view():
     Logs user out, destorys his access token
     """
 
-    destroy_access_token(request.headers['access_token'])
+    destroy_access_token(request.headers['Access-Token'])
 
     response = {
         'status': 'success',

@@ -1,4 +1,4 @@
-from flask import Flask, request
+from flask import Flask, request, jsonify
 from flask_restful import Resource
 import json
 
@@ -66,3 +66,8 @@ def add_cors(resp):
     if app.debug:
         resp.headers['Access-Control-Max-Age'] = '1'
     return resp
+
+
+@app.route('/api', strict_slashes=False)
+def status():
+    return jsonify(message="May the force be with you")
