@@ -22,4 +22,4 @@ def index_es(doobie):
         print 'Indexed {0}:{1}'.format(doobie.serialize['type'],
                                        doobie.serialize['id'])
     except Exception as e:
-        print 'problem with indexing - ' + e
+        print 'problem with indexing - ' + str(e)
