@@ -56,7 +56,8 @@ def question_view(question_id=None):
         """
         Currently returns a list of all questions
         """
-        questions = session.query(DbQuestion).all()
+        questions = session.query(DbQuestion).\
+                        order_by(DbQuestion.id.desc()).all()
 
         response = {
             'status': 'success',
