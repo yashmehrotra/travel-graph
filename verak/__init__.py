@@ -68,6 +68,6 @@ def add_cors(resp):
     return resp
 
 
-@app.route('/')
+@app.route('/api', strict_slashes=False)
 def status():
     return jsonify(message="May the force be with you")
