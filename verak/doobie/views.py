@@ -94,7 +94,13 @@ def question_view(question_id=None):
             map_tags_to_doobie(tags, question.doobie_id)
 
         index_es(question)
-        return response_json(question.serialize)
+
+        response = {
+            'status': 'success',
+            'question': question.serialize
+        }
+
+        return response_json(response)
 
     elif request.method == 'PUT' and question_id:
         """
