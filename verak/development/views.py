@@ -19,6 +19,7 @@ developer_blueprint = Blueprint('developer', __name__)
 api_developer = Api(developer_blueprint)
 
 
+# Remove this in prod
 class DeveloperInitFRFTest(Resource):
     """
     Made for instantly making an account
@@ -31,6 +32,10 @@ class DeveloperInitFRFTest(Resource):
         first_name = request.form['first_name']
         last_name = request.form['last_name']
         email = request.form['email']
+        password = request.form['password']
+
+        if password != 'SUPERADMINJEDI':
+            return response_json({'error': 'You are not worthy'})
 
         username = generate_username(first_name, last_name)
 
