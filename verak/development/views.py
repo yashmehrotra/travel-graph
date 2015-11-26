@@ -1,5 +1,5 @@
 from flask import Blueprint, request
-from flask_restful import Api, Resource
+from flask_restful import Resource
 
 from verak.user.utils import (
     generate_auth_key,
@@ -15,9 +15,6 @@ from verak.models import (
 
 from verak.helpers import response_json
 
-developer_blueprint = Blueprint('developer', __name__)
-api_developer = Api(developer_blueprint)
-
 
 # Remove this in prod
 class DeveloperInitFRFTest(Resource):
@@ -25,8 +22,7 @@ class DeveloperInitFRFTest(Resource):
     Made for instantly making an account
     """
 
-    url_endpoint = '/init/'
-    api_blueprint = api_developer
+    url_endpoint = '/developer/init/'
 
     def post(self):
         first_name = request.form['first_name']

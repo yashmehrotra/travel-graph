@@ -28,7 +28,7 @@ from verak.user.utils import (
     get_facebook_picture
 )
 
-api_user = Blueprint('api', __name__)
+api_user = Blueprint('api_user', __name__)
 
 
 @api_user.route('/<user_id>', methods=['GET', 'PUT'])

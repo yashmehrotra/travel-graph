@@ -28,8 +28,10 @@ class ApiSearchView(Resource):
     and answers through elasticsearch
     """
 
-    url_endpoint = '/'
+    url_endpoint = '/search/'
     api_blueprint = api_search
+    my_bp = search_blueprint
+    my_api = Api(search_blueprint)
     auth = True
 
     def get(self):
