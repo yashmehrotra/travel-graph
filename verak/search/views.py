@@ -29,9 +29,6 @@ class ApiSearchView(Resource):
     """
 
     url_endpoint = '/search/'
-    api_blueprint = api_search
-    my_bp = search_blueprint
-    my_api = Api(search_blueprint)
     auth = True
 
     def get(self):
@@ -46,6 +43,7 @@ class ApiSearchView(Resource):
         FIELDS = ["title", "description", "answer"]
 
         query = request.args.get('q')
+        query = query.replace('+', ' ')
 
         if not query:
             return response_error("No query provided")
@@ -59,8 +57,22 @@ class ApiSearchView(Resource):
                 }
             }
         }
-        search_result = es.search(index=ES_INDEX,
-                                  doc_type=ES_DOC_TYPE_DOOBIE,
-                                  body=body)
+        search_results = es.search(index=ES_INDEX,
+                                   doc_type=ES_DOC_TYPE_DOOBIE,
+                                   body=body)
 
-        return query
+        total_results = search_results['hits']['total']
+
+        if total_results == 0:
+            return response_json({'status': 'success',
+                                  'message': 'No results found'})
+
+        data = [hit['_source'] for hit in search_results['hits']['hits']]
+
+        response = {
+            'status': 'success',
+            'total_results': total_results,
+            'data': data
+        }
+
+        return response_json(response)
