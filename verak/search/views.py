@@ -1,6 +1,7 @@
 from flask import Blueprint, request
 from flask_restful import Api, Resource
 from elasticsearch import Elasticsearch
+import urllib
 
 from verak.decorators import (
     auth_required,
@@ -17,9 +18,6 @@ from verak.settings import (
     ES_INDEX,
     ES_DOC_TYPE_DOOBIE
 )
-
-search_blueprint = Blueprint('api_search', __name__)
-api_search = Api(search_blueprint)
 
 
 class ApiSearchView(Resource):
@@ -43,7 +41,7 @@ class ApiSearchView(Resource):
         FIELDS = ["title", "description", "answer"]
 
         query = request.args.get('q')
-        query = query.replace('+', ' ')
+        query = urllib.unquote(query).decode('utf8')
 
         if not query:
             return response_error("No query provided")
@@ -57,6 +55,7 @@ class ApiSearchView(Resource):
                 }
             }
         }
+
         search_results = es.search(index=ES_INDEX,
                                    doc_type=ES_DOC_TYPE_DOOBIE,
                                    body=body)
