@@ -25,7 +25,8 @@ from verak.user.utils import (
     generate_access_token,
     generate_username,
     verify_facebook_auth,
-    get_facebook_picture
+    get_facebook_picture,
+    is_user_invited,
 )
 
 api_user = Blueprint('api_user', __name__)
@@ -51,6 +52,7 @@ def user_view(user_id=None):
 
     elif request.method == 'PUT':
         # Edit the user
+        # Check for request.user_id == user_id
         return None
 
 
@@ -103,6 +105,11 @@ def user_post_view():
         }
 
         return response_json(response)
+
+    # Check whether user is invited or not
+    is_invited = is_user_invited(email)
+    if not is_invited:
+        return response_error('User not invited')
 
     profile_photo = get_facebook_picture(fb_acc_tok, fb_user_id)
     bio = request.form.get('bio')
@@ -187,7 +194,8 @@ def invite_email_view():
         Returns a list of allowed emails for signup
         """
         emails = session.query(DbEmailInvite.email).\
-                    filter(DbEmailInvite.invited == True)
+                    filter(DbEmailInvite.invited == True).\
+                    all()
 
         response = {
             'status': 'success',

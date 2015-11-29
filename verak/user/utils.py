@@ -4,6 +4,7 @@ import random
 import requests
 
 from verak.models import (
+    DbEmailInvite,
     DbRequestKey,
     DbUser,
     session
@@ -191,3 +192,20 @@ def get_facebook_picture(fb_acc_token, fb_user_id, height='256', width='256'):
         return None
 
     return fb_resp['data']['url']
+
+
+def is_user_invited(email):
+    """
+    Check whether the user is invited or not
+    Returns `True` if invited else `False`
+    """
+
+    inv = session.query(DbEmailInvite).\
+            filter(email == email,
+                   invited == True).\
+            count()
+
+    if inv > 0:
+        return True
+
+    return False
