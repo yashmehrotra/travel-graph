@@ -1,13 +1,13 @@
 from flask import Flask, request, jsonify, Blueprint
-from flask_restful import Resource, Api
+from flask.views import MethodView
 import json
 
 from verak.user.views import api_user
 from verak.doobie.views import api_question
 from verak.tag.views import api_tag
 
-from verak.development.views import Resource
-from verak.search.views import Resource
+from verak.development.views import developer_bp
+from verak.search.views import api_search
 
 from verak.decorators import (
     auth_required,
@@ -20,23 +20,20 @@ api_bpf = Blueprint('Baba', __name__)
 
 # Adding Flask Restful endpoints
 # Iterating through all the FRF Subclasses
-for cls in Resource.__subclasses__():
-    # Automatic authentication decorators
-    if getattr(cls, 'auth', False):
-        setattr(cls, 'method_decorators', [auth_required, login_required])
+for cls in MethodView.__subclasses__():
 
     # Registering the endpoints
     endpoint = cls.url_endpoint
-    if type(endpoint) != list:
-        endpoint = [endpoint]
-
-    Api(api_bpf).add_resource(cls, *endpoint)
+    blueprint = cls.blueprint
+    blueprint.add_url_rule(endpoint, view_func=cls.as_view(cls.__name__))
     print 'Registed: ' + str(endpoint)
 
 # Registering all the blueprints
 app.register_blueprint(api_user, url_prefix='/api/user')
 app.register_blueprint(api_question, url_prefix='/api/question')
 app.register_blueprint(api_tag, url_prefix='/api/tag')
+app.register_blueprint(api_search, url_prefix='/api/search')
+app.register_blueprint(developer_bp, url_prefix='/developer')
 app.register_blueprint(api_bpf, url_prefix='/api')
 
 

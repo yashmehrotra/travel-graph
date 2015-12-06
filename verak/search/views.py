@@ -1,5 +1,5 @@
 from flask import Blueprint, request
-from flask_restful import Api, Resource
+from flask.views import MethodView
 from elasticsearch import Elasticsearch
 import urllib
 
@@ -19,15 +19,17 @@ from verak.settings import (
     ES_DOC_TYPE_DOOBIE
 )
 
+api_search = Blueprint('api_search', __name__)
 
-class ApiSearchView(Resource):
+class ApiSearchView(MethodView):
     """
     Used for basic searching of questions
     and answers through elasticsearch
     """
 
-    url_endpoint = '/search/'
-    auth = True
+    url_endpoint = '/'
+    blueprint = api_search
+    decorators = [auth_required, login_required]
 
     def get(self):
         """

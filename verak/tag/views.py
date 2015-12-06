@@ -88,7 +88,7 @@ def follow_tag_view(tag):
         # Create a new relation
 
         new_relation = DbUserTagFollowing(user_id=user_id,
-                                          tag_id=tag_id
+                                          tag_id=tag_id,
                                           tag_name=tag)
 
         session.add(new_relation)
