@@ -117,7 +117,7 @@ class DbDoobieMapping(Base):
 
     id = Column(BigInteger, **PK_KWARGS)
     type_id = Column(Integer, ForeignKey(DbType.id))
-    mapping_id = Column(BigInteger)
+    mapping_id = Column(BigInteger, index=True)
 
     type = relationship(DbType)
 
@@ -144,8 +144,8 @@ class DbQuestion(Base):
     id = Column(BigInteger, **PK_KWARGS)
     title = Column(Unicode)
     description = Column(UnicodeText())
-    user_id = Column(BigInteger, ForeignKey(DbUser.id))
-    doobie_id = Column(BigInteger, ForeignKey(DbDoobieMapping.id), nullable=True)
+    user_id = Column(BigInteger, ForeignKey(DbUser.id), index=True)
+    doobie_id = Column(BigInteger, ForeignKey(DbDoobieMapping.id), index=True)
     create_ts = Column(DateTime, default=datetime.now())
     update_ts = Column(DateTime, default=datetime.now())
     enabled = Column(Boolean, default=True)
@@ -214,9 +214,9 @@ class DbAnswer(Base):
 
     id = Column(BigInteger, **PK_KWARGS)
     answer = Column(UnicodeText)
-    question_id = Column(BigInteger, ForeignKey(DbQuestion.id))
-    user_id = Column(BigInteger, ForeignKey(DbUser.id))
-    doobie_id = Column(BigInteger, ForeignKey(DbDoobieMapping.id), nullable=True)
+    question_id = Column(BigInteger, ForeignKey(DbQuestion.id), index=True)
+    user_id = Column(BigInteger, ForeignKey(DbUser.id), index=True)
+    doobie_id = Column(BigInteger, ForeignKey(DbDoobieMapping.id), index=True)
     create_ts = Column(DateTime, default=datetime.now())
     update_ts = Column(DateTime, default=datetime.now())
     enabled = Column(Boolean, default=True)
@@ -286,7 +286,7 @@ class DbTag(Base):
     # Override init to check for lower unique tag name
     __tablename__ = "db_tag"
 
-    id = Column(BigInteger, autoincrement=True, primary_key=True)
+    id = Column(BigInteger, **PK_KWARGS)
     name = Column(Unicode, unique=True)
     type_id = Column(Integer, ForeignKey(DbTagType.id))
     create_ts = Column(DateTime, default=datetime.now())
@@ -317,8 +317,8 @@ class DbDoobieTagMapping(Base):
     __tablename__ = "db_doobie_tag_mapping"
 
     id = Column(BigInteger, **PK_KWARGS)
-    doobie_id = Column(BigInteger, ForeignKey(DbDoobieMapping.id))
-    tag_id = Column(BigInteger, ForeignKey(DbTag.id))
+    doobie_id = Column(BigInteger, ForeignKey(DbDoobieMapping.id), index=True)
+    tag_id = Column(BigInteger, ForeignKey(DbTag.id), index=True)
     # Think about below line, how to query, and how to insert
     tag_name = Column(Unicode)
     create_ts = Column(DateTime, default=datetime.now())
@@ -374,7 +374,7 @@ class DbUserTagFollowing(Base, Following):
     id = Column(BigInteger, **PK_KWARGS)
     user_id = Column(BigInteger, ForeignKey(DbUser.id), index=True)
     tag_id = Column(BigInteger, ForeignKey(DbTag.id), index=True)
-    # Think about below line, how to query, and how to insert
+    # Think about below line, how to query, and how to insert and whether to add index=True
     tag_name = Column(Unicode, ForeignKey(DbTag.name))
     create_ts = Column(DateTime, default=datetime.now())
     update_ts = Column(DateTime, default=datetime.now())
@@ -428,8 +428,8 @@ class DbRoleUserMapping(Base):
     __tablename__ = "db_role_user_mapping"
 
     id = Column(BigInteger, **PK_KWARGS)
-    role_id = Column(BigInteger, ForeignKey(DbRole.id))
-    user_id = Column(BigInteger, ForeignKey(DbUser.id))
+    role_id = Column(BigInteger, ForeignKey(DbRole.id), index=True)
+    user_id = Column(BigInteger, ForeignKey(DbUser.id), index=True)
     create_ts = Column(DateTime, default=datetime.now())
 
     role = relationship(DbRole)
