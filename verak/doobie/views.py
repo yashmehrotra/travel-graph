@@ -1,4 +1,5 @@
 from flask import Blueprint, request
+from flask.views import MethodView
 from datetime import datetime
 
 from verak.models import (

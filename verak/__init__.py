@@ -27,7 +27,7 @@ for cls in MethodView.__subclasses__():
     if type(endpoint) != list:
         endpoint = [endpoint]
     for ep in endpoint:
-        blueprint.add_url_rule(ep, view_func=view_func)
+        blueprint.add_url_rule(ep['url'], view_func=view_func, methods=ep['methods'])
 
 # Registering all the blueprints
 app.register_blueprint(api_user, url_prefix='/api/user')

@@ -27,7 +27,7 @@ class ApiSearchView(MethodView):
     and answers through elasticsearch
     """
 
-    url_endpoint = '/'
+    url_endpoint = {'url': '/', 'methods': ['GET']}
     blueprint = api_search
     decorators = [auth_required, login_required]
 
