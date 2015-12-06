@@ -13,20 +13,21 @@ from verak.decorators import (
     auth_required,
     login_required
 )
+
 app = Flask(__name__)
 app.secret_key = 'A0Zr98j/asd R~XHH!jmN]LWX/,?RT'
 
-api_bpf = Blueprint('Baba', __name__)
-
-# Adding Flask Restful endpoints
-# Iterating through all the FRF Subclasses
+# Iterating through all the MethodView Subclasses
 for cls in MethodView.__subclasses__():
 
     # Registering the endpoints
     endpoint = cls.url_endpoint
     blueprint = cls.blueprint
-    blueprint.add_url_rule(endpoint, view_func=cls.as_view(cls.__name__))
-    print 'Registed: ' + str(endpoint)
+    view_func = cls.as_view(cls.__name__)
+    if type(endpoint) != list:
+        endpoint = [endpoint]
+    for ep in endpoint:
+        blueprint.add_url_rule(ep, view_func=view_func)
 
 # Registering all the blueprints
 app.register_blueprint(api_user, url_prefix='/api/user')
@@ -34,7 +35,6 @@ app.register_blueprint(api_question, url_prefix='/api/question')
 app.register_blueprint(api_tag, url_prefix='/api/tag')
 app.register_blueprint(api_search, url_prefix='/api/search')
 app.register_blueprint(developer_bp, url_prefix='/developer')
-app.register_blueprint(api_bpf, url_prefix='/api')
 
 
 # CORS Settings
