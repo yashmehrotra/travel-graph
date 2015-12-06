@@ -298,7 +298,7 @@ def user_follow_view(user_id=None):
 
         else:
             """
-            Changing enabled flag to False
+            Changing enabled flag to True
             """
 
             relation_exists.enabled = True

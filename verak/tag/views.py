@@ -3,6 +3,7 @@ from flask import Blueprint, request
 from verak.models import (
     DbTag,
     DbDoobieTagMapping,
+    DbUserTagFollowing,
     session
 )
 from verak.decorators import (
@@ -54,3 +55,86 @@ def tag_view(tag=None):
         }
 
         return response_json(response)
+
+
+@api_tag.route('/<tag>/follow/', methods=['POST'])
+@auth_required
+@login_required
+def follow_tag_view(tag):
+    """
+    When a user wants to follow a tag
+    """
+
+    tag_id = get_tag_id(tag)
+    user_id = request.user_id
+
+    relation_exists = session.query(DbUserTagFollowing).\
+                        filter(DbUserTagFollowing.user_id == user_id,
+                               DbUserTagFollowing.tag_id == tag_id).\
+                        first()
+
+    if relation_exists:
+        # User has en existing relationship with tag
+
+        if relation_exists.enabled:
+            # Return error as user already follows the tag
+            return response_error("User already follows this tag")
+        else:
+            relation_exists.enabled = True
+            session.add(relation_exists)
+            session.commit()
+
+    else:
+        # Create a new relation
+
+        new_relation = DbUserTagFollowing(user_id=user_id,
+                                          tag_id=tag_id
+                                          tag_name=tag)
+
+        session.add(new_relation)
+        session.commit()
+
+    response = {
+        'status': 'success',
+        'message': 'User {0} is now following {1}'.\
+                        format(user_id, tag)
+    }
+
+    return response_json(response)
+
+
+@api_tag.route('/<tag>/unfollow/', methods=['POST'])
+@auth_required
+@login_required
+def unfollow_tag_view(tag):
+    """
+    To unfollow a tag
+    """
+
+    tag_id = get_tag_id(tag)
+    user_id = request.user_id
+
+    relation = session.query(DbUserTagFollowing).\
+                filter(DbUserTagFollowing.user_id == user_id,
+                       DbUserTagFollowing.tag_id == tag_id).\
+                first()
+
+    if not relation:
+        return response_error('No relationship exists')
+
+    if not relation.enabled:
+        return response_error('Already unfollowed')
+
+    # Set the enabled flag to false
+    relation.enabled = False
+
+    session.add(relation)
+    session.commit()
+
+    response = {
+        'status': 'success',
+        'message': 'User {0} unfollowed {1}'.\
+                        format(user_id, tag)
+    }
+
+    return response_json(response)

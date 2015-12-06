@@ -29,6 +29,12 @@ engine = create_engine(SQLALCHEMY_ENGINE)
 scoper = sessionmaker(bind=engine)
 session = scoped_session(sessionmaker(bind=engine))
 
+PK_KWARGS = {
+    'autoincrement': True,
+    'primary_key': True,
+    'index': True
+}
+
 
 def get_class_by_tablename(tablename):
     """
@@ -48,7 +54,7 @@ class DbUser(Base):
 
     __tablename__ = "db_user"
 
-    id = Column(BigInteger, autoincrement=True, primary_key=True)
+    id = Column(BigInteger, **PK_KWARGS)
     username = Column(Unicode)
     email = Column(Unicode)
     first_name = Column(Unicode)
@@ -97,7 +103,7 @@ class DbType(Base):
 
     __tablename__ = "db_type"
 
-    id = Column(Integer, autoincrement=True, primary_key=True)
+    id = Column(Integer, **PK_KWARGS)
     name = Column(String)
     tablename = Column(String)
 
@@ -109,7 +115,7 @@ class DbDoobieMapping(Base):
 
     __tablename__ = "db_doobie_mapping"
 
-    id = Column(BigInteger, autoincrement=True, primary_key=True)
+    id = Column(BigInteger, **PK_KWARGS)
     type_id = Column(Integer, ForeignKey(DbType.id))
     mapping_id = Column(BigInteger)
 
@@ -135,7 +141,7 @@ class DbQuestion(Base):
 
     __tablename__ = "db_question"
 
-    id = Column(BigInteger, autoincrement=True, primary_key=True)
+    id = Column(BigInteger, **PK_KWARGS)
     title = Column(Unicode)
     description = Column(UnicodeText())
     user_id = Column(BigInteger, ForeignKey(DbUser.id))
@@ -206,7 +212,7 @@ class DbAnswer(Base):
 
     __tablename__ = "db_answer"
 
-    id = Column(BigInteger, autoincrement=True, primary_key=True)
+    id = Column(BigInteger, **PK_KWARGS)
     answer = Column(UnicodeText)
     question_id = Column(BigInteger, ForeignKey(DbQuestion.id))
     user_id = Column(BigInteger, ForeignKey(DbUser.id))
@@ -310,7 +316,7 @@ class DbDoobieTagMapping(Base):
 
     __tablename__ = "db_doobie_tag_mapping"
 
-    id = Column(BigInteger, autoincrement=True, primary_key=True)
+    id = Column(BigInteger, **PK_KWARGS)
     doobie_id = Column(BigInteger, ForeignKey(DbDoobieMapping.id))
     tag_id = Column(BigInteger, ForeignKey(DbTag.id))
     # Think about below line, how to query, and how to insert
@@ -347,9 +353,9 @@ class DbUserFollowing(Base, Following):
 
     __tablename__ = "db_user_following"
 
-    id = Column(BigInteger, autoincrement=True, primary_key=True)
-    follower_id = Column(BigInteger, ForeignKey(DbUser.id))
-    following_id = Column(BigInteger, ForeignKey(DbUser.id))
+    id = Column(BigInteger, **PK_KWARGS)
+    follower_id = Column(BigInteger, ForeignKey(DbUser.id), index=True)
+    following_id = Column(BigInteger, ForeignKey(DbUser.id), index=True)
     create_ts = Column(DateTime, default=datetime.now())
     update_ts = Column(DateTime, default=datetime.now())
     enabled = Column(Boolean, default=True)
@@ -365,9 +371,9 @@ class DbUserTagFollowing(Base, Following):
 
     __tablename__ = "db_user_tag_following"
 
-    id = Column(BigInteger, autoincrement=True, primary_key=True)
-    user_id = Column(BigInteger, ForeignKey(DbUser.id))
-    tag_id = Column(BigInteger, ForeignKey(DbTag.id))
+    id = Column(BigInteger, **PK_KWARGS)
+    user_id = Column(BigInteger, ForeignKey(DbUser.id), index=True)
+    tag_id = Column(BigInteger, ForeignKey(DbTag.id), index=True)
     # Think about below line, how to query, and how to insert
     tag_name = Column(Unicode, ForeignKey(DbTag.name))
     create_ts = Column(DateTime, default=datetime.now())
@@ -385,7 +391,7 @@ class DbRequestKey(Base):
 
     __tablename__ = "db_request_key"
 
-    id = Column(BigInteger, autoincrement=True, primary_key=True)
+    id = Column(BigInteger, **PK_KWARGS)
     request_key = Column(String)
     type = Column(String)
     ttl = Column(BigInteger)
@@ -398,7 +404,7 @@ class DbEmailInvite(Base):
 
     __tablename__ = "db_email_invite"
 
-    id = Column(BigInteger, autoincrement=True, primary_key=True)
+    id = Column(BigInteger, **PK_KWARGS)
     email = Column(Unicode)
     invited = Column(Boolean, default=False)
 
@@ -410,7 +416,7 @@ class DbRole(Base):
 
     __tablename__ = "db_role"
 
-    id = Column(BigInteger, autoincrement=True, primary_key=True)
+    id = Column(BigInteger, **PK_KWARGS)
     role = Column(String)
 
 
@@ -421,7 +427,7 @@ class DbRoleUserMapping(Base):
 
     __tablename__ = "db_role_user_mapping"
 
-    id = Column(BigInteger, autoincrement=True, primary_key=True)
+    id = Column(BigInteger, **PK_KWARGS)
     role_id = Column(BigInteger, ForeignKey(DbRole.id))
     user_id = Column(BigInteger, ForeignKey(DbUser.id))
     create_ts = Column(DateTime, default=datetime.now())
