@@ -114,7 +114,7 @@ def follow_tag_view():
 @api_tag.route('/unfollow/', methods=['POST'])
 @auth_required
 @login_required
-def unfollow_tag_view(tag):
+def unfollow_tag_view():
     """
     To unfollow a tag
     """
