@@ -62,8 +62,9 @@ def init_es():
     """
 
     es = Elasticsearch(ES_ADDRESS)
+    es.indices.delete(index=ES_INDEX, ignore=[400, 404])
     resp = es.indices.create(index=ES_INDEX, ignore=400)
-    print 'Created index ' + resp
+    print 'Created index ' + str(resp)
 
 
 @manager.command
