@@ -63,7 +63,7 @@ def tag_view(tag=None):
 @api_tag.route('/follow/', methods=['POST'])
 @auth_required
 @login_required
-def follow_tag_view(tag):
+def follow_tag_view():
     """
     When a user wants to follow a tag
     """
