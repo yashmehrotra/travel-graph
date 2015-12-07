@@ -133,7 +133,7 @@ class DbUser(Base):
 
         user_dict = self.serialize
 
-        tags_followed = [t.serialize['id'] for t in self.get_followed_tags()]
+        tags_followed = [t.serialize['tag'] for t in self.get_followed_tags()]
 
         users_followed = [u.serialize['id'] for u in self.get_followers()]
         users_following = [u.serialize['id'] for u in self.get_following()]
