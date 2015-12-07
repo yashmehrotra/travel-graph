@@ -46,7 +46,7 @@ def user_view(user_id=None):
         user = session.query(DbUser).get(user_id)
         response = {
             'status': 'success',
-            'user': user.serialize
+            'user': user.det_serialize
         }
         return response_json(response)
 
@@ -134,7 +134,7 @@ def user_post_view():
 
     response = {
         'status': 'success',
-        'user': user.serialize,
+        'user': user.det_serialize,
         'access_token': access_token,
         'redirect_url': URL_HOME
     }
@@ -251,7 +251,7 @@ def user_logout_view():
     Logs user out, destorys his access token
     """
 
-    destroy_access_token(request.headers['Access-Token'])
+    destroy_access_token(request.headers['Accesstoken'])
 
     response = {
         'status': 'success',

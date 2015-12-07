@@ -23,7 +23,7 @@ def map_tags_to_doobie(tags, doobie_id):
         tags = [tags]
 
     # Cleaning tags
-    tags = map(unicode.strip, filter(None, tags))
+    tags = map(unicode.lower, map(unicode.strip, filter(None, tags)))
 
     tag_mapping = []
     current_tags = []

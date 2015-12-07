@@ -69,6 +69,43 @@ class DbUser(Base):
     facebook_token = Column(UnicodeText())
     google_token = Column(UnicodeText())
 
+    def get_followers(self):
+        """
+        Returns user objects of the people that are following the user
+        """
+
+        followers = session.query(DbUserFollowing).\
+                        filter(DbUserFollowing.following_id == self.user_id).\
+                        all()
+
+        followers = [f.follower for f in followers]
+        return followers
+
+    def get_following(self):
+        """
+        Returns user objects of the people that are following the user
+        """
+
+        followering = session.query(DbUserFollowing).\
+                        filter(DbUserFollowing.follower_id == self.user_id).\
+                        all()
+
+        followers = [f.following for f in followers]
+        return followers
+
+    def get_followed_tags(self):
+        """
+        Returns the tag objects the user has followed
+        """
+
+        tags_followed = session.query(DbUserTagFollowing).\
+                            filter(DbUserTagFollowing.email == self.email,
+                                   DbUserTagFollowing.enabled == True).\
+                            all()
+
+        tags_followed = [t.tag for t in tags_followed]
+        return tags_followed
+
     @property
     def serialize(self):
         """
@@ -88,6 +125,26 @@ class DbUser(Base):
 
         return user_dict
 
+    @property
+    def det_serialize(self):
+        """
+        Detailed User Serialize
+        """
+
+        user_dict = self.serialize
+
+        tags_followed = [t.serialize for t in self.get_followed_tags()]
+
+        users_followed = [u.serialize for u in self.get_followers()]
+        users_following = [u.serialize for u in self.get_following()]
+
+        user_dict.update({
+            'tags_followed': tags_followed,
+            'users_followed': users_followed,
+            'users_following': users_following,
+        })
+
+        return user_dict
 
 class DbType(Base):
     """
