@@ -201,8 +201,8 @@ def is_user_invited(email):
     """
 
     inv = session.query(DbEmailInvite).\
-            filter(email == email,
-                   invited == True).\
+            filter(DbEmailInvite.email == email,
+                   DbEmailInvite.invited == True).\
             count()
 
     if inv > 0:
