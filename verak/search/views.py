@@ -21,6 +21,7 @@ from verak.settings import (
 
 api_search = Blueprint('api_search', __name__)
 
+
 class ApiSearchView(MethodView):
     """
     Used for basic searching of questions

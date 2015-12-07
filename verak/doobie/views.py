@@ -191,7 +191,7 @@ class ApiAnswerView(MethodView):
 
         return response_json(response)
 
-    def get(self, question_id=None,user_id=None):
+    def get(self, question_id=None, user_id=None):
 
         if not question_id:
             return response_error('question_id not provided')
@@ -218,7 +218,7 @@ class ApiAnswerView(MethodView):
 
         return response_json(response)
 
-    def put(self,question_id=None, user_id=None):
+    def put(self, question_id=None, user_id=None):
 
         if not user_id:
             return response_error('user_id not provided')

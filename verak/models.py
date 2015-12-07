@@ -146,6 +146,7 @@ class DbUser(Base):
 
         return user_dict
 
+
 class DbType(Base):
     """
     The db_type table

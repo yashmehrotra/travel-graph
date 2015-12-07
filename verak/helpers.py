@@ -73,3 +73,15 @@ def send_mail(from_email=None, to_email=None, subject=None, body=None):
     }
 
     mandrill_cli.messages.send(message=message, async=True)
+
+
+def multimap(funcs, iterable):
+    """
+    When multiple functions have to be applied
+    on an iterable
+    """
+
+    for f in funcs:
+        iterable = map(f, iterable)
+
+    return iterable

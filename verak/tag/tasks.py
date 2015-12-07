@@ -1,5 +1,4 @@
 from verak.models import (
-    DbTag,
     DbDoobieTagMapping,
     session
 )
@@ -7,6 +6,8 @@ from verak.models import (
 from verak.tag.utils import (
     get_tag_id
 )
+
+from verak.helpers import multimap
 
 
 def map_tags_to_doobie(tags, doobie_id):
@@ -23,7 +24,8 @@ def map_tags_to_doobie(tags, doobie_id):
         tags = [tags]
 
     # Cleaning tags
-    tags = map(unicode.lower, map(unicode.strip, filter(None, tags)))
+    tags = filter(None, tags)
+    tags = multimap([unicode.strip, unicode.lower], tags)
 
     tag_mapping = []
     current_tags = []

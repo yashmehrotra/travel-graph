@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, Blueprint
+from flask import Flask, request, jsonify
 from flask.views import MethodView
 import json
 
@@ -9,10 +9,6 @@ from verak.tag.views import api_tag
 from verak.development.views import developer_bp
 from verak.search.views import api_search
 
-from verak.decorators import (
-    auth_required,
-    login_required
-)
 
 app = Flask(__name__)
 app.secret_key = 'A0Zr98j/asd R~XHH!jmN]LWX/,?RT'

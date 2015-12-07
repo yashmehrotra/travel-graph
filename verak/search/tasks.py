@@ -19,7 +19,8 @@ def index_es(doobie):
                                   id=doobie.doobie_id,
                                   body=doobie.serialize)
 
-        print 'Indexed {0}:{1}'.format(doobie.serialize['type'],
-                                       doobie.serialize['id'])
+        print 'Indexed {0}:{1}\n{2}'.format(doobie.serialize['type'],
+                                            doobie.serialize['id'],
+                                            str(index_response))
     except Exception as e:
         print 'problem with indexing - ' + str(e)

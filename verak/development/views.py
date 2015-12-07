@@ -17,6 +17,7 @@ from verak.helpers import response_json
 
 developer_bp = Blueprint('developer_bp', __name__)
 
+
 # Remove this in prod
 class DeveloperInitFRFTest(MethodView):
     """

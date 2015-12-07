@@ -12,7 +12,10 @@ from verak.decorators import (
 )
 
 from verak.tag.utils import get_tag_id
-from verak.helpers import response_json
+from verak.helpers import (
+    response_error,
+    response_json
+)
 
 api_tag = Blueprint('api_tag', __name__)
 

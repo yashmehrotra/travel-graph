@@ -1,6 +1,7 @@
 from flask import request
-import urllib
-import base64
+# TODO: Decide whether encryption has to be used
+# import urllib
+# import base64
 
 from verak.helpers import response_unauthorised
 from verak.user.utils import (
