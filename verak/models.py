@@ -86,12 +86,12 @@ class DbUser(Base):
         Returns user objects of the people that are following the user
         """
 
-        followering = session.query(DbUserFollowing).\
+        following = session.query(DbUserFollowing).\
                         filter(DbUserFollowing.follower_id == self.id).\
                         all()
 
-        followers = [f.following for f in followers]
-        return followers
+        following = [f.following for f in following]
+        return following
 
     def get_followed_tags(self):
         """
