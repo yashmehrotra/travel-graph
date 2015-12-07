@@ -14,7 +14,7 @@ def auth_required(f):
     Checks user's auth_key
     """
     def wrap(*args, **kwargs):
-        auth_key = request.headers.get('AuthKey')
+        auth_key = request.headers.get('Authkey')
         if not auth_key:
             return response_unauthorised()
 
@@ -39,7 +39,7 @@ def login_required(f):
 
     def wrap(*args, **kwargs):
 
-        access_token = request.headers.get('AccessToken')
+        access_token = request.headers.get('Accesstoken')
 
         if not access_token:
             return response_unauthorised()
