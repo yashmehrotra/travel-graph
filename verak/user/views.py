@@ -70,7 +70,7 @@ def user_post_view():
         email = request.form['email']
         fb_acc_tok = request.form['fb_acc_tok']
         fb_user_id = request.form['fb_user_id']
-        auth_key = request.headers['Auth-Key']
+        auth_key = request.headers['Authkey']
 
     except KeyError:
         response = {
