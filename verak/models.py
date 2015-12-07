@@ -75,7 +75,7 @@ class DbUser(Base):
         """
 
         followers = session.query(DbUserFollowing).\
-                        filter(DbUserFollowing.following_id == self.user_id).\
+                        filter(DbUserFollowing.following_id == self.id).\
                         all()
 
         followers = [f.follower for f in followers]
@@ -87,7 +87,7 @@ class DbUser(Base):
         """
 
         followering = session.query(DbUserFollowing).\
-                        filter(DbUserFollowing.follower_id == self.user_id).\
+                        filter(DbUserFollowing.follower_id == self.id).\
                         all()
 
         followers = [f.following for f in followers]
