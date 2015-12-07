@@ -23,7 +23,7 @@ class DeveloperInitFRFTest(MethodView):
     Made for instantly making an account
     """
 
-    url_endpoint = {'url': '/developer/init/', 'methods': ['POST']}
+    url_endpoint = {'url': '/init/', 'methods': ['POST']}
     blueprint = developer_bp
 
     def post(self):

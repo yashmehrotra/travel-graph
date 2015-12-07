@@ -21,7 +21,6 @@ from verak.search.tasks import index_es
 from verak.tag.tasks import map_tags_to_doobie
 
 api_question = Blueprint('api_question', __name__)
-api_answer = Blueprint('api_answer', __name__)
 
 
 @api_question.route('/', methods=['GET', 'POST'])
@@ -135,18 +134,23 @@ def question_view(question_id=None):
         return response_json(question.serialize)
 
 
-@api_question.route('/<question_id>/answer', methods=['GET', 'POST'])
-@api_question.route('/<question_id>/answer/<user_id>', methods=['GET', 'POST', 'PUT'])
-@auth_required
-@login_required
-def answer_view(question_id=None, user_id=None):
+class ApiAnswerView(MethodView):
     """
     Return a specific answer based on the used
     """
 
-    if request.method == 'POST':
-        if user_id:
-            return response_error('user_id should not be provided')
+    url_endpoint = [
+        {'url': '/<int:question_id>/answer/',
+         'methods': ['GET', 'POST']},
+        {'url': '/<int:question_id>/answer/<int:user_id>/',
+         'methods': ['GET', 'PUT']}
+    ]
+    blueprint = api_question
+    decorators = [auth_required, login_required]
+
+    def post(self, question_id=None):
+        if not question_id:
+            return response_error('question_id not provided')
 
         answer_text = request.form.get('answer')
         tags = request.form.get('tags')
@@ -157,6 +161,7 @@ def answer_view(question_id=None, user_id=None):
         user_id = request.user_id
 
         # Check if user hasn't already answered the question
+        # TODO: Use sqlalchemy's exists here
         user_ans_count = session.query(DbAnswer).\
                             filter(DbAnswer.question_id == question_id,
                                    DbAnswer.user_id == user_id).\
@@ -186,25 +191,40 @@ def answer_view(question_id=None, user_id=None):
 
         return response_json(response)
 
-    elif request.method == 'GET':
-        if not user_id:
-            return response_error('user_id not provided')
+    def get(self, question_id=None,user_id=None):
+
+        if not question_id:
+            return response_error('question_id not provided')
 
         answer = session.query(DbAnswer).\
-                    filter(DbAnswer.question_id == question_id,
-                           DbAnswer.user_id == user_id).\
-                    first()
+                    filter(DbAnswer.question_id == question_id)
 
-        response = {
-            'status': 'success',
-            'answer': answer.serialize
-        }
+        if user_id:
+            answer = answer.filter(DbAnswer.user_id == user_id).\
+                        first()
+
+            response = {
+                'status': 'success',
+                'answer': answer.serialize
+            }
+
+        else:
+            answer = answer.all()
+
+            response = {
+                'status': 'success',
+                'answers': [a.serialize for a in answer]
+            }
 
         return response_json(response)
 
-    elif request.method == 'PUT':
+    def put(self,question_id=None, user_id=None):
+
         if not user_id:
             return response_error('user_id not provided')
+
+        if not question_id:
+            return response_error('question_id not provided')
 
         answer = session.query(DbAnswer).\
                     filter(DbAnswer.question_id == question_id,
@@ -225,6 +245,7 @@ def answer_view(question_id=None, user_id=None):
 
         session.commit()
 
+        # TODO: Handle what happens to tags which are delisted
         if tags:
             tags = tags.split(',') if type(tags) != list else tags
             map_tags_to_doobie(tags, answer.doobie_id)
