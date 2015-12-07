@@ -22,6 +22,9 @@ def map_tags_to_doobie(tags, doobie_id):
     if type(tags) != list:
         tags = [tags]
 
+    # Cleaning tags
+    tags = map(unicode.strip, filter(None, tags))
+
     tag_mapping = []
     current_tags = []
 
