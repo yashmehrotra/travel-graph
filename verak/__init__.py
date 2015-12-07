@@ -38,7 +38,7 @@ app.register_blueprint(developer_bp, url_prefix='/developer')
 
 
 # CORS Settings
-ALLOWED_CORS_HEADERS = 'Content-Type, Auth-Key, Access-Token'
+ALLOWED_CORS_HEADERS = 'Content-Type, AuthKey, AccessToken'
 
 
 @app.before_request

@@ -13,11 +13,11 @@ REDIS_AUTH_KEY_DB = 0
 REDIS_ACCESS_TOKEN_DB = 0
 
 # PostgreSQL Settings
-PGSQL_USER = 'test_user_1'
+PGSQL_USER = 'db_admin'
 PGSQL_PASSWORD = 'test'
 PGSQL_HOST = 'localhost'
 PGSQL_PORT = 5432
-PGSQL_DATABASE = 'db_test_1'
+PGSQL_DATABASE = 'travelgraph'
 
 SQLALCHEMY_ENGINE = 'postgresql://{0}:{1}@{2}:{3}/{4}'.format(PGSQL_USER,
                                                               PGSQL_PASSWORD,

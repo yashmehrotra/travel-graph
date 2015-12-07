@@ -32,7 +32,8 @@ session = scoped_session(sessionmaker(bind=engine))
 PK_KWARGS = {
     'autoincrement': True,
     'primary_key': True,
-    'index': True
+    'index': True,
+    'unique': True
 }
 
 
