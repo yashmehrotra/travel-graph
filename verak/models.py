@@ -99,7 +99,7 @@ class DbUser(Base):
         """
 
         tags_followed = session.query(DbUserTagFollowing).\
-                            filter(DbUserTagFollowing.email == self.email,
+                            filter(DbUserTagFollowing.user_id == self.user_id,
                                    DbUserTagFollowing.enabled == True).\
                             all()
 
