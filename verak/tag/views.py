@@ -57,13 +57,18 @@ def tag_view(tag=None):
         return response_json(response)
 
 
-@api_tag.route('/<tag>/follow/', methods=['POST'])
+@api_tag.route('/follow/', methods=['POST'])
 @auth_required
 @login_required
 def follow_tag_view(tag):
     """
     When a user wants to follow a tag
     """
+
+    try:
+        tag = request.form['tag']
+    except KeyError:
+        return response_error('Missing Parameters')
 
     tag_id = get_tag_id(tag)
     user_id = request.user_id
@@ -103,13 +108,18 @@ def follow_tag_view(tag):
     return response_json(response)
 
 
-@api_tag.route('/<tag>/unfollow/', methods=['POST'])
+@api_tag.route('/unfollow/', methods=['POST'])
 @auth_required
 @login_required
 def unfollow_tag_view(tag):
     """
     To unfollow a tag
     """
+
+    try:
+        tag = request.form['tag']
+    except KeyError:
+        return response_error('Missing Parameters')
 
     tag_id = get_tag_id(tag)
     user_id = request.user_id
