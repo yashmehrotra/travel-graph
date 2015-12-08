@@ -231,7 +231,9 @@ class DbQuestion(Base):
             'user': self.user.serialize,
             'doobie_id': self.doobie_id,
             'tags': self.tags,
-            'type': 'question'
+            'type': 'question',
+            'create_ts': str(self.create_ts),
+            'update_ts': str(self.update_ts)
         }
 
         return question_dict
@@ -304,6 +306,7 @@ class DbAnswer(Base):
             'question': self.question.serialize,
             'user': self.user.serialize,
             'create_ts': str(self.create_ts),
+            'update_ts': str(self.update_ts),
             'doobie_id': self.doobie_id,
             'tags': self.tags,
             'type': 'answer'
