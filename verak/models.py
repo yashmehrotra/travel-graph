@@ -122,7 +122,7 @@ class DbUser(Base):
             'last_name': self.last_name,
             'profile_photo': self.profile_photo,
             'bio': self.bio,
-            'create_ts': str(self.create_ts)
+            'create_ts': self.create_ts.isoformat(),
         }
 
         return user_dict
@@ -232,8 +232,8 @@ class DbQuestion(Base):
             'doobie_id': self.doobie_id,
             'tags': self.tags,
             'type': 'question',
-            'create_ts': str(self.create_ts),
-            'update_ts': str(self.update_ts)
+            'create_ts': self.create_ts.isoformat(),
+            'update_ts': self.update_ts.isoformat()
         }
 
         return question_dict
@@ -305,8 +305,8 @@ class DbAnswer(Base):
             'answer': self.answer,
             'question': self.question.serialize,
             'user': self.user.serialize,
-            'create_ts': str(self.create_ts),
-            'update_ts': str(self.update_ts),
+            'create_ts': self.create_ts.isoformat(),
+            'update_ts': self.update_ts.isoformat(),
             'doobie_id': self.doobie_id,
             'tags': self.tags,
             'type': 'answer'
