@@ -133,17 +133,17 @@ class DbUser(Base):
 
         user_dict = self.serialize
 
-        tags_followed = [t.serialize['tag'] for t in self.get_followed_tags()]
+        tags_following = [t.serialize['tag'] for t in self.get_followed_tags()]
 
-        users_followed = [u.serialize['id'] for u in self.get_followers()]
+        users_followers = [u.serialize['id'] for u in self.get_followers()]
         users_following = [u.serialize['id'] for u in self.get_following()]
 
         user_dict.update({
             #'tags_followed': tags_followed,
             #'users_followed': users_followed,
             #'users_following': users_following,
-            'tags_followed': tags_followed,
-            'users_followed': users_followed,
+            'tags_following': tags_following,
+            'users_followers': users_followers,
             'users_following': users_following,
         })
 
