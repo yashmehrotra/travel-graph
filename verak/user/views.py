@@ -99,7 +99,7 @@ def user_post_view():
 
         response = {
             'status': 'success',
-            'user': existing_user.serialize,
+            'user': existing_user.det_serialize,
             'access_token': access_token,
             'redirect_url': URL_HOME
         }
