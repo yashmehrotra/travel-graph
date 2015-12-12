@@ -5,9 +5,8 @@ import json
 from verak.user.views import api_user
 from verak.doobie.views import api_question
 from verak.tag.views import api_tag
-
-from verak.development.views import developer_bp
 from verak.search.views import api_search
+from verak.development.views import developer_bp
 
 
 app = Flask(__name__)

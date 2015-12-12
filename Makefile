@@ -7,6 +7,7 @@ run:
 
 lint:
 	@sh bin/lint.sh
+	@python bin/lint.py
 
 grun:
 	@gunicorn -c gunicorn.conf runserver:app

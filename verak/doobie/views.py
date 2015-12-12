@@ -23,53 +23,65 @@ from verak.tag.tasks import map_tags_to_doobie
 api_question = Blueprint('api_question', __name__)
 
 
-@api_question.route('/', methods=['GET', 'POST'])
-@api_question.route('/<question_id>', methods=['GET', 'PUT'])
-@auth_required
-@login_required
-def question_view(question_id=None):
+class ApiQuestionView(MethodView):
     """
     Main question view
     """
 
-    if request.method == 'GET' and question_id:
+    url_endpoint = [
+        {'url': '/',
+         'methods': ['GET', 'POST']},
+        {'url': '/<int:question_id>/',
+         'methods': ['GET', 'PUT']}
+    ]
+    blueprint = api_question
+    decorators = [auth_required, login_required]
 
-        question = session.query(DbQuestion).\
-                    get(question_id)
+    def get(self, question_id=None):
+        if question_id:
+            """
+            Return serialized form of a specific question
+            """
 
-        # Make it efficient
-        answers = session.query(DbAnswer).\
-                    filter(DbAnswer.question_id == question_id).\
-                    all()
-        # Below is temp
-        ans = []
-        for answer in answers:
-            ans.append(answer.serialize)
-        resp = {
-            'status': 'success',
-            'answers': ans,
-            'question': question.serialize
-        }
-        return response_json(resp)
+            question = session.query(DbQuestion).\
+                        get(question_id)
 
-    elif request.method == 'GET' and not question_id:
-        """
-        Currently returns a list of all questions
-        """
-        questions = session.query(DbQuestion).\
-                        order_by(DbQuestion.id.desc()).all()
+            if not question:
+                return response_error("Question does not exist")
 
-        response = {
-            'status': 'success',
-            'questions': []
-        }
+            # Make it efficient
+            answers = session.query(DbAnswer).\
+                        filter(DbAnswer.question_id == question_id).\
+                        all()
+            # Below is temp
+            ans = []
+            for answer in answers:
+                ans.append(answer.serialize)
+            resp = {
+                'status': 'success',
+                'answers': ans,
+                'question': question.serialize
+            }
+            return response_json(resp)
 
-        for q in questions:
-            response['questions'].append(q.serialize)
+        else:
+            """
+            Currently returns a list of all questions
+            """
+            questions = session.query(DbQuestion).\
+                            order_by(DbQuestion.id.desc()).all()
 
-        return response_json(response)
+            response = {
+                'status': 'success',
+                'questions': []
+            }
 
-    elif request.method == 'POST':
+            for q in questions:
+                response['questions'].append(q.serialize)
+
+            return response_json(response)
+
+    def post(self):
         """
         For adding a question
         """
@@ -103,7 +115,7 @@ def question_view(question_id=None):
 
         return response_json(response)
 
-    elif request.method == 'PUT' and question_id:
+    def put(self, question_id):
         """
         To Edit the given question
         """
