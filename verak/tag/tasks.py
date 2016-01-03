@@ -37,7 +37,7 @@ def map_tags_to_doobie(tags, doobie_id):
 
     for tag in tags:
 
-        tag_id = get_tag_id(tag)
+        tag_id = get_tag_id(tag, create=True)
         current_tags.append(tag_id)
 
         if tag_id in existing_tags:

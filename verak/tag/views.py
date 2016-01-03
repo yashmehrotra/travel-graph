@@ -1,4 +1,5 @@
 from flask import Blueprint, request
+from flask.views import MethodView
 
 from verak.models import (
     DbTag,
@@ -20,44 +21,56 @@ from verak.helpers import (
 api_tag = Blueprint('api_tag', __name__)
 
 
-@api_tag.route('/', methods=['GET'])
-@api_tag.route('/<tag>/', methods=['GET'])
-@auth_required
-@login_required
-def tag_view(tag=None):
+class ApiTagView(MethodView):
     """
     Returns doobies corresponding to tag
     """
-    if tag:
-        tag = tag.lower()
 
-        tag_id = get_tag_id(tag)
+    url_endpoint = [
+        {'url': '/',
+         'methods': ['GET']},
+        {'url': '/<tag>/',
+         'methods': ['GET']}
+    ]
+    blueprint = api_tag
+    decorators = [auth_required, login_required]
 
-        doobies = session.query(DbDoobieTagMapping).\
-                    filter(DbDoobieTagMapping.tag_id == tag_id,
-                           DbDoobieTagMapping.enabled == True).\
-                    all()
+    def get(self, tag=None):
+        if tag:
+            if tag.isdigit():
+                tag_id = int(tag)
+            else:
+                tag = tag.lower()
+                tag_id = get_tag_id(tag)
 
-        doobies = [d.doobie.serialize for d in doobies]
+                if not tag_id:
+                    return response_error("Tag does not exist")
 
-        response = {
-            'status': 'success',
-            'doobies': doobies
-        }
+            doobies = session.query(DbDoobieTagMapping).\
+                        filter(DbDoobieTagMapping.tag_id == tag_id,
+                               DbDoobieTagMapping.enabled == True).\
+                        all()
 
-        return response_json(response)
+            doobies = [d.doobie.serialize for d in doobies]
 
-    else:
-        tags = session.query(DbTag).all()
+            response = {
+                'status': 'success',
+                'doobies': doobies
+            }
 
-        tags = [t.serialize for t in tags]
+            return response_json(response)
 
-        response = {
-            'status': 'success',
-            'tags': tags,
-        }
+        else:
+            tags = session.query(DbTag).all()
 
-        return response_json(response)
+            tags = [t.serialize for t in tags]
+
+            response = {
+                'status': 'success',
+                'tags': tags,
+            }
+
+            return response_json(response)
 
 
 @api_tag.route('/follow/', methods=['POST'])

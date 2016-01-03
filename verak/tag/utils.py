@@ -5,7 +5,7 @@ from verak.models import (
 )
 
 
-def get_tag_id(tag):
+def get_tag_id(tag, create=False):
     """
     Get tag_id by tag name
     If tag doesn't exist, create a new one
@@ -17,11 +17,13 @@ def get_tag_id(tag):
                 filter(DbTag.name == tag).\
                 first()
 
-    if not tag_obj:
+    if not tag_obj and create:
         new_tag = DbTag(name=tag)
         session.add(new_tag)
         session.commit()
         return new_tag.id
+    elif not tag_obj:
+        return None
 
     return tag_obj.id
 

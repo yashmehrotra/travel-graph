@@ -270,6 +270,14 @@ class DbQuestion(Base):
 
         return tag_list
 
+    @property
+    def votes(self):
+        """
+        Returns the sum of votes for the doobie (+1/-1)
+        """
+
+        pass
+
 
 class DbAnswer(Base):
     """
@@ -501,6 +509,24 @@ class DbRoleUserMapping(Base):
 
     role = relationship(DbRole)
     user = relationship(DbUser)
+
+
+class DbDoobieVote(Base):
+    """
+    The db_doobie_vote table
+    """
+
+    __tablename__ = "db_doobie_vote"
+
+    id = Column(BigInteger, **PK_KWARGS)
+    user_id = Column(BigInteger, ForeignKey(DbUser.id), index=True)
+    doobie_id = Column(BigInteger, ForeignKey(DbDoobieMapping.id), index=True)
+    vote = Column(Integer)
+    create_ts = Column(DateTime, default=datetime.now())
+    update_ts = Column(DateTime, default=datetime.now())
+
+    user = relationship(DbUser)
+    doobie_mapping = relationship(DbDoobieMapping)
 
 
 # Define all event listensers and related stuff in the end

@@ -40,3 +40,6 @@ GEARMAN_PORT = 4730
 ES_ADDRESS = [{'host': 'localhost', 'port': 9200}]
 ES_INDEX = 'verak'
 ES_DOC_TYPE_DOOBIE = 'doobie'
+
+# Voting System
+vote_range = (1, -1)
