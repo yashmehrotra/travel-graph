@@ -8,6 +8,8 @@ from verak.tag.views import api_tag
 from verak.search.views import api_search
 from verak.development.views import developer_bp
 
+from verak.models import session
+
 
 app = Flask(__name__)
 app.secret_key = 'A0Zr98j/asd R~XHH!jmN]LWX/,?RT'
@@ -49,6 +51,25 @@ def change_json_to_form():
             request.form = json.loads(request.data)
         except ValueError:
             pass
+
+
+@app.before_request
+def session_init():
+    """
+    Initialize session for request
+    """
+
+    session()
+
+
+@app.after_request
+def s_dest(resp):
+    """
+    Clean session after request
+    """
+
+    session.remove()
+    return resp
 
 
 @app.after_request
