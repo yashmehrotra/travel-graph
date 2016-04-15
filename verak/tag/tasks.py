@@ -20,6 +20,9 @@ def map_tags_to_doobie(tags, doobie_id):
     # TODO: Add this function as a method
     #       in DbQuestion and DbAnswer
 
+    # TODO: When Editing a doobie, make sure old tags are
+    #       removed and only new/existing ones are there
+
     if type(tags) != list:
         tags = [tags]
 

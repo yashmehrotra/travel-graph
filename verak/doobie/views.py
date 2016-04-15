@@ -257,6 +257,7 @@ class ApiAnswerView(MethodView):
         answer.answer = answer_text
         answer.update_ts = datetime.now()
 
+        session.add(answer)
         session.commit()
 
         # TODO: Handle what happens to tags which are delisted

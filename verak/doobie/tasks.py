@@ -11,7 +11,7 @@ def vote_doobie(user_id, doobie_id, vote):
     """
     # Fixed Vote Range
     if vote not in (1, -1):
-        return response_error("Invalid vote")
+        return False
 
     existing = session.query(DbDoobieVote).\
                 filter(DbDoobieVote.user_id == user_id,
