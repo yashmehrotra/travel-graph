@@ -214,6 +214,8 @@ class ApiAnswerView(MethodView):
         if user_id:
             answer = answer.filter(DbAnswer.user_id == user_id).\
                         first()
+            if not answer:
+                return response_error('User has not answered this question')
 
             response = {
                 'status': 'success',
@@ -255,6 +257,7 @@ class ApiAnswerView(MethodView):
         answer.answer = answer_text
         answer.update_ts = datetime.now()
 
+        session.add(answer)
         session.commit()
 
         # TODO: Handle what happens to tags which are delisted
