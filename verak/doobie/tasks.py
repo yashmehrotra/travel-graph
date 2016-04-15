@@ -1,4 +1,3 @@
-from verak.helpers import response_error
 from verak.models import (
     DbDoobieVote,
     session
