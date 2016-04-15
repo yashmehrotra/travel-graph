@@ -214,6 +214,8 @@ class ApiAnswerView(MethodView):
         if user_id:
             answer = answer.filter(DbAnswer.user_id == user_id).\
                         first()
+            if not answer:
+                return response_error('User has not answered this question')
 
             response = {
                 'status': 'success',
